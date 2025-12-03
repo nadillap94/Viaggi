@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vienna Imperiale - La Tua Guida di Viaggio</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js per i grafici -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+    <!-- Icone Lucide (per le icone delle attività) -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <style>
+        /* Stile Elegante/Imperiale */
+        :root {
+            --color-primary: #8C0000; /* Bordeaux Scuro (rich red) */
+            --color-secondary: #C8AA50; /* Oro Antico (muted gold) */
+            --color-background: #FAF8F4; /* Crema/Bianco Sporco */
+            --color-text: #2c2c2c; /* Grigio Scuro Profondo */
+        }
+
+        body {
+            font-family: 'Georgia', serif; /* Font Serif per eleganza */
+            background-color: var(--color-background);
+            color: var(--color-text);
+        }
+
+        .header-bg {
+            background-color: var(--color-primary);
+            color: white;
+            padding: 1rem 0;
+            border-bottom: 6px solid var(--color-secondary);
+        }
+
+        .accent-color {
+            color: var(--color-primary);
+        }
+
+        .border-accent {
+            border-color: var(--color-secondary);
+        }
+
+        /* Stile Timeline */
+        .timeline-item {
+            border-left: 2px solid var(--color-secondary);
+        }
+
+        .timeline-point {
+            background-color: var(--color-primary);
+            border: 4px solid var(--color-secondary);
+        }
+
+        /* Stile pulsante dettagli */
+        .details-btn {
+            background-color: var(--color-primary);
+        }
+
+        .details-btn:hover {
+            background-color: #6C0000;
+        }
+        
+        /* Stile per la Stampa (Ottimizzazione A4) */
+        @media print {
+            body {
+                background-color: white !important;
+                color: black !important;
+                font-size: 10pt;
+            }
+            /* Rimuove elementi non necessari per la stampa */
+            .no-print, .details-btn {
+                display: none !important;
+            }
+            .header-bg, .footer-bg {
+                background-color: white !important;
+                color: black !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+                border-bottom: 1px solid black !important;
+            }
+            .timeline-item {
+                border-left: 1px dashed gray;
+            }
+            .timeline-point {
+                 background-color: white !important;
+                 border-color: black !important;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="header-bg shadow-lg">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h1 class="text-4xl font-extrabold tracking-wider text-center">VIENNA IMPERIALE <span class="text-yellow-200">👑</span></h1>
+            <p class="text-center text-sm mt-1 opacity-90">La Tua Guida Turistica Illustrata - Mobile-First</p>
+        </div>
+    </header>
+
+    <main class="max-w-6xl mx-auto p-4 sm:p-6 lg:p-8">
+
+        <!-- INTRO & SOMMARIO -->
+        <section class="mb-12 p-4 sm:p-6 bg-white shadow-xl rounded-xl">
+             <h2 class="text-3xl font-bold mb-4 accent-color">Benvenuti nell'Impero!</h2>
+             <p class="text-lg mb-4">Questa è la tua guida interattiva e stampabile per il viaggio a Vienna, strutturata per essere perfetta sul tuo smartphone e chiara sul tuo desktop.</p>
+             <p class="text-sm italic">Durata stimata: 4 giorni. Persone: 2. Budget totale stimato per persona: <span class="font-bold" id="total-budget-placeholder">...</span></p>
+        </section>
+
+
+        <!-- SEZIONE IMMAGINI E MAPPE (STATICHE) -->
+        <section class="mb-12">
+            <h2 class="text-2xl font-bold mb-6 pb-2 border-b border-accent accent-color flex items-center">
+                <i data-lucide="image" class="mr-2 text-xl"></i> Vetrina Illustrata & Mappe (Statiche)
+            </h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                
+                <!-- Immagine Placeholder 1: Schönbrunn -->
+                <div class="bg-white shadow-lg rounded-lg overflow-hidden border border-gray-200">
+                    <img src="https://placehold.co/600x400/C8AA50/8C0000?text=Palazzo+Schonbrunn" alt="Immagine di Schönbrunn" class="w-full h-48 object-cover">
+                    <div class="p-4">
+                        <h3 class="font-bold text-lg accent-color">Schönbrunn</h3>
+                        <p class="text-sm text-gray-600">Placeholder: Palazzo e giardini imperiali.</p>
+                    </div>
+                </div>
+
+                <!-- Mappa Placeholder 1: Centro Storico -->
+                <div class="bg-white shadow-lg rounded-lg overflow-hidden border border-gray-200">
+                    <img src="https://placehold.co/600x400/2c2c2c/FAF8F4?text=Mappa+Centro+Storico" alt="Mappa Centro Storico" class="w-full h-48 object-cover">
+                    <div class="p-4">
+                        <h3 class="font-bold text-lg accent-color">1° Distretto (Mappa)</h3>
+                        <p class="text-sm text-gray-600">Placeholder: Inserisci qui lo snapshot statico.</p>
+                    </div>
+                </div>
+                
+                 <!-- Immagine Placeholder 2: Stephansdom -->
+                 <div class="bg-white shadow-lg rounded-lg overflow-hidden border border-gray-200">
+                    <img src="https://placehold.co/600x400/8C0000/FAF8F4?text=Stephansdom" alt="Immagine di Stephansdom" class="w-full h-48 object-cover">
+                    <div class="p-4">
+                        <h3 class="font-bold text-lg accent-color">Stephansdom</h3>
+                        <p class="text-sm text-gray-600">Placeholder: Il simbolo gotico della città.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SEZIONE ITINERARIO INTERATTIVO (TIMELINE) -->
+        <section class="mb-12">
+            <h2 class="text-2xl font-bold mb-8 pb-2 border-b border-accent accent-color flex items-center">
+                <i data-lucide="calendar-check" class="mr-2 text-xl"></i> Itinerario Giorno per Giorno
+            </h2>
+            
+            <!-- CONTENITORE TIMELINE -->
+            <div id="timeline-container" class="relative">
+                <!-- La Timeline sarà generata qui da JavaScript -->
+            </div>
+        </section>
+        
+        <!-- SEZIONE CIBO E BEVANDE -->
+        <section class="mb-12">
+            <h2 class="text-2xl font-bold mb-6 pb-2 border-b border-accent accent-color flex items-center">
+                <i data-lucide="utensils" class="mr-2 text-xl"></i> Delizie Culinarie di Vienna
+            </h2>
+            <div id="food-list" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                <!-- La Lista Cibo sarà generata qui da JavaScript -->
+            </div>
+        </section>
+
+
+        <!-- SEZIONE BUDGET CON GRAFICI -->
+        <section class="mb-12 no-print">
+            <h2 class="text-2xl font-bold mb-6 pb-2 border-b border-accent accent-color flex items-center">
+                <i data-lucide="wallet" class="mr-2 text-xl"></i> Analisi Budget (Costo per Persona)
+            </h2>
+            <div class="bg-white p-6 rounded-xl shadow-xl border border-gray-100">
+                <canvas id="budgetChart"></canvas>
+                <p class="text-center text-sm mt-4 italic text-gray-500">I costi sono stimati per persona e provengono dal file BudgetVienna.csv.</p>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="footer-bg text-center text-sm py-4 mt-8 bg-gray-100 print:hidden">
+        © Vienna Imperiale Guida | Minisito Generato da Disegnaviaggi
+    </footer>
+
+    <script>
+        // Inizializza le icone Lucide
+        lucide.createIcons();
+
+        // ===========================================
+        // 1. DATA ESTRATTA E STRUTTURATA DAI FILE CSV
+        // ===========================================
+
+        // Dati Itinerario (PianoViaggio Vienna - PianoVienna.csv)
+        // Indirizzi aggiunti per maggiore precisione.
+        const itineraryData = [
+            { giorno: 1, data: "Venerdì 5", ora: "09:00 - 14:00", attivita: "Viaggio, Transfer, Check-in, Pranzo", luogo: "Leopoldstadt (2° distretto)", focus: "Trasporto", note: "Pranzo Low-Cost: Sfrutta un piccolo Imbiss in zona alloggio (1020)." },
+            { giorno: 1, data: "Venerdì 5", ora: "14:00 - 17:00", attivita: "Centro Storico (1010): Esplorazione a piedi", luogo: "Stephansdom, Stephansplatz 3, 1010 Wien", focus: "Passeggiata", note: "La Cattedrale di Santo Stefano è il simbolo gotico della città. Focus fotografico." },
+            { giorno: 1, data: "Venerdì 5", ora: "17:00 - 18:00", attivita: "Mercatino Stephansplatz (1°)", luogo: "Stephansplatz, 1010 Wien", focus: "Shopping", note: "Bevi il primo Glühwein qui per scaldarti. Mercatino 1/9." },
+            { giorno: 2, data: "Sabato 6", ora: "10:00 - 14:00", attivita: "Palazzo di Schönbrunn", luogo: "Schönbrunner Schloßstraße 47, 1130 Wien", focus: "Cultura", note: "Visita del 'Grand Tour' e dei giardini. T.T. = 4h." },
+            { giorno: 2, data: "Sabato 6", ora: "14:30 - 17:00", attivita: "Gloriette e Zoo di Schönbrunn", luogo: "Schönbrunner Schloßstraße 47, 1130 Wien (all'interno del complesso)", focus: "Natura/Zoo", note: "Pausa pranzo veloce nei pressi dello Zoo. Salita alla Gloriette per la vista." },
+            { giorno: 3, data: "Domenica 7", ora: "10:00 - 13:00", attivita: "Palazzo del Belvedere (Alto)", luogo: "Prinz-Eugen-Straße 27, 1030 Wien", focus: "Arte", note: "Ammirare 'Il Bacio' di Klimt. L'ingresso ai giardini è gratuito." },
+            { giorno: 3, data: "Domenica 7", ora: "13:00 - 14:00", attivita: "Hundertwasserhaus", luogo: "Kegelgasse 36-38, 1030 Wien", focus: "Architettura", note: "Quartiere colorato e particolare. T.T. $\\approx 30m$." },
+            { giorno: 3, data: "Domenica 7", ora: "19:00 - 21:00", attivita: "Opz 1: Concerto (Bösendorfer)", luogo: "Bösendorfer-Saal (nel Musikverein, Musikvereinsplatz 1, 1010 Wien)", focus: "Spettacolo", note: "Biglietti già prenotati. Alternativa: Opz 2: Cena e Teatro (Opera di Stato) - se disponibili." },
+            { giorno: 4, data: "Lunedì 8", ora: "09:00 - 11:30", attivita: "Prater & Donauturm", luogo: "Wurstelprater, Prater 7/1, 1020 Wien", focus: "Adrenalina", note: "Il Prater è il più antico parco divertimenti del mondo. T.T. $\\approx 15m$." },
+            { giorno: 4, data: "Lunedì 8", ora: "13:00 - 14:00", attivita: "Opz 1: Pranzo Würstelstand", luogo: "Al Prater o in zona alloggio (1020)", focus: "Cibo", note: "Il Würstelstand è una tradizione viennese. Perfetto pasto low-cost." },
+            { giorno: 4, data: "Lunedì 8", ora: "14:00 - 17:00", attivita: "Transfer e Partenza", luogo: "Vienna Hauptbahnhof / Aeroporto", focus: "Trasporto", note: "Transfer Aeroporto (S7 A/R). Fine del viaggio." }
+        ];
+
+        // Dati Cibo (PianoViaggio Vienna - CiboVienna.csv)
+        const foodData = [
+            { piatto: "Wiener Schnitzel", descrizione: "Cotoletta viennese DOC di vitello, fritta nel burro chiarificato.", suggerimenti: "Nei Beisl.", indirizzo_suggerito: "Bitzinger Augustinerkeller (Albertinaplatz 1, 1010 Wien)" },
+            { piatto: "Gulasch (Gulaschsuppe)", descrizione: "Spezzatino di manzo stufato con cipolla e paprika. Servito con Knödel.", suggerimenti: "Nei Beisl.", indirizzo_suggerito: "Café Anzengruber (Laplacegasse 17, 1040 Wien)" },
+            { piatto: "Käsekrainer", descrizione: "Salsiccia di maiale affumicata ripiena di formaggio fuso.", suggerimenti: "Il re degli Würstelstände (chioschi). Perfetto pasto low-cost.", indirizzo_suggerito: "Würstelstand Bitzinger (vicino all'Opera di Stato)" },
+            { piatto: "Sachertorte", descrizione: "Torta al cioccolato fondente e marmellata di albicocche, con panna fresca non zuccherata.", suggerimenti: "All'Hotel Sacher o in qualsiasi Café.", indirizzo_suggerito: "Hotel Sacher (Philharmoniker-Str. 4, 1010 Wien)" },
+            { piatto: "Apfelstrudel", descrizione: "Rotolo di pasta sottile ripieno di mele, uvetta, cannella e pangrattato.", suggerimenti: "In qualsiasi Cafè e spesso anche ai mercatini.", indirizzo_suggerito: "Café Central (Herrengasse 14, 1010 Wien)" },
+        ];
+        
+        // Dati Budget (PianoViaggio Vienna - BudgetVienna.csv)
+        // Usiamo solo le voci di costo rilevanti per il grafico per persona
+        const budgetData = [
+            { categoria: "Alloggio (3 notti)", costo: 121.50 },
+            { categoria: "Trasporti (Abbonamento 72h)", costo: 17.10 },
+            { categoria: "Transfer Aeroporto (S7 A/R)", costo: 17.60 },
+            { categoria: "Ingressi (Schönbrunn)", costo: 22.00 },
+            { categoria: "Ingressi (Belvedere)", costo: 18.00 },
+            { categoria: "Cibo & Bevande (Stimato)", costo: 120.00 },
+            { categoria: "Souvenir / Varie", costo: 50.00 },
+        ];
+
+
+        // ===========================================
+        // 2. FUNZIONI DI SUPPORTO PER ICONE LUCIDE
+        // ===========================================
+
+        /**
+         * Restituisce il nome dell'icona Lucide basata sulla categoria di focus.
+         * @param {string} focus - Categoria dal campo 'focus'.
+         * @returns {string} - Nome dell'icona Lucide.
+         */
+        function getIconNameByFocus(focus) {
+            const focusMap = {
+                'Cultura': 'castle',
+                'Arte': 'brush',
+                'Spettacolo': 'music',
+                'Passeggiata': 'map-pin',
+                'Trasporto': 'train',
+                'Architettura': 'building-2',
+                'Natura/Zoo': 'leaf',
+                'Shopping': 'shopping-bag',
+                'Adrenalina': 'zap',
+                'Cibo': 'coffee',
+                default: 'circle-dot'
+            };
+            // Normalizza l'input e ottieni l'icona, altrimenti usa l'icona di default
+            const normalizedFocus = focus.split('/')[0].trim(); 
+            return focusMap[normalizedFocus] || focusMap.default;
+        }
+
+        // ===========================================
+        // 3. LOGICA DI RENDERING ITINERARIO (TIMELINE)
+        // ===========================================
+
+        const timelineContainer = document.getElementById('timeline-container');
+        let htmlTimeline = '';
+        let lastDay = 0;
+
+        itineraryData.forEach((item, index) => {
+            // Inizio di un nuovo giorno
+            if (item.giorno !== lastDay) {
+                // Intestazione del Giorno
+                htmlTimeline += `
+                    <h3 class="text-xl font-bold mt-8 mb-4 pt-4 border-t border-accent accent-color">
+                        Giorno ${item.giorno}: ${item.data}
+                    </h3>
+                `;
+                lastDay = item.giorno;
+            }
+
+            const iconName = getIconNameByFocus(item.focus);
+            
+            // Elemento della Timeline
+            htmlTimeline += `
+                <div class="timeline-item relative py-4">
+                    <!-- Punto sulla linea -->
+                    <div class="timeline-point absolute -left-0.5 top-6 w-3 h-3 rounded-full z-10"></div>
+                    
+                    <div class="bg-white p-4 ml-4 rounded-lg shadow-md hover:shadow-xl transition duration-300 transform hover:scale-[1.01]">
+                        <div class="flex items-start mb-2 justify-between">
+                            <div class="flex items-center">
+                                <!-- Icona -->
+                                <i data-lucide="${iconName}" class="w-5 h-5 mr-3 accent-color shrink-0"></i>
+                                <span class="font-bold text-lg accent-color">${item.attivita}</span>
+                            </div>
+                             <span class="text-sm font-semibold text-gray-500">${item.ora}</span>
+                        </div>
+                        
+                        <p class="text-sm text-gray-700 mb-2 pl-8">
+                            📍 ${item.luogo}
+                        </p>
+                        
+                        <!-- Dettagli espandibili -->
+                        <button 
+                            class="details-btn text-xs font-semibold text-white py-1 px-3 rounded-full mt-2 no-print"
+                            onclick="toggleDetails('details-${index}')"
+                        >
+                            Mostra Dettagli
+                        </button>
+                        <div id="details-${index}" class="hidden mt-3 pt-3 border-t border-gray-100 text-sm">
+                            <p class="font-semibold text-gray-800"><span class="accent-color">Focus:</span> ${item.focus}</p>
+                            <p class="italic text-gray-600"><span class="accent-color">Note:</span> ${item.note}</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+        });
+        
+        timelineContainer.innerHTML = htmlTimeline;
+        lucide.createIcons(); // Re-inizializza le icone dopo aver aggiunto l'HTML
+
+        // Funzione per l'interattività (mostra/nascondi dettagli)
+        window.toggleDetails = function(id) {
+            const element = document.getElementById(id);
+            const button = event.target;
+            
+            if (element.classList.contains('hidden')) {
+                element.classList.remove('hidden');
+                button.textContent = 'Nascondi Dettagli';
+            } else {
+                element.classList.add('hidden');
+                button.textContent = 'Mostra Dettagli';
+            }
+        };
+
+
+        // ===========================================
+        // 4. LOGICA DI RENDERING CIBO
+        // ===========================================
+        
+        const foodListContainer = document.getElementById('food-list');
+        let htmlFood = '';
+
+        foodData.forEach(food => {
+            // Verifica se è presente un indirizzo suggerito e lo formatta
+            const addressHtml = food.indirizzo_suggerito 
+                ? `<p class="text-xs text-gray-500 mt-2 italic border-t pt-2">Indirizzo Suggerito: ${food.indirizzo_suggerito}</p>`
+                : '';
+            
+            htmlFood += `
+                <div class="bg-white p-4 rounded-lg shadow-md border-l-4 border-accent hover:shadow-xl transition duration-300">
+                    <h4 class="font-bold text-lg accent-color">${food.piatto}</h4>
+                    <p class="text-sm text-gray-700 mt-1">${food.descrizione}</p>
+                    <p class="text-xs text-gray-500 mt-2 italic border-t pt-2">Consiglio: ${food.suggerimenti}</p>
+                    ${addressHtml}
+                </div>
+            `;
+        });
+
+        foodListContainer.innerHTML = htmlFood;
+
+        // ===========================================
+        // 5. LOGICA GRAFICO BUDGET (CHART.JS)
+        // ===========================================
+
+        const categories = budgetData.map(item => item.categoria.split('(')[0].trim()); // Pulisce il nome per il grafico
+        const costs = budgetData.map(item => item.costo);
+        
+        const totalCost = costs.reduce((sum, cost) => sum + cost, 0);
+
+        // Aggiorna il placeholder del budget totale nell'introduzione
+        document.getElementById('total-budget-placeholder').textContent = `€ ${totalCost.toFixed(2)}`;
+
+        // Colori a tema imperiale/bordeaux per il grafico (compatibili con Chart.js)
+        const imperialColors = [
+            '#8C0000', '#C8AA50', '#A52A2A', '#D4AF37', '#B22222', '#696969', '#E6C3A3'
+        ];
+
+        const ctx = document.getElementById('budgetChart').getContext('2d');
+        
+        const budgetChart = new Chart(ctx, {
+            type: 'pie',
+            data: {
+                labels: categories,
+                datasets: [{
+                    data: costs,
+                    backgroundColor: imperialColors,
+                    borderColor: 'white',
+                    borderWidth: 2,
+                    hoverOffset: 8
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                plugins: {
+                    legend: {
+                        position: 'right',
+                        labels: {
+                            font: { family: 'Georgia, serif', size: 12 },
+                            color: getComputedStyle(document.documentElement).getPropertyValue('--color-text'),
+                            padding: 15
+                        }
+                    },
+                    title: {
+                        display: true,
+                        text: `Ripartizione Costi per Persona (Totale: € ${totalCost.toFixed(2)})`,
+                        font: { size: 18, family: 'Georgia, serif' },
+                        color: getComputedStyle(document.documentElement).getPropertyValue('--color-primary')
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                let label = context.label || '';
+                                if (label) { label += ': '; }
+                                label += new Intl.NumberFormat('it-IT', { style: 'currency', currency: 'EUR' }).format(context.raw);
+                                return label;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+    </script>
+</body>
+</html>
+
