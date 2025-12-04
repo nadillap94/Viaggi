@@ -14,11 +14,11 @@
     <style>
         /* DESIGN SYSTEM IMPERIALE */
         :root {
-            --color-primary: #8C0000; 
-            --color-secondary: #C8AA50; 
-            --color-background: #FAF8F4; 
+            --color-primary: #8C0000; /* Bordeaux Scuro (rich red) */
+            --color-secondary: #C8AA50; /* Oro Antico (muted gold) */
+            --color-background: #FAF8F4; /* Crema/Bianco Sporco */
             --color-text: #2c2c2c;
-            --color-nav-bg: #4A4A4A; 
+            --color-nav-bg: #4A4A4A; /* Grigio scuro per la navbar */
         }
 
         body {
@@ -46,6 +46,11 @@
             background-color: var(--color-primary);
             font-weight: bold;
             border-bottom: 3px solid var(--color-secondary);
+        }
+        /* NUOVA CLASSE PER LE INTRO */
+        .intro-accent {
+            color: var(--color-secondary); /* Oro Antico */
+            font-weight: bold; /* Grassetto */
         }
 
         /* VISUALIZZAZIONE TIMELINE */
@@ -133,7 +138,7 @@
                 <i data-lucide="calendar-check" class="mr-2 text-2xl"></i> Giorno 1: Venerdì 5 - Arrivo e Centro Storico
             </h2>
             <p class="text-lg mb-6 bg-white p-4 rounded-lg shadow-md border-l-4 border-accent">
-                **Intro:** Il focus è sull'assestamento logistico e l'immediata immersione nel cuore imperiale di Vienna (1010), chiudendo con il primo mercatino.
+                <span class="intro-accent">Intro:</span> Il focus è sull'assestamento logistico e l'immediata immersione nel cuore imperiale di Vienna (1010), chiudendo con il primo mercatino.
             </p>
             <div id="timeline-GIORNO1" class="relative"></div>
         </section>
@@ -143,7 +148,7 @@
                 <i data-lucide="calendar-check" class="mr-2 text-2xl"></i> Giorno 2: Sabato 6 - Grand Tour di Sfarzo
             </h2>
             <p class="text-lg mb-6 bg-white p-4 rounded-lg shadow-md border-l-4 border-accent">
-                **Intro:** Giorno dedicato alle due principali residenze imperiali (Schönbrunn e Belvedere) e ai mercatini più maestosi.
+                <span class="intro-accent">Intro:</span> Giorno dedicato alle due principali residenze imperiali (Schönbrunn e Belvedere) e ai mercatini più maestosi.
             </p>
             <div id="timeline-GIORNO2" class="relative"></div>
         </section>
@@ -153,7 +158,7 @@
                 <i data-lucide="calendar-check" class="mr-2 text-2xl"></i> Giorno 3: Domenica 7 - Arte, Follia e Intimità
             </h2>
             <p class="text-lg mb-6 bg-white p-4 rounded-lg shadow-md border-l-4 border-accent">
-                **Intro:** Un mix tra la grandezza dell'Hofburg, la modernità stravagante di Hundertwasser e la calma del mercatino di Spittelberg.
+                <span class="intro-accent">Intro:</span> Un mix tra la grandezza dell'Hofburg, la modernità stravagante di Hundertwasser e la calma del mercatino di Spittelberg.
             </p>
             <div id="timeline-GIORNO3" class="relative"></div>
         </section>
@@ -163,7 +168,7 @@
                 <i data-lucide="calendar-check" class="mr-2 text-2xl"></i> Giorno 4: Lunedì 8 - Saluti e Partenza
             </h2>
             <p class="text-lg mb-6 bg-white p-4 rounded-lg shadow-md border-l-4 border-accent">
-                **Intro:** Ultimo giorno dedicato al famoso Prater per un tocco finale di nostalgia prima del transfer.
+                <span class="intro-accent">Intro:</span> Ultimo giorno dedicato al famoso Prater per un tocco finale di nostalgia prima del transfer.
             </p>
             <div id="timeline-GIORNO4" class="relative"></div>
         </section>
@@ -214,24 +219,27 @@
         lucide.createIcons();
 
         // ===========================================
-        // 1. DATA ESTRATTA (ITINERARIO, CIBO, BUDGET)
+        // DATI
         // ===========================================
 
         const itineraryData = [
-            // Dati itinerario come sopra...
+            // Giorno 1
             { giorno: 1, ora: "09:00 - 14:00", attivita: "Viaggio, Transfer, Check-in, Pranzo", luogo: "Leopoldstadt (2° distretto)", focus: "Trasporto", note: "Pranzo Low-Cost: Sfrutta un piccolo Imbiss in zona alloggio (1020).", dettagli: "Gestione logistica del primo giorno. Acquisto dell'abbonamento 72h per i mezzi pubblici (se necessario)." },
             { giorno: 1, ora: "14:00 - 17:00", attivita: "Centro Storico (1010): Duomo e Passeggiata", luogo: "Stephansdom, Stephansplatz 3, 1010 Wien", focus: "Passeggiata/Architettura", note: "La Cattedrale di Santo Stefano è il simbolo gotico della città. Focus fotografico.", dettagli: "Visita all'esterno e all'interno. Salita opzionale sulla torre sud per la vista panoramica sul centro." },
             { giorno: 1, ora: "17:00 - 18:00", attivita: "Mercatino Stephansplatz (1°)", luogo: "Stephansplatz, 1010 Wien", focus: "Shopping/Bevande", note: "Primo Glühwein per scaldarsi e immergersi nell'atmosfera.", dettagli: "Mercatino piccolo ma scenografico, proprio di fronte al Duomo." },
             { giorno: 1, ora: "20:00 - 22:00", attivita: "Cena: Beim Czaak (Wiener Schnitzel)", luogo: "Beim Czaak, Am Heumarkt 10, 1030 Wien", focus: "Cibo", note: "Uno dei migliori Beisl per il Schnitzel autentico (di vitello). Prenotazione consigliata.", dettagli: "Ritorno in alloggio dopo cena." },
+            // Giorno 2
             { giorno: 2, ora: "10:00 - 14:00", attivita: "Palazzo di Schönbrunn", luogo: "Schönbrunner Schloßstraße 47, 1130 Wien", focus: "Cultura", note: "Visita del 'Grand Tour' e dei giardini. Durata stimata: 4h.", dettagli: "Arrivo con la U4. Visita degli appartamenti di Sissi e Francesco Giuseppe. Pranzo veloce al mercatino del palazzo." },
             { giorno: 2, ora: "15:00 - 17:30", attivita: "Belvedere e Klimt", luogo: "Prinz-Eugen-Straße 27, 1030 Wien", focus: "Arte", note: "Visita al Belvedere Superiore per vedere 'Il Bacio' di Klimt. T.T. = 2.5h.", dettagli: "Fermata del tram D. Dopo la visita, breve passeggiata nei giardini barocchi." },
             { giorno: 2, ora: "17:30 - 19:00", attivita: "Mercatino di Maria-Theresien Platz", luogo: "Maria-Theresien-Platz, 1010 Wien", focus: "Shopping/Bevande", note: "Mercatino tra i due grandi musei (Naturhistorisches e Kunsthistorisches).", dettagli: "Ideale per foto serali scenografiche." },
             { giorno: 2, ora: "20:00 - 22:00", attivita: "Cena: Anzengruber (Gulasch)", luogo: "Anzengruber, Schleifmühlgasse 19, 1040 Wien", focus: "Cibo", note: "Famoso per il Gulasch e l'atmosfera autentica (Wieden, 1040).", dettagli: "Locale piccolo e molto tradizionale." },
+            // Giorno 3
             { giorno: 3, ora: "9:30 - 12:30", attivita: "Hofburg e Biblioteca Nazionale", luogo: "Michaelerplatz, 1010 Wien", focus: "Cultura/Architettura", note: "Visita agli appartamenti e al Museo di Sissi. Imperdibile la Sala di Stato della Biblioteca.", dettagli: "La biblioteca è considerata una delle più belle del mondo." },
             { giorno: 3, ora: "13:00 - 14:00", attivita: "Pranzo: Naschmarkt", luogo: "Wienzeile, 1060 Wien", focus: "Cibo", note: "Pranzo veloce al mercato (es. Bosna dal Balkan Grill).", dettagli: "Mercato eclettico di cibo e antiquariato." },
             { giorno: 3, ora: "15:00 - 17:00", attivita: "Hundertwasserhaus e Villaggio", luogo: "Kegelgasse 34-38, 1030 Wien", focus: "Architettura", note: "Il palazzo colorato e asimmetrico come manifesto anti-linea retta.", dettagli: "Non visitabile all'interno, ma il villaggio di fronte è un bel mercatino souvenir." },
             { giorno: 3, ora: "17:30 - 20:00", attivita: "Rathausplatz (Il Gigante)", luogo: "Rathausplatz, 1010 Wien", focus: "Shopping/Bevande", note: "Il mercatino più grande e famoso. Molto affollato ma spettacolare per le luci.", dettagli: "Nonostante la folla, l'ambientazione nel parco del Municipio è imperdibile." },
             { giorno: 3, ora: "20:30 - 22:30", attivita: "Cena: Mercatino di Spittelberg", luogo: "Spittelberggasse, 1070 Wien", focus: "Cibo/Atmosfera", note: "Cena nel mercatino più intimo e romantico, nascosto tra i vicoli del 1070.", dettagli: "Perfetto per chiudere la serata con calma." },
+            // Giorno 4
             { giorno: 4, ora: "9:30 - 11:30", attivita: "Prater e Riesenrad", luogo: "Prater, 1020 Wien", focus: "Attrazione", note: "Il parco divertimenti storico. Giro sulla Ruota Panoramica (Riesenrad).", dettagli: "La ruota panoramica offre una vista a 360 gradi sulla città." },
             { giorno: 4, ora: "11:30 - 13:00", attivita: "Pranzo: Käsekrainer al chiosco", luogo: "Bitzinger Würstelstand, Prater, 1020 Wien", focus: "Cibo", note: "Ultimo pranzo veloce: Käsekrainer (salsiccia ripiena di formaggio).", dettagli: "Uno dei chioschi di salsicce più famosi, situato vicino all'entrata del Prater." },
             { giorno: 4, ora: "14:00 - 17:00", attivita: "Transfer e Partenza", luogo: "Vienna Hauptbahnhof / Aeroporto", focus: "Trasporto", note: "Trasferimento in treno (S7 o CAT) all'aeroporto.", dettagli: "Assicurati di lasciare tempo sufficiente per l'aeroporto (VIE)." }
@@ -264,7 +272,9 @@
             { categoria: "Spese Varie & Souvenir", costo: 150.00, icon: 'shopping-bag' }
         ];
 
-        // ... (FUNZIONI DI UTILITY E SPA INVARIATE) ...
+        // ===========================================
+        // FUNZIONI DI LOGICA E RENDERING
+        // ===========================================
 
         function getIconNameByFocus(focus) {
             const focusMap = {
@@ -389,7 +399,7 @@
         }
 
         function renderFoodShowcases() {
-            // CORREZIONE: Mappatura corretta tra Chiave dati e ID HTML semplificato
+            // Mappatura corretta per risolvere il bug ID
             const idMap = {
                 "Piatti tipici": "showcase-piatti",
                 "Le merende reali": "showcase-merende",
