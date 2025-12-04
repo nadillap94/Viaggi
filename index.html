@@ -100,9 +100,7 @@
         }
     </style>
 </head>
-<body onload="showPage('page-PANORAMICA')">
-
-    <header class="header-bg shadow-lg fixed top-0 w-full z-50 h-12 md:h-14 fixed-element">
+<body> <header class="header-bg shadow-lg fixed top-0 w-full z-50 h-12 md:h-14 fixed-element">
         <div class="max-w-6xl mx-auto px-4 py-2 md:py-3">
             <h1 class="text-lg md:text-xl font-extrabold tracking-wider text-center pt-0.5">GUIDA VIENNA: L'EFFICACIA IMPERIALE</h1>
         </div>
@@ -255,4 +253,337 @@
         // Dati Cibo (Pianoviaggio Vienna v2 - Cibo.csv)
         const newFoodData = {
             "Piatti tipici": [
-                { titolo: "Käsekrainer / Würstel", descrizione: "Il re dello street food viennese. Salsiccia di maiale affumicata ripiena di formaggio fuso. Veloce, caldo e low-cost.", indirizzi: "Bitzinger Würstelstand (vicino Praterstern). Perfetto per un pranzo veloce o spuntino. Costo: ≈ 5-6€.", sug
+                { titolo: "Käsekrainer / Würstel", descrizione: "Il re dello street food viennese. Salsiccia di maiale affumicata ripiena di formaggio fuso. Veloce, caldo e low-cost.", indirizzi: "Bitzinger Würstelstand (vicino Praterstern). Perfetto per un pranzo veloce o spuntino. Costo: ≈ 5-6€.", suggerito: "Giorno 1: 12:15 - Pranzo di Arrivo." },
+                { titolo: "Wiener Schnitzel", descrizione: "La celebre cotoletta viennese. Scegli quella di maiale (Schwein) nei Beisl per risparmiare rispetto a quella di vitello (Kalb).", indirizzi: "Beisl Tradizionale / Zum Friedensrichter (Leopoldstadt) per un'opzione vicina e autentica. Costo: $12 - $18 (maiale).", suggerito: "Giorno 1: 20:30 - Cena Post-Concerto." },
+                { titolo: "Gulasch", descrizione: "Stufato di manzo in salsa di paprika. Perfetto per riscaldarsi.", indirizzi: "Beisl autentico o ristorante come Anzengruber. Costo: $15 - $22.", suggerito: "Giorno 2: 20:00 - Cena (dopo il tour del Castello e Belvedere)." },
+                { titolo: "Tafelspitz", descrizione: "Bollito di manzo in brodo con contorni. Piatto preferito di Franz Joseph.", indirizzi: "Ristoranti tradizionali di alta qualità (es. Plachutta). Costo: $25 - $35.", suggerito: "Giorno 3: 20:00 - Cena di Arrivederci (come pasto caldo e tradizionale)." },
+                { titolo: "Langos / Schupfnudeln", descrizione: "Piatto ungherese fritto (Langos) o gnocchetti di patate (Schupfnudeln) dai mercatini. Low-cost.", indirizzi: "Mercatini di Natale (Rathausplatz, Schönbrunn). Costo: $5 - $8.", suggerito: "Giorno 2: 14:00 - Pranzo veloce al Mercatino di Schönbrunn." }
+            ],
+            "Drink": [
+                { titolo: "Glühwein / Punsch", descrizione: "Vino caldo e speziato o punch (spesso con brandy o rum). Indispensabile per affrontare i mercatini. Ideale per riscaldarsi. Costo: $8 - $14.", indirizzi: "Mercatini di Natale (qualsiasi chiosco).", suggerito: "Giorno 3: 20:00 - Cena di Arrivederci (come pasto caldo e tradizionale)." }
+            ],
+            "Le merende reali": [
+                { titolo: "Pausa Café/Atmosfera", descrizione: "Non un piatto, ma l'esperienza essenziale del caffè viennese in un ambiente storico.", indirizzi: "Café Central (Interni maestosi, low-cost se si ordina solo una bevanda). Costo: ≈ 5€ per un Melange.", suggerito: "Giorno 2: 17:30 - Pausa Calda (dopo la Biblioteca Nazionale)." },
+                { titolo: "Apfelstrudel", descrizione: "Sfoglia sottile ripiena di mele, uvetta e cannella, servita calda (spesso con salsa alla vaniglia).", indirizzi: "Mercatini di Natale o qualsiasi Konditorei (pasticceria).", suggerito: "Giorno 3: 16:00 - Merenda Calda durante il Mercatino di Rathausplatz." },
+                { titolo: "Sachertorte", descrizione: "L'iconica torta al cioccolato e albicocca. Ottima per salutare Vienna.", indirizzi: "Aida (Catena Rosa, per un'opzione low-cost e diffusa) o Konditorei locale. Costo: ≈ 4-7€ a fetta.", suggerito: "Giorno 4: 12:00 - Ultima Merenda/Colazione prima del transfer per l'aeroporto." },
+                { titolo: "Mozartkugel / Manner Wafers", descrizione: "Le famose palle di cioccolato al pistacchio (Mozartkugel) e i wafer alla nocciola (Manner, prodotto a Vienna).", indirizzi: "Supermercati (Billa, Spar) o negozi Manner. Evita i negozi di souvenir troppo cari.", suggerito: "Giorno 4: 10:00 - Acquisto Souvenir / Snack." }
+            ]
+        };
+
+        // Dati Culturali (Pianoviaggio Vienna v2 - Cultura.csv)
+        const culturalMap = {
+            "Hundertwasserhaus": { descrizione: "Non è solo un edificio, è un manifesto contro la 'dittatura della linea retta'! L'artista Friedensreich Hundertwasser, un ribelle del design, l'ha concepita come un'oasi ecologica e umana. Ogni inquilino aveva il diritto di dipingere la facciata intorno alla propria finestra a piacimento. È un'esplosione di colori, alberi che spuntano dai balconi e pavimenti irregolari, un inno alla libertà e all'armonia con la natura, lontano dalla seriosità imperiale.", curiosita: "Il Diritto della Finestra: Hundertwasser credeva che ogni persona avesse il diritto di 'disegnare' l'area della parete attorno alla propria finestra, fin dove arrivava il suo braccio. Il suo rifiuto dell'angolo retto era quasi filosofico, vedendolo come qualcosa di 'immorale' e innaturale." },
+            "Castello del Belvedere": { descrizione: "Un capolavoro barocco commissionato dal Principe Eugenio di Savoia, un genio militare che sconfisse i Turchi. Non fu mai pensato come residenza principale, ma come 'giardino di delizie' e palazzo estivo, una celebrazione della sua gloria. Oggi, la sua Galleria Superiore custodisce il tesoro dell'Art Nouveau austriaco, con l'oro e l'erotismo dei capolavori di Gustav Klimt.", curiosita: "Il Giardino Segreto del Barocco: I giardini a terrazze, che collegano il Belvedere Superiore e Inferiore, sono un perfetto esempio di design barocco. Le sculture e le fontane creano un complesso simbolico che riflette l'ordine e la ragione dell'Illuminismo, in contrasto con la natura selvaggia." },
+            "Duomo di Santo Stefano": { descrizione: "Conosciuta come Stephansdom, è il cuore spirituale e geografico di Vienna. Le sue guglie gotiche dominano lo skyline. Il tetto piastrellato, con i suoi colori vivaci, è un'opera d'arte unica. È sopravvissuta a guerre e incendi, diventando un simbolo della resilienza e dell'identità austriaca.", curiosita: "La Porta del Gigante: La porta principale prende il nome dal femore di un mammut (o di un gigante, secondo la leggenda) appeso lì per secoli. È il luogo dove la leggenda e la storia si incontrano, proprio all'ingresso del Duomo." },
+            "Hofburg Palace": { descrizione: "Per oltre 600 anni, questo è stato il centro nevralgico dell'Impero Asburgico, la residenza invernale e il luogo dove si prendevano le decisioni che plasmavano l'Europa. È un complesso di edifici che abbraccia stili dall'architettura gotica al neoclassicismo, testimoniando la continua crescita e il potere della dinastia.", curiosita: "Lo Stemma Nascosto di Sissi: Vicino agli appartamenti imperiali (Kaiserappartements), ci sono dettagli nascosti che riflettono la personalità ribelle di Elisabetta (Sissi), che odiava l'etichetta di corte. I suoi appartamenti erano un rifugio di privacy e malinconia, un contrasto con la grandiosità esterna." },
+            "Rathausplatz": { descrizione: "La tradizione dei mercatini risale al Medioevo. Oggi è il più grande e spettacolare, con le luci che avvolgono il maestoso Municipio in un'atmosfera da fiaba.", curiosita: "Il Municipio Protettore: La facciata gotica del Municipio (Rathaus) è stata progettata per sovrastare il potere imperiale di Hofburg. Durante il periodo natalizio, le luci sembrano trasformare l'architettura in un castello incantato, quasi come se proteggesse la gioia popolare dagli sguardi austeri dell'Impero." },
+            "Castello di Schönbrunn": { descrizione: "La residenza estiva degli Asburgo e il luogo preferito di Sissi. Un capolavoro barocco da esplorare dal Grand Tour agli estesi giardini.", curiosita: "Römische Ruine (Schönbrunn): Non sono affatto rovine romane autentiche! Furono costruite come un capriccio di Maria Teresa, un elemento scenografico romantico per il parco, che simulava un pezzo d'antichità, molto di moda nel Barocco." }
+        };
+
+        // Dati Budget (Mantenuti dalla versione precedente)
+        const budgetData = [
+            { categoria: "Alloggio (3 notti)", costo: 243.00, icon: 'bed' },
+            { categoria: "Ingressi & Biglietti (Cultura)", costo: 132.00, icon: 'ticket' },
+            { categoria: "Trasporti (Abbonamenti e Transfer)", costo: 69.40, icon: 'train' },
+            { categoria: "Cibo & Bevande (Stimato per 4 giorni)", costo: 320.00, icon: 'sandwich' },
+            { categoria: "Spese Varie & Souvenir", costo: 150.00, icon: 'shopping-bag' }
+        ];
+
+        let itineraryData = []; // Array finale popolato da initializeData
+
+        // ===========================================
+        // 2. LOGICA DI INIZIALIZZAZIONE E RENDERING
+        // ===========================================
+        
+        function getIconNameByFocus(focus) {
+            // Logica per determinare l'icona in base all'attività (invariata)
+            const activity = focus.toLowerCase();
+            if (activity.includes('volo') || activity.includes('transfer') || activity.includes('bus')) return 'train';
+            if (activity.includes('pranzo') || activity.includes('cena') || activity.includes('colazione') || activity.includes('cibo') || activity.includes('würstel')) return 'coffee';
+            if (activity.includes('mercatino') || activity.includes('acquisti') || activity.includes('shopping')) return 'shopping-cart';
+            if (activity.includes('castello') || activity.includes('hofburg') || activity.includes('schönbrunn') || activity.includes('duomo') || activity.includes('biblioteca') || activity.includes('chiesa')) return 'castle';
+            if (activity.includes('belvedere') || activity.includes('museum') || activity.includes('arte')) return 'brush';
+            if (activity.includes('hundertwasser')) return 'building-2';
+            
+            return 'circle-dot';
+        }
+
+        /**
+         * Funzione per creare il link di Google Maps
+         * @param {string} location La stringa del luogo da cercare su Google Maps.
+         * @returns {string} Il tag <a> HTML per il link.
+         */
+        function createMapsLink(location) {
+            // Utilizziamo i template literal (backtick `) per interpolare correttamente la variabile.
+            const encodedLocation = encodeURIComponent(location.replace(/\s+/g, ' ').trim());
+            // Link corretto a Google Maps per ottenere le indicazioni verso una destinazione.
+            return `<a href="http://maps.google.com/maps?daddr=${encodedLocation}" target="_blank" class="text-blue-600 hover:text-blue-800 underline font-semibold">Ottieni indicazioni su Google Maps</a>`;
+        }
+
+        // Funzione per combinare i dati grezzi e arricchirli
+        function initializeData() {
+            itineraryData = rawItineraryData.map(item => {
+                // 1. Estrai il numero del giorno e il nome completo
+                const match = item.giorno.match(/Giorno (\d+)/);
+                const giornoNumber = match ? parseInt(match[1]) : 0;
+                
+                // 2. Determina il focus
+                const focus = getIconNameByFocus(item.attivita);
+                
+                // 3. Arricchisci i dettagli con le informazioni culturali
+                let culturalInfo = '';
+                
+                const culturalKeys = Object.keys(culturalMap);
+                for (const key of culturalKeys) {
+                    // Controlla se l'attività o il luogo contengono la chiave culturale
+                    if (item.attivita.includes(key) || item.luogo.includes(key)) {
+                        const cultData = culturalMap[key];
+                        culturalInfo += `<p class="mt-3 font-semibold text-gray-800 border-t pt-2 border-gray-100">Contesto Storico (${key}):</p>`;
+                        culturalInfo += `<p class="text-gray-700">${cultData.descrizione}</p>`;
+                        culturalInfo += `<p class="italic text-gray-600 mt-1"><span class="accent-color">Curiosità:</span> ${cultData.curiosita}</p>`;
+                        break; // Trovato il luogo, interrompi la ricerca
+                    }
+                }
+
+                // 4. Genera il link di Google Maps
+                const mapsLink = createMapsLink(item.luogo);
+                const arrivalInfo = `
+                    <p class="mt-3 font-semibold text-gray-800 border-t pt-2 border-gray-100">Come arrivare:</p>
+                    <p class="text-gray-700">${mapsLink}</p>
+                `;
+
+                // 5. Combina tutti i dettagli in un unico campo
+                const combinedDettagli = `
+                    <p class="font-semibold text-gray-800"><span class="accent-color">Note Logistiche:</span> ${item.note}</p>
+                    <p class="text-gray-700 mt-2"><span class="font-semibold">Contesto & Focus:</span> ${item.focus_raw}</p>
+                    ${culturalInfo}
+                    ${arrivalInfo} `;
+
+                return {
+                    giorno: giornoNumber,
+                    ora: item.ora,
+                    attivita: item.attivita,
+                    luogo: item.luogo,
+                    focus: focus,
+                    note: item.note,
+                    dettagli: combinedDettagli
+                };
+            });
+        }
+
+        window.toggleDetails = function(id) {
+            const element = document.getElementById(id);
+            const button = event.target;
+            
+            if (element.classList.contains('hidden')) {
+                element.classList.remove('hidden');
+                button.textContent = 'Nascondi Dettagli';
+            } else {
+                element.classList.add('hidden');
+                button.textContent = 'Mostra Dettagli';
+            }
+        };
+
+        const navButtons = document.querySelectorAll('.nav-button');
+        const pages = document.querySelectorAll('.tab-content');
+        
+        window.showPage = function(pageId) {
+            pages.forEach(page => { page.style.display = 'none'; });
+            const targetPage = document.getElementById(pageId);
+            if (targetPage) { targetPage.style.display = 'block'; }
+
+            navButtons.forEach(button => { button.classList.remove('active-tab'); });
+            const activeButton = document.querySelector(`button[data-page="${pageId}"]`);
+            if (activeButton) { activeButton.classList.add('active-tab'); }
+        }
+
+        function renderTimeline(day, containerId) {
+            const container = document.getElementById(containerId);
+            const dailyData = itineraryData.filter(item => item.giorno === day);
+            let htmlTimeline = '';
+
+            dailyData.forEach((item, index) => {
+                const iconName = item.focus; 
+                const uniqueId = `${containerId}-details-${index}`;
+                
+                htmlTimeline += `
+                    <div class="timeline-item relative py-4">
+                        <div class="timeline-point absolute -left-0.5 top-6 w-3 h-3 rounded-full z-10"></div>
+                        <div class="bg-white p-4 ml-4 rounded-lg shadow-md hover:shadow-xl transition duration-300 transform hover:scale-[1.01]">
+                            <div class="flex items-start mb-2 justify-between">
+                                <div class="flex items-center">
+                                    <i data-lucide="${iconName}" class="w-5 h-5 mr-3 accent-color shrink-0"></i>
+                                    <span class="font-bold text-lg accent-color">${item.attivita}</span>
+                                </div>
+                                 <span class="text-sm font-semibold text-gray-500">${item.ora}</span>
+                            </div>
+                            <p class="text-sm text-gray-700 mb-2 pl-8">📍 ${item.luogo}</p>
+                            
+                            <button 
+                                class="details-btn text-xs font-semibold text-white py-1 px-3 rounded-full mt-2 no-print"
+                                onclick="toggleDetails('${uniqueId}')"
+                            >
+                                Mostra Dettagli
+                            </button>
+                            <div id="${uniqueId}" class="hidden mt-3 pt-3 text-sm">
+                                ${item.dettagli}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+
+            container.innerHTML = htmlTimeline;
+            // lucide.createIcons() è chiamato in DOMContentLoaded
+        }
+
+        function renderSummary() {
+            const summaryContainer = document.getElementById('summary-container');
+            let htmlSummary = '';
+            let lastDay = 0;
+
+            itineraryData.forEach(item => {
+                if (item.giorno !== lastDay) {
+                    htmlSummary += `
+                        <h3 class="text-xl font-bold mt-6 pb-1 border-b-2 border-gray-300 accent-color">
+                            Giorno ${item.giorno}
+                        </h3>
+                        <ul class="list-disc list-inside space-y-1 ml-4">
+                    `;
+                    lastDay = item.giorno;
+                }
+                
+                htmlSummary += `
+                    <li class="text-gray-700">
+                        <span class="font-semibold">${item.ora}:</span> ${item.attivita} (<span class="italic">${item.luogo}</span>)
+                    </li>
+                `;
+
+                if (itineraryData.length === itineraryData.indexOf(item) + 1 || itineraryData[itineraryData.indexOf(item) + 1].giorno !== lastDay) {
+                    htmlSummary += `</ul>`;
+                }
+            });
+
+            summaryContainer.innerHTML = htmlSummary;
+        }
+
+        function renderFoodShowcases() {
+            const containerMap = {
+                "Piatti tipici": "showcase-piatti",
+                "Le merende reali": "showcase-merende",
+                "Drink": "showcase-drink"
+            };
+
+            for (const category in newFoodData) {
+                const id = containerMap[category];
+                const container = document.getElementById(id);
+                let htmlContent = '';
+
+                newFoodData[category].forEach(item => {
+                    htmlContent += `
+                        <div class="bg-gray-50 p-3 rounded-lg mt-3 border border-gray-200">
+                            <h4 class="font-bold text-lg">${item.titolo}</h4>
+                            <p class="text-sm text-gray-700 mt-1">${item.descrizione}</p>
+                            <p class="text-xs text-gray-500 mt-2 italic border-t pt-2">
+                                📍 Dove: ${item.indirizzi}
+                                <br>
+                                🗓️ Suggerimento: ${item.suggerito}
+                            </p>
+                        </div>
+                    `;
+                });
+                if (container) {
+                     // Solo append, l'header h3 è già nell'HTML statico
+                     container.innerHTML += htmlContent;
+                }
+            }
+        }
+
+        function renderBudgetAndStats() {
+            const costs = budgetData.map(item => item.costo);
+            const totalCost = costs.reduce((sum, cost) => sum + cost, 0);
+            
+            document.getElementById('total-budget-display').textContent = `€ ${totalCost.toFixed(2)}`;
+            const kpiContainer = document.getElementById('kpi-summary');
+            let htmlKpi = '';
+            
+            budgetData.forEach(item => {
+                 htmlKpi += `
+                    <div class="flex items-center">
+                        <i data-lucide="${item.icon}" class="w-4 h-4 mr-2 text-gray-700"></i>
+                        <span class="font-semibold">${item.categoria}:</span>
+                        <span class="ml-auto font-bold">${item.costo.toFixed(2)} €</span>
+                    </div>
+                `;
+            });
+            kpiContainer.innerHTML = htmlKpi;
+            
+            if (window.matchMedia('print').matches) return;
+
+            const categories = budgetData.map(item => item.categoria.split('(')[0].trim());
+            const imperialColors = ['#8C0000', '#C8AA50', '#A52A2A', '#D4AF37', '#B22222'];
+            
+            const ctx = document.getElementById('budgetChart').getContext('2d');
+            
+            // Distruggi e ricrea il grafico per evitare errori in caso di hot-reloading
+            if (window.budgetChartInstance) {
+                window.budgetChartInstance.destroy();
+            }
+
+            window.budgetChartInstance = new Chart(ctx, {
+                type: 'pie',
+                data: {
+                    labels: categories,
+                    datasets: [{
+                        data: costs,
+                        backgroundColor: imperialColors,
+                        borderColor: 'white',
+                        borderWidth: 2,
+                        hoverOffset: 8
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'right' },
+                        title: {
+                            display: true,
+                            text: `Costo Totale Stimato: € ${totalCost.toFixed(2)}`,
+                            font: { size: 16, family: 'Georgia, serif' },
+                            color: getComputedStyle(document.documentElement).getPropertyValue('--color-primary')
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.label || '';
+                                    if (label) { label += ': '; }
+                                    label += new Intl.NumberFormat('it-IT', { style: 'currency', currency: 'EUR' }).format(context.raw);
+                                    return label;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            initializeData();
+            renderSummary();
+            renderTimeline(1, 'timeline-GIORNO1');
+            renderTimeline(2, 'timeline-GIORNO2');
+            renderTimeline(3, 'timeline-GIORNO3');
+            renderTimeline(4, 'timeline-GIORNO4');
+            renderFoodShowcases();
+            renderBudgetAndStats();
+            
+            // CHIAMATA ESSENZIALE PER RENDERE TUTTE LE ICONE DOPO IL CARICAMENTO DEI DATI
+            lucide.createIcons(); 
+            
+            // Mostra la pagina di default solo dopo che tutti i dati sono stati renderizzati
+            showPage('page-PANORAMICA');
+        });
+    </script>
+</body>
+</html>
