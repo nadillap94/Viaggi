@@ -38,6 +38,7 @@
         }
         .nav-button {
             transition: all 0.2s;
+            flex-shrink: 0; /* Impedisce che i bottoni si schiaccino su mobile */
         }
         .nav-button:hover {
             background-color: #6C0000;
@@ -47,7 +48,6 @@
             font-weight: bold;
             border-bottom: 3px solid var(--color-secondary);
         }
-        /* NUOVA CLASSE PER LE INTRO */
         .intro-accent {
             color: var(--color-secondary); /* Oro Antico */
             font-weight: bold; /* Grassetto */
@@ -102,15 +102,15 @@
 </head>
 <body onload="showPage('page-PANORAMICA')">
 
-    <header class="header-bg shadow-lg fixed top-0 w-full z-50 h-14 fixed-element">
-        <div class="max-w-6xl mx-auto px-4 py-3">
-            <h1 class="text-xl font-extrabold tracking-wider text-center pt-0.5">GUIDA VIENNA: L'EFFICACIA IMPERIALE</h1>
+    <header class="header-bg shadow-lg fixed top-0 w-full z-50 h-12 md:h-14 fixed-element">
+        <div class="max-w-6xl mx-auto px-4 py-2 md:py-3">
+            <h1 class="text-lg md:text-xl font-extrabold tracking-wider text-center pt-0.5">GUIDA VIENNA: L'EFFICACIA IMPERIALE</h1>
         </div>
     </header>
 
-    <nav class="nav-bg fixed top-14 w-full z-40 shadow-xl h-10 fixed-element">
+    <nav class="nav-bg fixed top-12 md:top-14 w-full z-40 shadow-xl h-10 fixed-element">
         <div class="max-w-6xl mx-auto px-4">
-            <div class="flex flex-wrap justify-center gap-1 text-sm md:text-base pt-1">
+            <div class="flex overflow-x-auto whitespace-nowrap justify-start md:justify-center gap-1 text-sm md:text-base pt-1">
                 <button onclick="showPage('page-PANORAMICA')" class="nav-button px-3 py-0.5 text-white" data-page="page-PANORAMICA">PANORAMICA</button>
                 <button onclick="showPage('page-GIORNO1')" class="nav-button px-3 py-0.5 text-white" data-page="page-GIORNO1">GIORNO 1: VENERDÌ 5</button>
                 <button onclick="showPage('page-GIORNO2')" class="nav-button px-3 py-0.5 text-white" data-page="page-GIORNO2">GIORNO 2: SABATO 6</button>
@@ -122,7 +122,7 @@
         </div>
     </nav>
 
-    <main class="max-w-6xl mx-auto p-4 sm:p-6 lg:p-8 pt-24">
+    <main class="max-w-6xl mx-auto p-4 sm:p-6 lg:p-8 pt-20 md:pt-24">
 
         <section id="page-PANORAMICA" class="tab-content">
             <h2 class="text-3xl font-bold mb-6 pb-2 border-b border-accent accent-color flex items-center">
@@ -138,7 +138,7 @@
                 <i data-lucide="calendar-check" class="mr-2 text-2xl"></i> Giorno 1: Venerdì 5 - Arrivo e Centro Storico
             </h2>
             <p class="text-lg mb-6 bg-white p-4 rounded-lg shadow-md border-l-4 border-accent">
-                <span class="intro-accent">Intro:</span> Il focus è sull'assestamento logistico e l'immediata immersione nel cuore imperiale di Vienna (1010), chiudendo con il primo mercatino.
+                <span class="intro-accent">Il focus è sull'assestamento logistico e l'immediata immersione nel cuore imperiale di Vienna (1010), chiudendo con il primo mercatino.</span> 
             </p>
             <div id="timeline-GIORNO1" class="relative"></div>
         </section>
@@ -148,7 +148,7 @@
                 <i data-lucide="calendar-check" class="mr-2 text-2xl"></i> Giorno 2: Sabato 6 - Grand Tour di Sfarzo
             </h2>
             <p class="text-lg mb-6 bg-white p-4 rounded-lg shadow-md border-l-4 border-accent">
-                <span class="intro-accent">Intro:</span> Giorno dedicato alle due principali residenze imperiali (Schönbrunn e Belvedere) e ai mercatini più maestosi.
+                <span class="intro-accent">Giorno dedicato alle due principali residenze imperiali (Schönbrunn e Belvedere) e ai mercatini più maestosi.</span> 
             </p>
             <div id="timeline-GIORNO2" class="relative"></div>
         </section>
@@ -158,7 +158,7 @@
                 <i data-lucide="calendar-check" class="mr-2 text-2xl"></i> Giorno 3: Domenica 7 - Arte, Follia e Intimità
             </h2>
             <p class="text-lg mb-6 bg-white p-4 rounded-lg shadow-md border-l-4 border-accent">
-                <span class="intro-accent">Intro:</span> Un mix tra la grandezza dell'Hofburg, la modernità stravagante di Hundertwasser e la calma del mercatino di Spittelberg.
+                <span class="intro-accent"> Un mix tra la grandezza dell'Hofburg, la modernità stravagante di Hundertwasser e la calma del mercatino di Spittelberg.</span>
             </p>
             <div id="timeline-GIORNO3" class="relative"></div>
         </section>
@@ -168,7 +168,7 @@
                 <i data-lucide="calendar-check" class="mr-2 text-2xl"></i> Giorno 4: Lunedì 8 - Saluti e Partenza
             </h2>
             <p class="text-lg mb-6 bg-white p-4 rounded-lg shadow-md border-l-4 border-accent">
-                <span class="intro-accent">Intro:</span> Ultimo giorno dedicato al famoso Prater per un tocco finale di nostalgia prima del transfer.
+                <span class="intro-accent">Ultimo giorno dedicato al famoso Prater per un tocco finale di nostalgia prima del transfer.</span> 
             </p>
             <div id="timeline-GIORNO4" class="relative"></div>
         </section>
@@ -219,27 +219,22 @@
         lucide.createIcons();
 
         // ===========================================
-        // DATI
+        // DATI (Invariati)
         // ===========================================
-
         const itineraryData = [
-            // Giorno 1
             { giorno: 1, ora: "09:00 - 14:00", attivita: "Viaggio, Transfer, Check-in, Pranzo", luogo: "Leopoldstadt (2° distretto)", focus: "Trasporto", note: "Pranzo Low-Cost: Sfrutta un piccolo Imbiss in zona alloggio (1020).", dettagli: "Gestione logistica del primo giorno. Acquisto dell'abbonamento 72h per i mezzi pubblici (se necessario)." },
             { giorno: 1, ora: "14:00 - 17:00", attivita: "Centro Storico (1010): Duomo e Passeggiata", luogo: "Stephansdom, Stephansplatz 3, 1010 Wien", focus: "Passeggiata/Architettura", note: "La Cattedrale di Santo Stefano è il simbolo gotico della città. Focus fotografico.", dettagli: "Visita all'esterno e all'interno. Salita opzionale sulla torre sud per la vista panoramica sul centro." },
             { giorno: 1, ora: "17:00 - 18:00", attivita: "Mercatino Stephansplatz (1°)", luogo: "Stephansplatz, 1010 Wien", focus: "Shopping/Bevande", note: "Primo Glühwein per scaldarsi e immergersi nell'atmosfera.", dettagli: "Mercatino piccolo ma scenografico, proprio di fronte al Duomo." },
             { giorno: 1, ora: "20:00 - 22:00", attivita: "Cena: Beim Czaak (Wiener Schnitzel)", luogo: "Beim Czaak, Am Heumarkt 10, 1030 Wien", focus: "Cibo", note: "Uno dei migliori Beisl per il Schnitzel autentico (di vitello). Prenotazione consigliata.", dettagli: "Ritorno in alloggio dopo cena." },
-            // Giorno 2
             { giorno: 2, ora: "10:00 - 14:00", attivita: "Palazzo di Schönbrunn", luogo: "Schönbrunner Schloßstraße 47, 1130 Wien", focus: "Cultura", note: "Visita del 'Grand Tour' e dei giardini. Durata stimata: 4h.", dettagli: "Arrivo con la U4. Visita degli appartamenti di Sissi e Francesco Giuseppe. Pranzo veloce al mercatino del palazzo." },
             { giorno: 2, ora: "15:00 - 17:30", attivita: "Belvedere e Klimt", luogo: "Prinz-Eugen-Straße 27, 1030 Wien", focus: "Arte", note: "Visita al Belvedere Superiore per vedere 'Il Bacio' di Klimt. T.T. = 2.5h.", dettagli: "Fermata del tram D. Dopo la visita, breve passeggiata nei giardini barocchi." },
             { giorno: 2, ora: "17:30 - 19:00", attivita: "Mercatino di Maria-Theresien Platz", luogo: "Maria-Theresien-Platz, 1010 Wien", focus: "Shopping/Bevande", note: "Mercatino tra i due grandi musei (Naturhistorisches e Kunsthistorisches).", dettagli: "Ideale per foto serali scenografiche." },
             { giorno: 2, ora: "20:00 - 22:00", attivita: "Cena: Anzengruber (Gulasch)", luogo: "Anzengruber, Schleifmühlgasse 19, 1040 Wien", focus: "Cibo", note: "Famoso per il Gulasch e l'atmosfera autentica (Wieden, 1040).", dettagli: "Locale piccolo e molto tradizionale." },
-            // Giorno 3
             { giorno: 3, ora: "9:30 - 12:30", attivita: "Hofburg e Biblioteca Nazionale", luogo: "Michaelerplatz, 1010 Wien", focus: "Cultura/Architettura", note: "Visita agli appartamenti e al Museo di Sissi. Imperdibile la Sala di Stato della Biblioteca.", dettagli: "La biblioteca è considerata una delle più belle del mondo." },
             { giorno: 3, ora: "13:00 - 14:00", attivita: "Pranzo: Naschmarkt", luogo: "Wienzeile, 1060 Wien", focus: "Cibo", note: "Pranzo veloce al mercato (es. Bosna dal Balkan Grill).", dettagli: "Mercato eclettico di cibo e antiquariato." },
             { giorno: 3, ora: "15:00 - 17:00", attivita: "Hundertwasserhaus e Villaggio", luogo: "Kegelgasse 34-38, 1030 Wien", focus: "Architettura", note: "Il palazzo colorato e asimmetrico come manifesto anti-linea retta.", dettagli: "Non visitabile all'interno, ma il villaggio di fronte è un bel mercatino souvenir." },
             { giorno: 3, ora: "17:30 - 20:00", attivita: "Rathausplatz (Il Gigante)", luogo: "Rathausplatz, 1010 Wien", focus: "Shopping/Bevande", note: "Il mercatino più grande e famoso. Molto affollato ma spettacolare per le luci.", dettagli: "Nonostante la folla, l'ambientazione nel parco del Municipio è imperdibile." },
             { giorno: 3, ora: "20:30 - 22:30", attivita: "Cena: Mercatino di Spittelberg", luogo: "Spittelberggasse, 1070 Wien", focus: "Cibo/Atmosfera", note: "Cena nel mercatino più intimo e romantico, nascosto tra i vicoli del 1070.", dettagli: "Perfetto per chiudere la serata con calma." },
-            // Giorno 4
             { giorno: 4, ora: "9:30 - 11:30", attivita: "Prater e Riesenrad", luogo: "Prater, 1020 Wien", focus: "Attrazione", note: "Il parco divertimenti storico. Giro sulla Ruota Panoramica (Riesenrad).", dettagli: "La ruota panoramica offre una vista a 360 gradi sulla città." },
             { giorno: 4, ora: "11:30 - 13:00", attivita: "Pranzo: Käsekrainer al chiosco", luogo: "Bitzinger Würstelstand, Prater, 1020 Wien", focus: "Cibo", note: "Ultimo pranzo veloce: Käsekrainer (salsiccia ripiena di formaggio).", dettagli: "Uno dei chioschi di salsicce più famosi, situato vicino all'entrata del Prater." },
             { giorno: 4, ora: "14:00 - 17:00", attivita: "Transfer e Partenza", luogo: "Vienna Hauptbahnhof / Aeroporto", focus: "Trasporto", note: "Trasferimento in treno (S7 o CAT) all'aeroporto.", dettagli: "Assicurati di lasciare tempo sufficiente per l'aeroporto (VIE)." }
@@ -268,239 +263,4 @@
             { categoria: "Alloggio (3 notti)", costo: 243.00, icon: 'bed' },
             { categoria: "Ingressi & Biglietti (Cultura)", costo: 132.00, icon: 'ticket' },
             { categoria: "Trasporti (Abbonamenti e Transfer)", costo: 69.40, icon: 'train' },
-            { categoria: "Cibo & Bevande (Stimato per 4 giorni)", costo: 320.00, icon: 'sandwich' },
-            { categoria: "Spese Varie & Souvenir", costo: 150.00, icon: 'shopping-bag' }
-        ];
-
-        // ===========================================
-        // FUNZIONI DI LOGICA E RENDERING
-        // ===========================================
-
-        function getIconNameByFocus(focus) {
-            const focusMap = {
-                'Cultura': 'castle',
-                'Arte': 'brush',
-                'Passeggiata/Architettura': 'map-pin',
-                'Architettura': 'building-2',
-                'Trasporto': 'train',
-                'Shopping/Bevande': 'shopping-cart',
-                'Attrazione': 'sparkles',
-                'Cibo': 'coffee',
-                default: 'circle-dot'
-            };
-            const normalizedFocus = focus.split('/')[0].trim();
-            return focusMap[normalizedFocus] || focusMap.default;
-        }
-        
-        window.toggleDetails = function(id) {
-            const element = document.getElementById(id);
-            const button = event.target;
-            
-            if (element.classList.contains('hidden')) {
-                element.classList.remove('hidden');
-                button.textContent = 'Nascondi Dettagli';
-            } else {
-                element.classList.add('hidden');
-                button.textContent = 'Mostra Dettagli';
-            }
-        };
-
-        const navButtons = document.querySelectorAll('.nav-button');
-        const pages = document.querySelectorAll('.tab-content');
-        
-        window.showPage = function(pageId) {
-            pages.forEach(page => {
-                page.style.display = 'none';
-            });
-            const targetPage = document.getElementById(pageId);
-            if (targetPage) {
-                targetPage.style.display = 'block';
-            }
-
-            navButtons.forEach(button => {
-                button.classList.remove('active-tab');
-            });
-            const activeButton = document.querySelector(`button[data-page="${pageId}"]`);
-            if (activeButton) {
-                activeButton.classList.add('active-tab');
-            }
-        }
-
-        function renderTimeline(day, containerId) {
-            const container = document.getElementById(containerId);
-            const dailyData = itineraryData.filter(item => item.giorno === day);
-            let htmlTimeline = '';
-
-            dailyData.forEach((item, index) => {
-                const iconName = getIconNameByFocus(item.focus);
-                const uniqueId = `${containerId}-details-${index}`;
-                
-                htmlTimeline += `
-                    <div class="timeline-item relative py-4">
-                        <div class="timeline-point absolute -left-0.5 top-6 w-3 h-3 rounded-full z-10"></div>
-                        <div class="bg-white p-4 ml-4 rounded-lg shadow-md hover:shadow-xl transition duration-300 transform hover:scale-[1.01]">
-                            <div class="flex items-start mb-2 justify-between">
-                                <div class="flex items-center">
-                                    <i data-lucide="${iconName}" class="w-5 h-5 mr-3 accent-color shrink-0"></i>
-                                    <span class="font-bold text-lg accent-color">${item.attivita}</span>
-                                </div>
-                                 <span class="text-sm font-semibold text-gray-500">${item.ora}</span>
-                            </div>
-                            <p class="text-sm text-gray-700 mb-2 pl-8">📍 ${item.luogo}</p>
-                            
-                            <button 
-                                class="details-btn text-xs font-semibold text-white py-1 px-3 rounded-full mt-2 no-print"
-                                onclick="toggleDetails('${uniqueId}')"
-                            >
-                                Mostra Dettagli
-                            </button>
-                            <div id="${uniqueId}" class="hidden mt-3 pt-3 border-t border-gray-100 text-sm">
-                                <p class="font-semibold text-gray-800"><span class="accent-color">Focus:</span> ${item.focus}</p>
-                                <p class="italic text-gray-600"><span class="accent-color">Note:</span> ${item.note}</p>
-                                <p class="text-gray-700 mt-2"><span class="font-semibold">Descrizione Dettagliata:</span> ${item.dettagli}</p>
-                            </div>
-                        </div>
-                    </div>
-                `;
-            });
-
-            container.innerHTML = htmlTimeline;
-            lucide.createIcons();
-        }
-
-        function renderSummary() {
-            const summaryContainer = document.getElementById('summary-container');
-            let htmlSummary = '';
-            let lastDay = 0;
-
-            itineraryData.forEach(item => {
-                if (item.giorno !== lastDay) {
-                    htmlSummary += `
-                        <h3 class="text-xl font-bold mt-6 pb-1 border-b-2 border-gray-300 accent-color">
-                            Giorno ${item.giorno}
-                        </h3>
-                        <ul class="list-disc list-inside space-y-1 ml-4">
-                    `;
-                    lastDay = item.giorno;
-                }
-                
-                htmlSummary += `
-                    <li class="text-gray-700">
-                        <span class="font-semibold">${item.ora}:</span> ${item.attivita} (<span class="italic">${item.luogo}</span>)
-                    </li>
-                `;
-
-                if (itineraryData.length === itineraryData.indexOf(item) + 1 || itineraryData[itineraryData.indexOf(item) + 1].giorno !== lastDay) {
-                    htmlSummary += `</ul>`;
-                }
-            });
-
-            summaryContainer.innerHTML = htmlSummary;
-        }
-
-        function renderFoodShowcases() {
-            // Mappatura corretta per risolvere il bug ID
-            const idMap = {
-                "Piatti tipici": "showcase-piatti",
-                "Le merende reali": "showcase-merende",
-                "Drink": "showcase-drink"
-            };
-
-            for (const category in foodData) {
-                const id = idMap[category];
-                const container = document.getElementById(id);
-                let htmlContent = '';
-
-                foodData[category].forEach(item => {
-                    htmlContent += `
-                        <div class="bg-gray-50 p-3 rounded-lg mt-3 border border-gray-200">
-                            <h4 class="font-bold text-lg">${item.titolo}</h4>
-                            <p class="text-sm text-gray-700 mt-1">${item.descrizione}</p>
-                            <p class="text-xs text-gray-500 mt-2 italic border-t pt-2">📍 Indirizzi: ${item.indirizzi}</p>
-                        </div>
-                    `;
-                });
-                if (container) {
-                     container.innerHTML += htmlContent;
-                }
-            }
-        }
-
-        function renderBudgetAndStats() {
-            const costs = budgetData.map(item => item.costo);
-            const totalCost = costs.reduce((sum, cost) => sum + cost, 0);
-            
-            document.getElementById('total-budget-display').textContent = `€ ${totalCost.toFixed(2)}`;
-            const kpiContainer = document.getElementById('kpi-summary');
-            let htmlKpi = '';
-            
-            budgetData.forEach(item => {
-                 htmlKpi += `
-                    <div class="flex items-center">
-                        <i data-lucide="${item.icon}" class="w-4 h-4 mr-2 text-gray-700"></i>
-                        <span class="font-semibold">${item.categoria}:</span>
-                        <span class="ml-auto font-bold">${item.costo.toFixed(2)} €</span>
-                    </div>
-                `;
-            });
-            kpiContainer.innerHTML = htmlKpi;
-            lucide.createIcons();
-            
-            if (window.matchMedia('print').matches) return;
-
-            const categories = budgetData.map(item => item.categoria.split('(')[0].trim());
-            const imperialColors = ['#8C0000', '#C8AA50', '#A52A2A', '#D4AF37', '#B22222'];
-            
-            const ctx = document.getElementById('budgetChart').getContext('2d');
-            
-            const budgetChart = new Chart(ctx, {
-                type: 'pie',
-                data: {
-                    labels: categories,
-                    datasets: [{
-                        data: costs,
-                        backgroundColor: imperialColors,
-                        borderColor: 'white',
-                        borderWidth: 2,
-                        hoverOffset: 8
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: { position: 'right' },
-                        title: {
-                            display: true,
-                            text: `Costo Totale Stimato: € ${totalCost.toFixed(2)}`,
-                            font: { size: 16, family: 'Georgia, serif' },
-                            color: getComputedStyle(document.documentElement).getPropertyValue('--color-primary')
-                        },
-                        tooltip: {
-                            callbacks: {
-                                label: function(context) {
-                                    let label = context.label || '';
-                                    if (label) { label += ': '; }
-                                    label += new Intl.NumberFormat('it-IT', { style: 'currency', currency: 'EUR' }).format(context.raw);
-                                    return label;
-                                }
-                            }
-                        }
-                    }
-                }
-            });
-        }
-
-        document.addEventListener('DOMContentLoaded', () => {
-            renderSummary();
-            renderTimeline(1, 'timeline-GIORNO1');
-            renderTimeline(2, 'timeline-GIORNO2');
-            renderTimeline(3, 'timeline-GIORNO3');
-            renderTimeline(4, 'timeline-GIORNO4');
-            renderFoodShowcases();
-            renderBudgetAndStats();
-            showPage('page-PANORAMICA');
-        });
-    </script>
-</body>
-</html>
+            { categoria: "Cibo & Bevande (Stimato per 4 giorni)",
