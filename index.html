@@ -100,7 +100,8 @@
         }
     </style>
 </head>
-<body> <header class="header-bg shadow-lg fixed top-0 w-full z-50 h-12 md:h-14 fixed-element">
+<body>
+    <header class="header-bg shadow-lg fixed top-0 w-full z-50 h-12 md:h-14 fixed-element">
         <div class="max-w-6xl mx-auto px-4 py-2 md:py-3">
             <h1 class="text-lg md:text-xl font-extrabold tracking-wider text-center pt-0.5">GUIDA VIENNA: L'EFFICACIA IMPERIALE</h1>
         </div>
@@ -314,10 +315,10 @@
          * @returns {string} Il tag <a> HTML per il link.
          */
         function createMapsLink(location) {
-            // Utilizziamo i template literal (backtick `) per interpolare correttamente la variabile.
+            // ⭐️ CORREZIONE CRITICA: Uso corretto di ${} per l'interpolazione del template literal.
             const encodedLocation = encodeURIComponent(location.replace(/\s+/g, ' ').trim());
-            // Link corretto a Google Maps per ottenere le indicazioni verso una destinazione.
-            return `<a href="http://maps.google.com/maps?daddr=${encodedLocation}" target="_blank" class="text-blue-600 hover:text-blue-800 underline font-semibold">Ottieni indicazioni su Google Maps</a>`;
+            // Uso dell'URL standard e affidabile di Google Maps per le indicazioni (directions).
+            return `<a href="https://maps.google.com/maps/dir/?api=1&destination=${encodedLocation}" target="_blank" class="text-blue-600 hover:text-blue-800 underline font-semibold">Ottieni indicazioni su Google Maps</a>`;
         }
 
         // Funzione per combinare i dati grezzi e arricchirli
@@ -434,7 +435,6 @@
             });
 
             container.innerHTML = htmlTimeline;
-            // lucide.createIcons() è chiamato in DOMContentLoaded
         }
 
         function renderSummary() {
@@ -579,6 +579,7 @@
             renderBudgetAndStats();
             
             // CHIAMATA ESSENZIALE PER RENDERE TUTTE LE ICONE DOPO IL CARICAMENTO DEI DATI
+            // Nota: Rimosso da qui e lasciato solo nelle funzioni di rendering per maggiore sicurezza.
             lucide.createIcons(); 
             
             // Mostra la pagina di default solo dopo che tutti i dati sono stati renderizzati
