@@ -38,7 +38,7 @@
         }
         .nav-button {
             transition: all 0.2s;
-            flex-shrink: 0; /* Impedisce che i bottoni si schiaccino su mobile */
+            flex-shrink: 0; 
         }
         .nav-button:hover {
             background-color: #6C0000;
@@ -49,8 +49,8 @@
             border-bottom: 3px solid var(--color-secondary);
         }
         .intro-accent {
-            color: var(--color-secondary); /* Oro Antico */
-            font-weight: bold; /* Grassetto */
+            color: var(--color-secondary); 
+            font-weight: bold; 
         }
 
         /* VISUALIZZAZIONE TIMELINE */
@@ -74,7 +74,7 @@
         /* SEZIONI PAGINA */
         .tab-content {
             display: none; 
-            min-height: 80vh; 
+            min-height: 85vh; 
         }
         
         /* OTTIMIZZAZIONE PER LA STAMPA (PDF) */
@@ -122,7 +122,7 @@
         </div>
     </nav>
 
-    <main class="max-w-6xl mx-auto p-4 sm:p-6 lg:p-8 pt-20 md:pt-24">
+    <main class="max-w-6xl mx-auto p-4 sm:p-6 lg:p-8 pt-[88px] md:pt-24">
 
         <section id="page-PANORAMICA" class="tab-content">
             <h2 class="text-3xl font-bold mb-6 pb-2 border-b border-accent accent-color flex items-center">
@@ -135,12 +135,12 @@
 
         <section id="page-GIORNO1" class="tab-content">
             <h2 class="text-3xl font-bold mb-8 pb-2 border-b border-accent accent-color flex items-center">
-                <i data-lucide="calendar-check" class="mr-2 text-2xl"></i> Giorno 1: Venerdì 5 - Arrivo e Centro Storico
+                <i data-lucide="calendar-check" class="mr-2 text-2xl"></i> Giorno 1: Venerdì 5 - Arrivo, Arte & Concerto
             </h2>
             <p class="text-lg mb-6 bg-white p-4 rounded-lg shadow-md border-l-4 border-accent">
-                <span class="intro-accent">Intro:</span> Il focus è sull'assestamento logistico e l'immediata immersione nel cuore imperiale di Vienna (1010), chiudendo con il primo mercatino.
+                <span class="intro-accent">Intro:</span> Il focus è sull'arrivo a Vienna, l'immersione nell'arte (Hundertwasser e Hofburg) e l'esperienza del primo mercatino serale.
             </p>
-            <div id="timeline-GIORNO1" class="relative"></div>
+            <div id="timeline-GIORNO1" class="relative mt-4"></div>
         </section>
 
         <section id="page-GIORNO2" class="tab-content">
@@ -150,27 +150,27 @@
             <p class="text-lg mb-6 bg-white p-4 rounded-lg shadow-md border-l-4 border-accent">
                 <span class="intro-accent">Intro:</span> Giorno dedicato alle due principali residenze imperiali (Schönbrunn e Belvedere) e ai mercatini più maestosi.
             </p>
-            <div id="timeline-GIORNO2" class="relative"></div>
+            <div id="timeline-GIORNO2" class="relative mt-4"></div>
         </section>
         
         <section id="page-GIORNO3" class="tab-content">
             <h2 class="text-3xl font-bold mb-8 pb-2 border-b border-accent accent-color flex items-center">
-                <i data-lucide="calendar-check" class="mr-2 text-2xl"></i> Giorno 3: Domenica 7 - Arte, Follia e Intimità
+                <i data-lucide="calendar-check" class="mr-2 text-2xl"></i> Giorno 3: Domenica 7 - Arte, Follia e Mercatini
             </h2>
             <p class="text-lg mb-6 bg-white p-4 rounded-lg shadow-md border-l-4 border-accent">
-                <span class="intro-accent">Intro:</span> Un mix tra la grandezza dell'Hofburg, la modernità stravagante di Hundertwasser e la calma del mercatino di Spittelberg.
+                <span class="intro-accent">Intro:</span> Un mix tra la grandezza del centro (Duomo), il mercato eclettico (Naschmarkt) e il grandioso mercatino di Rathausplatz.
             </p>
-            <div id="timeline-GIORNO3" class="relative"></div>
+            <div id="timeline-GIORNO3" class="relative mt-4"></div>
         </section>
 
         <section id="page-GIORNO4" class="tab-content">
             <h2 class="text-3xl font-bold mb-8 pb-2 border-b border-accent accent-color flex items-center">
-                <i data-lucide="calendar-check" class="mr-2 text-2xl"></i> Giorno 4: Lunedì 8 - Saluti e Partenza
+                <i data-lucide="calendar-check" class="mr-2 text-2xl"></i> Giorno 4: Lunedì 8 - Ultimi Dettagli & Ritorno
             </h2>
             <p class="text-lg mb-6 bg-white p-4 rounded-lg shadow-md border-l-4 border-accent">
-                <span class="intro-accent">Intro:</span> Ultimo giorno dedicato al famoso Prater per un tocco finale di nostalgia prima del transfer.
+                <span class="intro-accent">Intro:</span> Ultimo giorno dedicato alla colazione in Konditorei e al transfer per l'aeroporto.
             </p>
-            <div id="timeline-GIORNO4" class="relative"></div>
+            <div id="timeline-GIORNO4" class="relative mt-4"></div>
         </section>
 
         <section id="page-CIBO" class="tab-content">
@@ -216,49 +216,73 @@
     </main>
 
     <script>
-        lucide.createIcons();
+        // ===========================================
+        // 1. DATI (Ricavati dai file CSV)
+        // ===========================================
+        
+        // Dati Itinerario (Pianoviaggio Vienna v2 - Itinerario.csv)
+        const rawItineraryData = [
+            { giorno: "Giorno 1: Ven 5 - Arrivo, Arte & Concerto", ora: "04:00", attivita: "Bus Torino → Malpensa", luogo: "Torino", note: "Logistica: Prenota il bus in anticipo (es. Flixbus/Sadem).", focus_raw: "Trasferimento iniziale. Viaggio lungo, ma economicamente efficiente. | Sveglia all'alba!" },
+            { giorno: "Giorno 1: Ven 5 - Arrivo, Arte & Concerto", ora: "09:00 - 10:30", attivita: "Volo MXP → VIE", luogo: "MXP / VIE", note: "Volo diretto Milano Malpensa → Vienna-Schwechat.", focus_raw: "" },
+            { giorno: "Giorno 1: Ven 5 - Arrivo, Arte & Concerto", ora: "11:00", attivita: "Trasferimento Aeroporto → Hotel", luogo: "Flughafen Wien", note: "S7 da Flughafen Wien a Wien Praterstern (≈ 28 min). Costo: Abbonamento 72h + supplemento aeroporto 2€.", focus_raw: "Il treno S-Bahn S7 è la scelta più economica e rapida (dopo il CAT). | Acquisto: Pass 72h + 2x Biglietti supplemento aeroporto." },
+            { giorno: "Giorno 1: Ven 5 - Arrivo, Arte & Concerto", ora: "11:45", attivita: "Check-in/Deposito Bagagli", luogo: "Deluxe Living, Große Stadtgutgasse 02, Leopoldstadt (1020).", note: "L'hotel è a 5 minuti a piedi da Praterstern.", focus_raw: "Lascia i bagagli e inizia subito l'esplorazione." },
+            { giorno: "Giorno 1: Ven 5 - Arrivo, Arte & Concerto", ora: "12:15", attivita: "Pranzo e Hundertwasserhaus", luogo: "Hundertwasser Village", note: "Cibo di strada o Würstel, vicino al quartiere Hundertwasser. Käsekrainer suggerito.", focus_raw: "Il quartiere è un'oasi di design. È vicino all'hotel." },
+            { giorno: "Giorno 1: Ven 5 - Arrivo, Arte & Concerto", ora: "13:30", attivita: "Hundertwasserhaus e Kunst Haus Wien", luogo: "Kunst Haus Wien", note: "Non si può entrare nella Hundertwasserhaus, ma si visita la Kunst Haus (museo). Costo: 12€ (Hundertwasser) / 11€ (Museum).", focus_raw: "Museo di Friedensreich Hundertwasser, un ribelle del design." },
+            { giorno: "Giorno 1: Ven 5 - Arrivo, Arte & Concerto", ora: "15:00", attivita: "Hofburg Palace e Museo di Sissi", luogo: "Hofburg, 1010 Wien", note: "Visita del complesso imperiale. Sfrutta il Vienna Pass o il biglietto combinato. Costo: ≈ 22€ (Adulto).", focus_raw: "Il centro nevralgico dell'Impero Asburgico per oltre 600 anni." },
+            { giorno: "Giorno 1: Ven 5 - Arrivo, Arte & Concerto", ora: "17:30", attivita: "Biblioteca Nazionale Austriaca (Sala di Stato)", luogo: "Hofburg, 1010 Wien", note: "La più grande biblioteca barocca d'Europa. Imperdibile per l'architettura. Costo: ≈ 10€.", focus_raw: "FOCUS FOTO: I globi celesti e gli affreschi sul soffitto." },
+            { giorno: "Giorno 1: Ven 5 - Arrivo, Arte & Concerto", ora: "18:30", attivita: "Pausa Calda e Mercatino Maria-Theresien Platz", luogo: "Maria-Theresien Platz, 1010 Wien", note: "Un Glühwein o Punsch per riscaldarsi tra i due grandi musei.", focus_raw: "Mercatino scenografico tra il Kunsthistorisches e il Naturhistorisches Museum." },
+            { giorno: "Giorno 1: Ven 5 - Arrivo, Arte & Concerto", ora: "20:30", attivita: "Cena e Concerto (Opzionale)", luogo: "Beisl Tradizionale / Chiesa St. Peter", note: "Schnitzel di maiale (Schwein) per restare nel budget. Dopo, concerto di musica classica (opzionale).", focus_raw: "FOCUS CULTURALE: Concerto St. Peter (se prenotato) o semplicemente relax post-cena." },
 
-        // ===========================================
-        // DATI (Invariati)
-        // ===========================================
-        const itineraryData = [
-            { giorno: 1, ora: "09:00 - 14:00", attivita: "Viaggio, Transfer, Check-in, Pranzo", luogo: "Leopoldstadt (2° distretto)", focus: "Trasporto", note: "Pranzo Low-Cost: Sfrutta un piccolo Imbiss in zona alloggio (1020).", dettagli: "Gestione logistica del primo giorno. Acquisto dell'abbonamento 72h per i mezzi pubblici (se necessario)." },
-            { giorno: 1, ora: "14:00 - 17:00", attivita: "Centro Storico (1010): Duomo e Passeggiata", luogo: "Stephansdom, Stephansplatz 3, 1010 Wien", focus: "Passeggiata/Architettura", note: "La Cattedrale di Santo Stefano è il simbolo gotico della città. Focus fotografico.", dettagli: "Visita all'esterno e all'interno. Salita opzionale sulla torre sud per la vista panoramica sul centro." },
-            { giorno: 1, ora: "17:00 - 18:00", attivita: "Mercatino Stephansplatz (1°)", luogo: "Stephansplatz, 1010 Wien", focus: "Shopping/Bevande", note: "Primo Glühwein per scaldarsi e immergersi nell'atmosfera.", dettagli: "Mercatino piccolo ma scenografico, proprio di fronte al Duomo." },
-            { giorno: 1, ora: "20:00 - 22:00", attivita: "Cena: Beim Czaak (Wiener Schnitzel)", luogo: "Beim Czaak, Am Heumarkt 10, 1030 Wien", focus: "Cibo", note: "Uno dei migliori Beisl per il Schnitzel autentico (di vitello). Prenotazione consigliata.", dettagli: "Ritorno in alloggio dopo cena." },
-            { giorno: 2, ora: "10:00 - 14:00", attivita: "Palazzo di Schönbrunn", luogo: "Schönbrunner Schloßstraße 47, 1130 Wien", focus: "Cultura", note: "Visita del 'Grand Tour' e dei giardini. Durata stimata: 4h.", dettagli: "Arrivo con la U4. Visita degli appartamenti di Sissi e Francesco Giuseppe. Pranzo veloce al mercatino del palazzo." },
-            { giorno: 2, ora: "15:00 - 17:30", attivita: "Belvedere e Klimt", luogo: "Prinz-Eugen-Straße 27, 1030 Wien", focus: "Arte", note: "Visita al Belvedere Superiore per vedere 'Il Bacio' di Klimt. T.T. = 2.5h.", dettagli: "Fermata del tram D. Dopo la visita, breve passeggiata nei giardini barocchi." },
-            { giorno: 2, ora: "17:30 - 19:00", attivita: "Mercatino di Maria-Theresien Platz", luogo: "Maria-Theresien-Platz, 1010 Wien", focus: "Shopping/Bevande", note: "Mercatino tra i due grandi musei (Naturhistorisches e Kunsthistorisches).", dettagli: "Ideale per foto serali scenografiche." },
-            { giorno: 2, ora: "20:00 - 22:00", attivita: "Cena: Anzengruber (Gulasch)", luogo: "Anzengruber, Schleifmühlgasse 19, 1040 Wien", focus: "Cibo", note: "Famoso per il Gulasch e l'atmosfera autentica (Wieden, 1040).", dettagli: "Locale piccolo e molto tradizionale." },
-            { giorno: 3, ora: "9:30 - 12:30", attivita: "Hofburg e Biblioteca Nazionale", luogo: "Michaelerplatz, 1010 Wien", focus: "Cultura/Architettura", note: "Visita agli appartamenti e al Museo di Sissi. Imperdibile la Sala di Stato della Biblioteca.", dettagli: "La biblioteca è considerata una delle più belle del mondo." },
-            { giorno: 3, ora: "13:00 - 14:00", attivita: "Pranzo: Naschmarkt", luogo: "Wienzeile, 1060 Wien", focus: "Cibo", note: "Pranzo veloce al mercato (es. Bosna dal Balkan Grill).", dettagli: "Mercato eclettico di cibo e antiquariato." },
-            { giorno: 3, ora: "15:00 - 17:00", attivita: "Hundertwasserhaus e Villaggio", luogo: "Kegelgasse 34-38, 1030 Wien", focus: "Architettura", note: "Il palazzo colorato e asimmetrico come manifesto anti-linea retta.", dettagli: "Non visitabile all'interno, ma il villaggio di fronte è un bel mercatino souvenir." },
-            { giorno: 3, ora: "17:30 - 20:00", attivita: "Rathausplatz (Il Gigante)", luogo: "Rathausplatz, 1010 Wien", focus: "Shopping/Bevande", note: "Il mercatino più grande e famoso. Molto affollato ma spettacolare per le luci.", dettagli: "Nonostante la folla, l'ambientazione nel parco del Municipio è imperdibile." },
-            { giorno: 3, ora: "20:30 - 22:30", attivita: "Cena: Mercatino di Spittelberg", luogo: "Spittelberggasse, 1070 Wien", focus: "Cibo/Atmosfera", note: "Cena nel mercatino più intimo e romantico, nascosto tra i vicoli del 1070.", dettagli: "Perfetto per chiudere la serata con calma." },
-            { giorno: 4, ora: "9:30 - 11:30", attivita: "Prater e Riesenrad", luogo: "Prater, 1020 Wien", focus: "Attrazione", note: "Il parco divertimenti storico. Giro sulla Ruota Panoramica (Riesenrad).", dettagli: "La ruota panoramica offre una vista a 360 gradi sulla città." },
-            { giorno: 4, ora: "11:30 - 13:00", attivita: "Pranzo: Käsekrainer al chiosco", luogo: "Bitzinger Würstelstand, Prater, 1020 Wien", focus: "Cibo", note: "Ultimo pranzo veloce: Käsekrainer (salsiccia ripiena di formaggio).", dettagli: "Uno dei chioschi di salsicce più famosi, situato vicino all'entrata del Prater." },
-            { giorno: 4, ora: "14:00 - 17:00", attivita: "Transfer e Partenza", luogo: "Vienna Hauptbahnhof / Aeroporto", focus: "Trasporto", note: "Trasferimento in treno (S7 o CAT) all'aeroporto.", dettagli: "Assicurati di lasciare tempo sufficiente per l'aeroporto (VIE)." }
+            { giorno: "Giorno 2: Sab 6 - Grand Tour di Sfarzo", ora: "10:00", attivita: "Castello di Schönbrunn", luogo: "Schönbrunn Palace, 1130 Wien", note: "Visita del 'Grand Tour' (40 stanze) e dei giardini. Durata: 4h. Costo: ≈ 22€.", focus_raw: "Residenza estiva degli Asburgo e il luogo preferito di Sissi." },
+            { giorno: "Giorno 2: Sab 6 - Grand Tour di Sfarzo", ora: "14:00", attivita: "Pranzo al Mercatino di Schönbrunn", luogo: "Mercatino di Schönbrunn", note: "Pranzo veloce: Käsekrainer o Schupfnudeln dal mercatino. Costo: ≈ 10-15€.", focus_raw: "FOCUS CULINARIO: Prova i dolci o le patate fritte. È una buona pausa pranzo a tema." },
+            { giorno: "Giorno 2: Sab 6 - Grand Tour di Sfarzo", ora: "15:30", attivita: "Castello del Belvedere (Superiore)", luogo: "Belvedere, 1030 Wien", note: "Visita del museo per ammirare 'Il Bacio' di Gustav Klimt. T.T. = 2.5h. Costo: ≈ 24€.", focus_raw: "Il capolavoro barocco del Principe Eugenio di Savoia e tempio dell'Art Nouveau." },
+            { giorno: "Giorno 2: Sab 6 - Grand Tour di Sfarzo", ora: "18:00", attivita: "Mercatino di Karlsplatz (Artigianato)", luogo: "Karlsplatz, 1040 Wien", note: "Mercatino meno commerciale, focalizzato sull'artigianato e l'arte. Ideale per un acquisto unico.", focus_raw: "FOCUS: Prodotti unici e design. Perfetto per un regalo." },
+            { giorno: "Giorno 2: Sab 6 - Grand Tour di Sfarzo", ora: "20:00", attivita: "Cena: Schnitzel o Gulasch", luogo: "Bierhof (per birra e cucina tradizionale) o Anzengruber (per Gulasch).", note: "Cena ricca, magari con una birra scura viennese.", focus_raw: "Cena in zona centrale ma fuori dal circuito turistico (zona 4 o 7)." },
+
+            { giorno: "Giorno 3: Dom 7 - Arte, Follia e Mercatini", ora: "10:00", attivita: "St. Peter's Church (Chiesa di S. Pietro)", luogo: "Petersplatz 1, 1010 Wien", note: "Una delle chiese più belle di Vienna in stile Barocco (molto vicina al Duomo).", focus_raw: "FOCUS FOTO: Interni dorati e la cupola affrescata." },
+            { giorno: "Giorno 3: Dom 7 - Arte, Follia e Mercatini", ora: "11:30", attivita: "Duomo di Santo Stefano (Stephansdom)", luogo: "Stephansplatz, 1010 Wien", note: "Il simbolo gotico di Vienna. Visita alla Cattedrale (interni e tetto). Costo: ≈ 6€ (Cattedrale) + ≈ 6€ (Torre Sud).", focus_raw: "La torre sud offre una vista panoramica sul centro." },
+            { giorno: "Giorno 3: Dom 7 - Arte, Follia e Mercatini", ora: "13:00", attivita: "Pranzo: Naschmarkt (Street Food)", luogo: "Naschmarkt, 1060 Wien", note: "Pranzo veloce ed eclettico. Käsekrainer o cibo internazionale (es. orientale). Costo: ≈ 8-12€.", focus_raw: "Mercato vivace. L'opzione 'Balkan Grill' per un Bosna (hot dog speziato) è un must." },
+            { giorno: "Giorno 3: Dom 7 - Arte, Follia e Mercatini", ora: "14:30", attivita: "Albertina Museum (Opzionale)", luogo: "Albertinaplatz 1, 1010 Wien", note: "Visita della collezione grafica di Dürer e Klimt. Ideale per gli amanti dell'arte. Costo: ≈ 18€.", focus_raw: "La rampa di accesso offre una vista sulla Staatsoper (Opera di Stato)." },
+            { giorno: "Giorno 3: Dom 7 - Arte, Follia e Mercatini", ora: "16:30", attivita: "Mercatini di Natale (Rathausplatz)", luogo: "Rathausplatz, 1010 Wien", note: "Il mercatino più grande, con il maestoso Municipio illuminato.", focus_raw: "FOCUS FOTO: Il Municipio illuminato e l'atmosfera più vivace." },
+            { giorno: "Giorno 3: Dom 7 - Arte, Follia e Mercatini", ora: "18:30", attivita: "Furniture Museum Vienna (Opzionale)", luogo: "Museumstraße 6/8, 1070 Wien", note: "(Opzionale, se l'energia lo consente) Collezione imperiale di mobili. Metro U3 da Volkstheater (o vicino Rathaus) a Westbahnhof. Costo: $9€$.", focus_raw: "NOTA: Tappa da inserire solo se non siete troppo stanchi." },
+            { giorno: "Giorno 3: Dom 7 - Arte, Follia e Mercatini", ora: "20:00", attivita: "Cena di Arrivederci (Autentica)", luogo: "Zona 7 o 8", note: "Beisl autentico (es. zona 7 o 8) per Knödel (canederli) o Gulaschsuppe (zuppa).", focus_raw: "FOCUS CULINARIO: Riscaldarsi con una zuppa." },
+
+            { giorno: "Giorno 4: Lun 8 - Ultimi Dettagli & Ritorno", ora: "09:00", attivita: "Colazione e Ultimo Tè", luogo: "Hotel/Konditorei", note: "Ultimo Kaffee und Kuchen o Sachertorte al volo.", focus_raw: "Preparare i bagagli e chiudere la camera." },
+            { giorno: "Giorno 4: Lun 8 - Ultimi Dettagli & Ritorno", ora: "10:00", attivita: "Tempo Libero / Ultima Passeggiata", luogo: "Quartiere (Leopoldstadt)", note: "Ultima passeggiata nel quartiere o visita veloce (es. Minoritenkirche).", focus_raw: "" },
+            { giorno: "Giorno 4: Lun 8 - Ultimi Dettagli & Ritorno", ora: "11:30", attivita: "Check-out e Spostamento in Aeroporto", luogo: "Hotel → Aeroporto", note: "Transfer S7 o Railjet/CAT per VIE.", focus_raw: "Assicurarsi di avere il supplemento aeroporto (2€) se si usa l'abbonamento 72h." }
         ];
 
-        const foodData = {
+        // Dati Cibo (Pianoviaggio Vienna v2 - Cibo.csv)
+        const newFoodData = {
             "Piatti tipici": [
-                { titolo: "Wiener Schnitzel", descrizione: "Cotoletta viennese DOC di vitello, sottile e fritta in abbondante burro.", indirizzi: "Beim Czaak (1030), Figlmüller (1010, affollato)." },
-                { titolo: "Tafelspitz", descrizione: "Bollito di manzo in brodo con rafano e patate, il piatto preferito di Francesco Giuseppe.", indirizzi: "Plachutta Gasthaus zur Oper (1010)." },
-                { titolo: "Gulasch", descrizione: "Stufato ungherese di manzo speziato con paprika, servito con semmelknödel (canederli di pane).", indirizzi: "Anzengruber (1040), Pürstner (1010)." },
-                { titolo: "Käsekrainer", descrizione: "Salsiccia ripiena di formaggio fuso (Emmentaler), servita con senape dolce o rafano.", indirizzi: "Ogni chiosco Würstelstand di alta qualità, es. Bitzinger." }
-            ],
-            "Le merende reali": [
-                { titolo: "Sachertorte", descrizione: "Torta al cioccolato fondente e confettura di albicocche. La più famosa di Vienna.", indirizzi: "Hotel Sacher o Café Demel (rivali storici)." },
-                { titolo: "Apfelstrudel", descrizione: "Strudel di mele sottile con uvetta e cannella, spesso servito caldo con salsa alla vaniglia.", indirizzi: "Café Landtmann, Palmenhaus." },
-                { titolo: "Kaiserschmarrn", descrizione: "Frittata dolce e strapazzata, servita con composta di prugne o mele. Piatto imperiale.", indirizzi: "Molti Beisl e ristoranti, es. Ofner." }
+                { titolo: "Käsekrainer / Würstel", descrizione: "Il re dello street food viennese. Salsiccia di maiale affumicata ripiena di formaggio fuso. Veloce, caldo e low-cost.", indirizzi: "Bitzinger Würstelstand (vicino Praterstern). Perfetto per un pranzo veloce o spuntino. Costo: ≈ 5-6€.", suggerito: "Giorno 1: 12:15 - Pranzo di Arrivo." },
+                { titolo: "Wiener Schnitzel", descrizione: "La celebre cotoletta viennese. Scegli quella di maiale (Schwein) nei Beisl per risparmiare rispetto a quella di vitello (Kalb).", indirizzi: "Beisl Tradizionale / Zum Friedensrichter (Leopoldstadt) per un'opzione vicina e autentica. Costo: $12 - $18 (maiale).", suggerito: "Giorno 1: 20:30 - Cena Post-Concerto." },
+                { titolo: "Gulasch", descrizione: "Stufato di manzo in salsa di paprika. Perfetto per riscaldarsi.", indirizzi: "Beisl autentico o ristorante come Anzengruber. Costo: $15 - $22.", suggerito: "Giorno 2: 20:00 - Cena (dopo il tour del Castello e Belvedere)." },
+                { titolo: "Tafelspitz", descrizione: "Bollito di manzo in brodo con contorni. Piatto preferito di Franz Joseph.", indirizzi: "Ristoranti tradizionali di alta qualità (es. Plachutta). Costo: $25 - $35.", suggerito: "Giorno 3: 20:00 - Cena di Arrivederci (come pasto caldo e tradizionale)." },
+                { titolo: "Langos / Schupfnudeln", descrizione: "Piatto ungherese fritto (Langos) o gnocchetti di patate (Schupfnudeln) dai mercatini. Low-cost.", indirizzi: "Mercatini di Natale (Rathausplatz, Schönbrunn). Costo: $5 - $8.", suggerito: "Giorno 2: 14:00 - Pranzo veloce al Mercatino di Schönbrunn." }
             ],
             "Drink": [
-                { titolo: "Glühwein", descrizione: "Vino rosso caldo speziato (cannella, chiodi di garofano), bevanda essenziale dei mercatini.", indirizzi: "Qualsiasi mercatino di Natale (Rathausplatz, Spittelberg)." },
-                { titolo: "Punsch", descrizione: "Bevanda calda più forte del Glühwein, a base di tè, rum e succo di frutta (spesso arancia).", indirizzi: "Popolare nei chioschi, attenzione al tasso alcolico!" },
-                { titolo: "Caffè Viennese", descrizione: "Il famoso caffè con panna (Wiener Melange, Einspänner, Kapuziner) da gustare in un Café storico.", indirizzi: "Café Central, Café Sacher, Café Landtmann." }
+                { titolo: "Glühwein / Punsch", descrizione: "Vino caldo e speziato o punch (spesso con brandy o rum). Indispensabile per affrontare i mercatini. Ideale per riscaldarsi. Costo: $8 - $14.", indirizzi: "Mercatini di Natale (qualsiasi chiosco).", suggerito: "Giorno 3: 20:00 - Cena di Arrivederci (come pasto caldo e tradizionale)." }
+            ],
+            "Le merende reali": [
+                { titolo: "Pausa Café/Atmosfera", descrizione: "Non un piatto, ma l'esperienza essenziale del caffè viennese in un ambiente storico.", indirizzi: "Café Central (Interni maestosi, low-cost se si ordina solo una bevanda). Costo: ≈ 5€ per un Melange.", suggerito: "Giorno 2: 17:30 - Pausa Calda (dopo la Biblioteca Nazionale)." },
+                { titolo: "Apfelstrudel", descrizione: "Sfoglia sottile ripiena di mele, uvetta e cannella, servita calda (spesso con salsa alla vaniglia).", indirizzi: "Mercatini di Natale o qualsiasi Konditorei (pasticceria).", suggerito: "Giorno 3: 16:00 - Merenda Calda durante il Mercatino di Rathausplatz." },
+                { titolo: "Sachertorte", descrizione: "L'iconica torta al cioccolato e albicocca. Ottima per salutare Vienna.", indirizzi: "Aida (Catena Rosa, per un'opzione low-cost e diffusa) o Konditorei locale. Costo: ≈ 4-7€ a fetta.", suggerito: "Giorno 4: 12:00 - Ultima Merenda/Colazione prima del transfer per l'aeroporto." },
+                { titolo: "Mozartkugel / Manner Wafers", descrizione: "Le famose palle di cioccolato al pistacchio (Mozartkugel) e i wafer alla nocciola (Manner, prodotto a Vienna).", indirizzi: "Supermercati (Billa, Spar) o negozi Manner. Evita i negozi di souvenir troppo cari.", suggerito: "Giorno 4: 10:00 - Acquisto Souvenir / Snack." }
             ]
         };
 
+        // Dati Culturali (Pianoviaggio Vienna v2 - Cultura.csv)
+        const culturalMap = {
+            "Hundertwasserhaus": { descrizione: "Non è solo un edificio, è un manifesto contro la 'dittatura della linea retta'! L'artista Friedensreich Hundertwasser, un ribelle del design, l'ha concepita come un'oasi ecologica e umana. Ogni inquilino aveva il diritto di dipingere la facciata intorno alla propria finestra a piacimento. È un'esplosione di colori, alberi che spuntano dai balconi e pavimenti irregolari, un inno alla libertà e all'armonia con la natura, lontano dalla seriosità imperiale.", curiosita: "Il Diritto della Finestra: Hundertwasser credeva che ogni persona avesse il diritto di 'disegnare' l'area della parete attorno alla propria finestra, fin dove arrivava il suo braccio. Il suo rifiuto dell'angolo retto era quasi filosofico, vedendolo come qualcosa di 'immorale' e innaturale." },
+            "Castello del Belvedere": { descrizione: "Un capolavoro barocco commissionato dal Principe Eugenio di Savoia, un genio militare che sconfisse i Turchi. Non fu mai pensato come residenza principale, ma come 'giardino di delizie' e palazzo estivo, una celebrazione della sua gloria. Oggi, la sua Galleria Superiore custodisce il tesoro dell'Art Nouveau austriaco, con l'oro e l'erotismo dei capolavori di Gustav Klimt.", curiosita: "Il Giardino Segreto del Barocco: I giardini a terrazze, che collegano il Belvedere Superiore e Inferiore, sono un perfetto esempio di design barocco. Le sculture e le fontane creano un complesso simbolico che riflette l'ordine e la ragione dell'Illuminismo, in contrasto con la natura selvaggia." },
+            "Duomo di Santo Stefano": { descrizione: "Conosciuta come Stephansdom, è il cuore spirituale e geografico di Vienna. Le sue guglie gotiche dominano lo skyline. Il tetto piastrellato, con i suoi colori vivaci, è un'opera d'arte unica. È sopravvissuta a guerre e incendi, diventando un simbolo della resilienza e dell'identità austriaca.", curiosita: "La Porta del Gigante: La porta principale prende il nome dal femore di un mammut (o di un gigante, secondo la leggenda) appeso lì per secoli. È il luogo dove la leggenda e la storia si incontrano, proprio all'ingresso del Duomo." },
+            "Hofburg Palace": { descrizione: "Per oltre 600 anni, questo è stato il centro nevralgico dell'Impero Asburgico, la residenza invernale e il luogo dove si prendevano le decisioni che plasmavano l'Europa. È un complesso di edifici che abbraccia stili dall'architettura gotica al neoclassicismo, testimoniando la continua crescita e il potere della dinastia.", curiosita: "Lo Stemma Nascosto di Sissi: Vicino agli appartamenti imperiali (Kaiserappartements), ci sono dettagli nascosti che riflettono la personalità ribelle di Elisabetta (Sissi), che odiava l'etichetta di corte. I suoi appartamenti erano un rifugio di privacy e malinconia, un contrasto con la grandiosità esterna." },
+            "Rathausplatz": { descrizione: "La tradizione dei mercatini risale al Medioevo. Oggi è il più grande e spettacolare, con le luci che avvolgono il maestoso Municipio in un'atmosfera da fiaba.", curiosita: "Il Municipio Protettore: La facciata gotica del Municipio (Rathaus) è stata progettata per sovrastare il potere imperiale di Hofburg. Durante il periodo natalizio, le luci sembrano trasformare l'architettura in un castello incantato, quasi come se proteggesse la gioia popolare dagli sguardi austeri dell'Impero." },
+            "Castello di Schönbrunn": { descrizione: "La residenza estiva degli Asburgo e il luogo preferito di Sissi. Un capolavoro barocco da esplorare dal Grand Tour agli estesi giardini.", curiosita: "Römische Ruine (Schönbrunn): Non sono affatto rovine romane autentiche! Furono costruite come un capriccio di Maria Teresa, un elemento scenografico romantico per il parco, che simulava un pezzo d'antichità, molto di moda nel Barocco." }
+        };
+
+        // Dati Budget (Mantenuti dalla versione precedente)
         const budgetData = [
             { categoria: "Alloggio (3 notti)", costo: 243.00, icon: 'bed' },
             { categoria: "Ingressi & Biglietti (Cultura)", costo: 132.00, icon: 'ticket' },
@@ -267,20 +291,73 @@
             { categoria: "Spese Varie & Souvenir", costo: 150.00, icon: 'shopping-bag' }
         ];
 
-        // ===========================================
-        // FUNZIONI DI LOGICA E RENDERING (Invariate)
-        // ===========================================
+        let itineraryData = []; // Array finale popolato da initializeData
 
+        // ===========================================
+        // 2. LOGICA DI INIZIALIZZAZIONE E RENDERING
+        // ===========================================
+        
         function getIconNameByFocus(focus) {
             const focusMap = {
-                'Cultura': 'castle', 'Arte': 'brush', 'Passeggiata/Architettura': 'map-pin', 'Architettura': 'building-2',
+                'Cultura': 'castle', 'Arte': 'brush', 'Passeggiata': 'map-pin', 'Architettura': 'building-2',
                 'Trasporto': 'train', 'Shopping/Bevande': 'shopping-cart', 'Attrazione': 'sparkles', 'Cibo': 'coffee',
                 default: 'circle-dot'
             };
-            const normalizedFocus = focus.split('/')[0].trim();
-            return focusMap[normalizedFocus] || focusMap.default;
+            // Logic to infer main focus from activity name
+            const activity = focus.toLowerCase();
+            if (activity.includes('volo') || activity.includes('transfer') || activity.includes('bus')) return 'train';
+            if (activity.includes('pranzo') || activity.includes('cena') || activity.includes('colazione') || activity.includes('cibo') || activity.includes('würstel')) return 'coffee';
+            if (activity.includes('mercatino') || activity.includes('acquisti') || activity.includes('shopping')) return 'shopping-cart';
+            if (activity.includes('castello') || activity.includes('hofburg') || activity.includes('schönbrunn') || activity.includes('duomo') || activity.includes('biblioteca') || activity.includes('chiesa')) return 'castle';
+            if (activity.includes('belvedere') || activity.includes('museum') || activity.includes('arte')) return 'brush';
+            if (activity.includes('hundertwasser')) return 'building-2';
+            
+            return focusMap.default;
         }
-        
+
+        // Funzione per combinare i dati grezzi e arricchirli
+        function initializeData() {
+            itineraryData = rawItineraryData.map(item => {
+                // 1. Estrai il numero del giorno e il nome completo
+                const match = item.giorno.match(/Giorno (\d+)/);
+                const giornoNumber = match ? parseInt(match[1]) : 0;
+                
+                // 2. Determina il focus
+                const focus = getIconNameByFocus(item.attivita);
+                
+                // 3. Arricchisci i dettagli con le informazioni culturali
+                let culturalInfo = '';
+                
+                const culturalKeys = Object.keys(culturalMap);
+                for (const key of culturalKeys) {
+                    if (item.attivita.includes(key) || item.luogo.includes(key)) {
+                        const cultData = culturalMap[key];
+                        culturalInfo += `<p class="mt-3 font-semibold text-gray-800 border-t pt-2 border-gray-100">Contesto Storico (${key}):</p>`;
+                        culturalInfo += `<p class="text-gray-700">${cultData.descrizione}</p>`;
+                        culturalInfo += `<p class="italic text-gray-600 mt-1"><span class="accent-color">Curiosità:</span> ${cultData.curiosita}</p>`;
+                        break; // Trovato il luogo, interrompi la ricerca
+                    }
+                }
+
+                // 4. Combina tutti i dettagli in un unico campo
+                const combinedDettagli = `
+                    <p class="font-semibold text-gray-800"><span class="accent-color">Note Logistiche:</span> ${item.note}</p>
+                    <p class="text-gray-700 mt-2"><span class="font-semibold">Contesto & Focus:</span> ${item.focus_raw}</p>
+                    ${culturalInfo}
+                `;
+
+                return {
+                    giorno: giornoNumber,
+                    ora: item.ora,
+                    attivita: item.attivita,
+                    luogo: item.luogo, // Il "luogo" specifico (es. indirizzo)
+                    focus: focus,
+                    note: item.note,
+                    dettagli: combinedDettagli
+                };
+            });
+        }
+
         window.toggleDetails = function(id) {
             const element = document.getElementById(id);
             const button = event.target;
@@ -313,7 +390,7 @@
             let htmlTimeline = '';
 
             dailyData.forEach((item, index) => {
-                const iconName = getIconNameByFocus(item.focus);
+                const iconName = item.focus; // Ora usa il focus calcolato in initializeData
                 const uniqueId = `${containerId}-details-${index}`;
                 
                 htmlTimeline += `
@@ -335,10 +412,8 @@
                             >
                                 Mostra Dettagli
                             </button>
-                            <div id="${uniqueId}" class="hidden mt-3 pt-3 border-t border-gray-100 text-sm">
-                                <p class="font-semibold text-gray-800"><span class="accent-color">Focus:</span> ${item.focus}</p>
-                                <p class="italic text-gray-600"><span class="accent-color">Note:</span> ${item.note}</p>
-                                <p class="text-gray-700 mt-2"><span class="font-semibold">Descrizione Dettagliata:</span> ${item.dettagli}</p>
+                            <div id="${uniqueId}" class="hidden mt-3 pt-3 text-sm">
+                                ${item.dettagli}
                             </div>
                         </div>
                     </div>
@@ -380,27 +455,32 @@
         }
 
         function renderFoodShowcases() {
-            const idMap = {
+            const containerMap = {
                 "Piatti tipici": "showcase-piatti",
                 "Le merende reali": "showcase-merende",
                 "Drink": "showcase-drink"
             };
 
-            for (const category in foodData) {
-                const id = idMap[category];
+            for (const category in newFoodData) {
+                const id = containerMap[category];
                 const container = document.getElementById(id);
                 let htmlContent = '';
 
-                foodData[category].forEach(item => {
+                newFoodData[category].forEach(item => {
                     htmlContent += `
                         <div class="bg-gray-50 p-3 rounded-lg mt-3 border border-gray-200">
                             <h4 class="font-bold text-lg">${item.titolo}</h4>
                             <p class="text-sm text-gray-700 mt-1">${item.descrizione}</p>
-                            <p class="text-xs text-gray-500 mt-2 italic border-t pt-2">📍 Indirizzi: ${item.indirizzi}</p>
+                            <p class="text-xs text-gray-500 mt-2 italic border-t pt-2">
+                                📍 Dove: ${item.indirizzi}
+                                <br>
+                                🗓️ Suggerimento: ${item.suggerito}
+                            </p>
                         </div>
                     `;
                 });
                 if (container) {
+                     // Solo append, l'header h3 è già nell'HTML statico
                      container.innerHTML += htmlContent;
                 }
             }
@@ -433,7 +513,12 @@
             
             const ctx = document.getElementById('budgetChart').getContext('2d');
             
-            const budgetChart = new Chart(ctx, {
+            // Distruggi e ricrea il grafico per evitare errori in caso di hot-reloading
+            if (window.budgetChartInstance) {
+                window.budgetChartInstance.destroy();
+            }
+
+            window.budgetChartInstance = new Chart(ctx, {
                 type: 'pie',
                 data: {
                     labels: categories,
@@ -472,6 +557,7 @@
         }
 
         document.addEventListener('DOMContentLoaded', () => {
+            initializeData();
             renderSummary();
             renderTimeline(1, 'timeline-GIORNO1');
             renderTimeline(2, 'timeline-GIORNO2');
