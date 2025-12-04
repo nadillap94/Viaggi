@@ -138,7 +138,7 @@
                 <i data-lucide="calendar-check" class="mr-2 text-2xl"></i> Giorno 1: Venerdì 5 - Arrivo e Centro Storico
             </h2>
             <p class="text-lg mb-6 bg-white p-4 rounded-lg shadow-md border-l-4 border-accent">
-                <span class="intro-accent">Il focus è sull'assestamento logistico e l'immediata immersione nel cuore imperiale di Vienna (1010), chiudendo con il primo mercatino.</span> 
+                <span class="intro-accent">Intro:</span> Il focus è sull'assestamento logistico e l'immediata immersione nel cuore imperiale di Vienna (1010), chiudendo con il primo mercatino.
             </p>
             <div id="timeline-GIORNO1" class="relative"></div>
         </section>
@@ -148,7 +148,7 @@
                 <i data-lucide="calendar-check" class="mr-2 text-2xl"></i> Giorno 2: Sabato 6 - Grand Tour di Sfarzo
             </h2>
             <p class="text-lg mb-6 bg-white p-4 rounded-lg shadow-md border-l-4 border-accent">
-                <span class="intro-accent">Giorno dedicato alle due principali residenze imperiali (Schönbrunn e Belvedere) e ai mercatini più maestosi.</span> 
+                <span class="intro-accent">Intro:</span> Giorno dedicato alle due principali residenze imperiali (Schönbrunn e Belvedere) e ai mercatini più maestosi.
             </p>
             <div id="timeline-GIORNO2" class="relative"></div>
         </section>
@@ -158,7 +158,7 @@
                 <i data-lucide="calendar-check" class="mr-2 text-2xl"></i> Giorno 3: Domenica 7 - Arte, Follia e Intimità
             </h2>
             <p class="text-lg mb-6 bg-white p-4 rounded-lg shadow-md border-l-4 border-accent">
-                <span class="intro-accent"> Un mix tra la grandezza dell'Hofburg, la modernità stravagante di Hundertwasser e la calma del mercatino di Spittelberg.</span>
+                <span class="intro-accent">Intro:</span> Un mix tra la grandezza dell'Hofburg, la modernità stravagante di Hundertwasser e la calma del mercatino di Spittelberg.
             </p>
             <div id="timeline-GIORNO3" class="relative"></div>
         </section>
@@ -168,7 +168,7 @@
                 <i data-lucide="calendar-check" class="mr-2 text-2xl"></i> Giorno 4: Lunedì 8 - Saluti e Partenza
             </h2>
             <p class="text-lg mb-6 bg-white p-4 rounded-lg shadow-md border-l-4 border-accent">
-                <span class="intro-accent">Ultimo giorno dedicato al famoso Prater per un tocco finale di nostalgia prima del transfer.</span> 
+                <span class="intro-accent">Intro:</span> Ultimo giorno dedicato al famoso Prater per un tocco finale di nostalgia prima del transfer.
             </p>
             <div id="timeline-GIORNO4" class="relative"></div>
         </section>
@@ -263,4 +263,224 @@
             { categoria: "Alloggio (3 notti)", costo: 243.00, icon: 'bed' },
             { categoria: "Ingressi & Biglietti (Cultura)", costo: 132.00, icon: 'ticket' },
             { categoria: "Trasporti (Abbonamenti e Transfer)", costo: 69.40, icon: 'train' },
-            { categoria: "Cibo & Bevande (Stimato per 4 giorni)",
+            { categoria: "Cibo & Bevande (Stimato per 4 giorni)", costo: 320.00, icon: 'sandwich' },
+            { categoria: "Spese Varie & Souvenir", costo: 150.00, icon: 'shopping-bag' }
+        ];
+
+        // ===========================================
+        // FUNZIONI DI LOGICA E RENDERING (Invariate)
+        // ===========================================
+
+        function getIconNameByFocus(focus) {
+            const focusMap = {
+                'Cultura': 'castle', 'Arte': 'brush', 'Passeggiata/Architettura': 'map-pin', 'Architettura': 'building-2',
+                'Trasporto': 'train', 'Shopping/Bevande': 'shopping-cart', 'Attrazione': 'sparkles', 'Cibo': 'coffee',
+                default: 'circle-dot'
+            };
+            const normalizedFocus = focus.split('/')[0].trim();
+            return focusMap[normalizedFocus] || focusMap.default;
+        }
+        
+        window.toggleDetails = function(id) {
+            const element = document.getElementById(id);
+            const button = event.target;
+            
+            if (element.classList.contains('hidden')) {
+                element.classList.remove('hidden');
+                button.textContent = 'Nascondi Dettagli';
+            } else {
+                element.classList.add('hidden');
+                button.textContent = 'Mostra Dettagli';
+            }
+        };
+
+        const navButtons = document.querySelectorAll('.nav-button');
+        const pages = document.querySelectorAll('.tab-content');
+        
+        window.showPage = function(pageId) {
+            pages.forEach(page => { page.style.display = 'none'; });
+            const targetPage = document.getElementById(pageId);
+            if (targetPage) { targetPage.style.display = 'block'; }
+
+            navButtons.forEach(button => { button.classList.remove('active-tab'); });
+            const activeButton = document.querySelector(`button[data-page="${pageId}"]`);
+            if (activeButton) { activeButton.classList.add('active-tab'); }
+        }
+
+        function renderTimeline(day, containerId) {
+            const container = document.getElementById(containerId);
+            const dailyData = itineraryData.filter(item => item.giorno === day);
+            let htmlTimeline = '';
+
+            dailyData.forEach((item, index) => {
+                const iconName = getIconNameByFocus(item.focus);
+                const uniqueId = `${containerId}-details-${index}`;
+                
+                htmlTimeline += `
+                    <div class="timeline-item relative py-4">
+                        <div class="timeline-point absolute -left-0.5 top-6 w-3 h-3 rounded-full z-10"></div>
+                        <div class="bg-white p-4 ml-4 rounded-lg shadow-md hover:shadow-xl transition duration-300 transform hover:scale-[1.01]">
+                            <div class="flex items-start mb-2 justify-between">
+                                <div class="flex items-center">
+                                    <i data-lucide="${iconName}" class="w-5 h-5 mr-3 accent-color shrink-0"></i>
+                                    <span class="font-bold text-lg accent-color">${item.attivita}</span>
+                                </div>
+                                 <span class="text-sm font-semibold text-gray-500">${item.ora}</span>
+                            </div>
+                            <p class="text-sm text-gray-700 mb-2 pl-8">📍 ${item.luogo}</p>
+                            
+                            <button 
+                                class="details-btn text-xs font-semibold text-white py-1 px-3 rounded-full mt-2 no-print"
+                                onclick="toggleDetails('${uniqueId}')"
+                            >
+                                Mostra Dettagli
+                            </button>
+                            <div id="${uniqueId}" class="hidden mt-3 pt-3 border-t border-gray-100 text-sm">
+                                <p class="font-semibold text-gray-800"><span class="accent-color">Focus:</span> ${item.focus}</p>
+                                <p class="italic text-gray-600"><span class="accent-color">Note:</span> ${item.note}</p>
+                                <p class="text-gray-700 mt-2"><span class="font-semibold">Descrizione Dettagliata:</span> ${item.dettagli}</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+
+            container.innerHTML = htmlTimeline;
+            lucide.createIcons();
+        }
+
+        function renderSummary() {
+            const summaryContainer = document.getElementById('summary-container');
+            let htmlSummary = '';
+            let lastDay = 0;
+
+            itineraryData.forEach(item => {
+                if (item.giorno !== lastDay) {
+                    htmlSummary += `
+                        <h3 class="text-xl font-bold mt-6 pb-1 border-b-2 border-gray-300 accent-color">
+                            Giorno ${item.giorno}
+                        </h3>
+                        <ul class="list-disc list-inside space-y-1 ml-4">
+                    `;
+                    lastDay = item.giorno;
+                }
+                
+                htmlSummary += `
+                    <li class="text-gray-700">
+                        <span class="font-semibold">${item.ora}:</span> ${item.attivita} (<span class="italic">${item.luogo}</span>)
+                    </li>
+                `;
+
+                if (itineraryData.length === itineraryData.indexOf(item) + 1 || itineraryData[itineraryData.indexOf(item) + 1].giorno !== lastDay) {
+                    htmlSummary += `</ul>`;
+                }
+            });
+
+            summaryContainer.innerHTML = htmlSummary;
+        }
+
+        function renderFoodShowcases() {
+            const idMap = {
+                "Piatti tipici": "showcase-piatti",
+                "Le merende reali": "showcase-merende",
+                "Drink": "showcase-drink"
+            };
+
+            for (const category in foodData) {
+                const id = idMap[category];
+                const container = document.getElementById(id);
+                let htmlContent = '';
+
+                foodData[category].forEach(item => {
+                    htmlContent += `
+                        <div class="bg-gray-50 p-3 rounded-lg mt-3 border border-gray-200">
+                            <h4 class="font-bold text-lg">${item.titolo}</h4>
+                            <p class="text-sm text-gray-700 mt-1">${item.descrizione}</p>
+                            <p class="text-xs text-gray-500 mt-2 italic border-t pt-2">📍 Indirizzi: ${item.indirizzi}</p>
+                        </div>
+                    `;
+                });
+                if (container) {
+                     container.innerHTML += htmlContent;
+                }
+            }
+        }
+
+        function renderBudgetAndStats() {
+            const costs = budgetData.map(item => item.costo);
+            const totalCost = costs.reduce((sum, cost) => sum + cost, 0);
+            
+            document.getElementById('total-budget-display').textContent = `€ ${totalCost.toFixed(2)}`;
+            const kpiContainer = document.getElementById('kpi-summary');
+            let htmlKpi = '';
+            
+            budgetData.forEach(item => {
+                 htmlKpi += `
+                    <div class="flex items-center">
+                        <i data-lucide="${item.icon}" class="w-4 h-4 mr-2 text-gray-700"></i>
+                        <span class="font-semibold">${item.categoria}:</span>
+                        <span class="ml-auto font-bold">${item.costo.toFixed(2)} €</span>
+                    </div>
+                `;
+            });
+            kpiContainer.innerHTML = htmlKpi;
+            lucide.createIcons();
+            
+            if (window.matchMedia('print').matches) return;
+
+            const categories = budgetData.map(item => item.categoria.split('(')[0].trim());
+            const imperialColors = ['#8C0000', '#C8AA50', '#A52A2A', '#D4AF37', '#B22222'];
+            
+            const ctx = document.getElementById('budgetChart').getContext('2d');
+            
+            const budgetChart = new Chart(ctx, {
+                type: 'pie',
+                data: {
+                    labels: categories,
+                    datasets: [{
+                        data: costs,
+                        backgroundColor: imperialColors,
+                        borderColor: 'white',
+                        borderWidth: 2,
+                        hoverOffset: 8
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'right' },
+                        title: {
+                            display: true,
+                            text: `Costo Totale Stimato: € ${totalCost.toFixed(2)}`,
+                            font: { size: 16, family: 'Georgia, serif' },
+                            color: getComputedStyle(document.documentElement).getPropertyValue('--color-primary')
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.label || '';
+                                    if (label) { label += ': '; }
+                                    label += new Intl.NumberFormat('it-IT', { style: 'currency', currency: 'EUR' }).format(context.raw);
+                                    return label;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            renderSummary();
+            renderTimeline(1, 'timeline-GIORNO1');
+            renderTimeline(2, 'timeline-GIORNO2');
+            renderTimeline(3, 'timeline-GIORNO3');
+            renderTimeline(4, 'timeline-GIORNO4');
+            renderFoodShowcases();
+            renderBudgetAndStats();
+            showPage('page-PANORAMICA');
+        });
+    </script>
+</body>
+</html>
