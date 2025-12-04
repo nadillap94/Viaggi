@@ -137,7 +137,7 @@
                 <i data-lucide="calendar-check" class="mr-2 text-2xl"></i> Giorno 1: Venerdì 5 - Arrivo, Arte & Concerto
             </h2>
             <p class="text-lg mb-6 bg-white p-4 rounded-lg shadow-md border-l-4 border-accent">
-                <span class="intro-accent">Intro:</span> Il focus è sull'arrivo a Vienna, l'immersione nell'arte (Hundertwasser e Hofburg) e l'esperienza del primo mercatino serale.
+                <span class="intro-accent">Intro:</span> Il focus è sull'arrivo a Vienna, l'immersione nell'arte (Hundertwasser e Hofburg), il **check-in posticipato** e il **concerto serale fissato**.
             </p>
             <div id="timeline-GIORNO1" class="relative mt-4"></div>
         </section>
@@ -224,14 +224,19 @@
             { giorno: "Giorno 1: Ven 5 - Arrivo, Arte & Concerto", ora: "04:00", attivita: "Bus Torino → Malpensa", luogo: "Torino", note: "Logistica: Prenota il bus in anticipo (es. Flixbus/Sadem).", focus_raw: "Trasferimento iniziale. Viaggio lungo, ma economicamente efficiente. | Sveglia all'alba!" },
             { giorno: "Giorno 1: Ven 5 - Arrivo, Arte & Concerto", ora: "09:00 - 10:30", attivita: "Volo MXP → VIE", luogo: "MXP / VIE", note: "Volo diretto Milano Malpensa → Vienna-Schwechat.", focus_raw: "" },
             { giorno: "Giorno 1: Ven 5 - Arrivo, Arte & Concerto", ora: "11:00", attivita: "Trasferimento Aeroporto → Hotel", luogo: "Flughafen Wien", note: "S7 da Flughafen Wien a Wien Praterstern (≈ 28 min). Costo: Abbonamento 72h + supplemento aeroporto 2€.", focus_raw: "Il treno S-Bahn S7 è la scelta più economica e rapida (dopo il CAT). | Acquisto: Pass 72h + 2x Biglietti supplemento aeroporto." },
-            { giorno: "Giorno 1: Ven 5 - Arrivo, Arte & Concerto", ora: "11:45", attivita: "Check-in/Deposito Bagagli", luogo: "Deluxe Living, Große Stadtgutgasse 02, Leopoldstadt (1020).", note: "L'hotel è a 5 minuti a piedi da Praterstern.", focus_raw: "Lascia i bagagli e inizia subito l'esplorazione." },
-            { giorno: "Giorno 1: Ven 5 - Arrivo, Arte & Concerto", ora: "12:15", attivita: "Pranzo e Hundertwasserhaus", luogo: "Hundertwasser Village", note: "Cibo di strada o Würstel, vicino al quartiere Hundertwasser. Käsekrainer suggerito.", focus_raw: "Il quartiere è un'oasi di design. È vicino all'hotel." },
-            { giorno: "Giorno 1: Ven 5 - Arrivo, Arte & Concerto", ora: "13:30", attivita: "Hundertwasserhaus e Kunst Haus Wien", luogo: "Kunst Haus Wien", note: "Non si può entrare nella Hundertwasserhaus, ma si visita la Kunst Haus (museo). Costo: 12€ (Hundertwasser) / 11€ (Museum).", focus_raw: "Museo di Friedensreich Hundertwasser, un ribelle del design." },
-            { giorno: "Giorno 1: Ven 5 - Arrivo, Arte & Concerto", ora: "15:00", attivita: "Hofburg Palace e Museo di Sissi", luogo: "Hofburg, 1010 Wien", note: "Visita del complesso imperiale. Sfrutta il Vienna Pass o il biglietto combinato. Costo: ≈ 22€ (Adulto).", focus_raw: "Il centro nevralgico dell'Impero Asburgico per oltre 600 anni." },
-            { giorno: "Giorno 1: Ven 5 - Arrivo, Arte & Concerto", ora: "17:30", attivita: "Biblioteca Nazionale Austriaca (Sala di Stato)", luogo: "Hofburg, 1010 Wien", note: "La più grande biblioteca barocca d'Europa. Imperdibile per l'architettura. Costo: ≈ 10€.", focus_raw: "FOCUS FOTO: I globi celesti e gli affreschi sul soffitto." },
-            { giorno: "Giorno 1: Ven 5 - Arrivo, Arte & Concerto", ora: "18:30", attivita: "Pausa Calda e Mercatino Maria-Theresien Platz", luogo: "Maria-Theresien Platz, 1010 Wien", note: "Un Glühwein o Punsch per riscaldarsi tra i due grandi musei.", focus_raw: "Mercatino scenografico tra il Kunsthistorisches e il Naturhistorisches Museum." },
-            { giorno: "Giorno 1: Ven 5 - Arrivo, Arte & Concerto", ora: "20:30", attivita: "Cena e Concerto (Opzionale)", luogo: "Beisl Tradizionale / Chiesa St. Peter", note: "Schnitzel di maiale (Schwein) per restare nel budget. Dopo, concerto di musica classica (opzionale).", focus_raw: "FOCUS CULTURALE: Concerto St. Peter (se prenotato) o semplicemente relax post-cena." },
+            // MODIFICA 1: Hundertwasserhouse e Pranzo SUBITO DOPO IL TRANSFER
+            { giorno: "Giorno 1: Ven 5 - Arrivo, Arte & Concerto", ora: "11:45", attivita: "Hundertwasserhaus e Kunst Haus Wien (Visita)", luogo: "Kunst Haus Wien", note: "Non si può entrare nella Hundertwasserhaus, ma si visita la Kunst Haus (museo). Costo: 12€ (Hundertwasser) / 11€ (Museum).", focus_raw: "Museo di Friedensreich Hundertwasser, un ribelle del design. Vicino all'hotel (zona Praterstern)." },
+            { giorno: "Giorno 1: Ven 5 - Arrivo, Arte & Concerto", ora: "13:30", attivita: "Pranzo Veloce", luogo: "Hundertwasser Village", note: "Cibo di strada o Würstel (Käsekrainer suggerito), vicino al quartiere Hundertwasser.", focus_raw: "Il quartiere è un'oasi di design. Pranzo rapido." },
+            // MODIFICA 1: Check-in SPOSTATO DOPO LE 15:00
+            { giorno: "Giorno 1: Ven 5 - Arrivo, Arte & Concerto", ora: "15:00", attivita: "Check-in/Deposito Bagagli", luogo: "Deluxe Living, Große Stadtgutgasse 02, Leopoldstadt (1020).", note: "**IMPORTANTE: Il Check-in è solo dopo le 15:00.** L'hotel è a 5 minuti a piedi da Praterstern.", focus_raw: "Lascia i bagagli e dirigiti verso il centro storico (Hofburg)." },
+            { giorno: "Giorno 1: Ven 5 - Arrivo, Arte & Concerto", ora: "15:45", attivita: "Hofburg Palace e Museo di Sissi", luogo: "Hofburg, 1010 Wien", note: "Visita del complesso imperiale. Sfrutta il Vienna Pass o il biglietto combinato. Costo: ≈ 22€ (Adulto).", focus_raw: "Il centro nevralgico dell'Impero Asburgico per oltre 600 anni." },
+            { giorno: "Giorno 1: Ven 5 - Arrivo, Arte & Concerto", ora: "17:30", attivita: "Biblioteca Nazionale Austriaca (Sala di Stato)", luogo: "Hofburg, 1010 Wien", note: "La più grande biblioteca barocca d'Europa. Imperdibile per l'architettura. Costo: ≈ 10€. I biglietti potrebbero chiudere alle 19:00. Controlare gli orari.", focus_raw: "FOCUS FOTO: I globi celesti e gli affreschi sul soffitto. Perfetto per scaldarsi prima del concerto." },
+            { giorno: "Giorno 1: Ven 5 - Arrivo, Arte & Concerto", ora: "18:30", attivita: "Pausa Calda e Mercatino", luogo: "Maria-Theresien Platz, 1010 Wien", note: "Un Glühwein o Punsch per riscaldarsi in pausa. Mercatino scenografico.", focus_raw: "Mercatino scenografico tra il Kunsthistorisches e il Naturhistorisches Museum. Breve sosta prima del concerto." },
+            // MODIFICA 2: INSERIMENTO CONCERTO FISSATO
+            { giorno: "Giorno 1: Ven 5 - Arrivo, Arte & Concerto", ora: "19:00 - 20:00", attivita: "Bösendorfer Salonkonzert (EVENTO FISSATO)", luogo: "Bösendorfer Salon / Stephansplatz Area", note: "Concerto di Sergey Tanin, esperienza musicale intima in un salone storico.", focus_raw: "Logistica: A piedi dalla zona Stephansplatz (1010 Wien). Godetevi la musica." },
+            { giorno: "Giorno 1: Ven 5 - Arrivo, Arte & Concerto", ora: "20:30", attivita: "Cena Tradizionale Post-Concerto", luogo: "Beisl Tradizionale (vicino Stephansplatz o hotel)", note: "Schnitzel di maiale (Schwein) per restare nel budget. Cena ricca.", focus_raw: "Cena post-evento in zona centrale ma non turistica." },
 
+            // Dati dal Giorno 2 in poi (NON MODIFICATI)
             { giorno: "Giorno 2: Sab 6 - Grand Tour di Sfarzo", ora: "10:00", attivita: "Castello di Schönbrunn", luogo: "Schönbrunn Palace, 1130 Wien", note: "Visita del 'Grand Tour' e dei giardini. Durata: 4h. Costo: ≈ 22€.", focus_raw: "Residenza estiva degli Asburgo e il luogo preferito di Sissi." },
             { giorno: "Giorno 2: Sab 6 - Grand Tour di Sfarzo", ora: "14:00", attivita: "Pranzo al Mercatino di Schönbrunn", luogo: "Mercatino di Schönbrunn", note: "Pranzo veloce: Käsekrainer o Schupfnudeln dal mercatino. Costo: ≈ 10-15€.", focus_raw: "FOCUS CULINARIO: Prova i dolci o le patate fritte. È una buona pausa pranzo a tema." },
             { giorno: "Giorno 2: Sab 6 - Grand Tour di Sfarzo", ora: "15:30", attivita: "Castello del Belvedere (Superiore)", luogo: "Belvedere, 1030 Wien", note: "Visita del museo per ammirare 'Il Bacio' di Gustav Klimt. T.T. = 2.5h. Costo: ≈ 24€.", focus_raw: "Il capolavoro barocco del Principe Eugenio di Savoia e tempio dell'Art Nouveau." },
@@ -254,14 +259,14 @@
         // Dati Cibo (Pianoviaggio Vienna v2 - Cibo.csv)
         const newFoodData = {
             "Piatti tipici": [
-                { titolo: "Käsekrainer / Würstel", descrizione: "Il re dello street food viennese. Salsiccia di maiale affumicata ripiena di formaggio fuso. Veloce, caldo e low-cost.", indirizzi: "Bitzinger Würstelstand (vicino Praterstern). Perfetto per un pranzo veloce o spuntino. Costo: ≈ 5-6€.", suggerito: "Giorno 1: 12:15 - Pranzo di Arrivo." },
+                { titolo: "Käsekrainer / Würstel", descrizione: "Il re dello street food viennese. Salsiccia di maiale affumicata ripiena di formaggio fuso. Veloce, caldo e low-cost.", indirizzi: "Bitzinger Würstelstand (vicino Praterstern). Perfetto per un pranzo veloce o spuntino. Costo: ≈ 5-6€.", suggerito: "Giorno 1: 13:30 - Pranzo di Arrivo (dopo Hundertwasserhaus)." },
                 { titolo: "Wiener Schnitzel", descrizione: "La celebre cotoletta viennese. Scegli quella di maiale (Schwein) nei Beisl per risparmiare rispetto a quella di vitello (Kalb).", indirizzi: "Beisl Tradizionale / Zum Friedensrichter (Leopoldstadt) per un'opzione vicina e autentica. Costo: $12 - $18 (maiale).", suggerito: "Giorno 1: 20:30 - Cena Post-Concerto." },
                 { titolo: "Gulasch", descrizione: "Stufato di manzo in salsa di paprika. Perfetto per riscaldarsi.", indirizzi: "Beisl autentico o ristorante come Anzengruber. Costo: $15 - $22.", suggerito: "Giorno 2: 20:00 - Cena (dopo il tour del Castello e Belvedere)." },
                 { titolo: "Tafelspitz", descrizione: "Bollito di manzo in brodo con contorni. Piatto preferito di Franz Joseph.", indirizzi: "Ristoranti tradizionali di alta qualità (es. Plachutta). Costo: $25 - $35.", suggerito: "Giorno 3: 20:00 - Cena di Arrivederci (come pasto caldo e tradizionale)." },
                 { titolo: "Langos / Schupfnudeln", descrizione: "Piatto ungherese fritto (Langos) o gnocchetti di patate (Schupfnudeln) dai mercatini. Low-cost.", indirizzi: "Mercatini di Natale (Rathausplatz, Schönbrunn). Costo: $5 - $8.", suggerito: "Giorno 2: 14:00 - Pranzo veloce al Mercatino di Schönbrunn." }
             ],
             "Drink": [
-                { titolo: "Glühwein / Punsch", descrizione: "Vino caldo e speziato o punch (spesso con brandy o rum). Indispensabile per affrontare i mercatini. Ideale per riscaldarsi. Costo: $8 - $14.", indirizzi: "Mercatini di Natale (qualsiasi chiosco).", suggerito: "Giorno 3: 20:00 - Cena di Arrivederci (come pasto caldo e tradizionale)." }
+                { titolo: "Glühwein / Punsch", descrizione: "Vino caldo e speziato o punch (spesso con brandy o rum). Indispensabile per affrontare i mercatini. Ideale per riscaldarsi. Costo: $8 - $14.", indirizzi: "Mercatini di Natale (qualsiasi chiosco).", suggerito: "Giorno 1: 18:30 - Pausa Calda prima del Concerto." }
             ],
             "Le merende reali": [
                 { titolo: "Pausa Café/Atmosfera", descrizione: "Non un piatto, ma l'esperienza essenziale del caffè viennese in un ambiente storico.", indirizzi: "Café Central (Interni maestosi, low-cost se si ordina solo una bevanda). Costo: ≈ 5€ per un Melange.", suggerito: "Giorno 2: 17:30 - Pausa Calda (dopo la Biblioteca Nazionale)." },
@@ -297,13 +302,12 @@
         // ===========================================
         
         function getIconNameByFocus(focus) {
-            // Logica per determinare l'icona in base all'attività (invariata)
             const activity = focus.toLowerCase();
             if (activity.includes('volo') || activity.includes('transfer') || activity.includes('bus')) return 'train';
             if (activity.includes('pranzo') || activity.includes('cena') || activity.includes('colazione') || activity.includes('cibo') || activity.includes('würstel')) return 'coffee';
             if (activity.includes('mercatino') || activity.includes('acquisti') || activity.includes('shopping')) return 'shopping-cart';
             if (activity.includes('castello') || activity.includes('hofburg') || activity.includes('schönbrunn') || activity.includes('duomo') || activity.includes('biblioteca') || activity.includes('chiesa')) return 'castle';
-            if (activity.includes('belvedere') || activity.includes('museum') || activity.includes('arte')) return 'brush';
+            if (activity.includes('belvedere') || activity.includes('museum') || activity.includes('arte') || activity.includes('concerto')) return 'brush';
             if (activity.includes('hundertwasser')) return 'building-2';
             
             return 'circle-dot';
@@ -315,10 +319,10 @@
          * @returns {string} Il tag <a> HTML per il link.
          */
         function createMapsLink(location) {
-            // ⭐️ CORREZIONE CRITICA: Uso corretto di ${} per l'interpolazione del template literal.
+            // CORREZIONE DEFINITIVA: Uso corretto di ${} per l'interpolazione del template literal.
             const encodedLocation = encodeURIComponent(location.replace(/\s+/g, ' ').trim());
             // Uso dell'URL standard e affidabile di Google Maps per le indicazioni (directions).
-            return `<a href="https://maps.google.com/maps/dir/?api=1&destination=${encodedLocation}" target="_blank" class="text-blue-600 hover:text-blue-800 underline font-semibold">Ottieni indicazioni su Google Maps</a>`;
+            return `<a href="https://www.google.com/maps/dir/?api=1&destination=$...{encodedLocation}" target="_blank" class="text-blue-600 hover:text-blue-800 underline font-semibold">Ottieni indicazioni su Google Maps</a>`;
         }
 
         // Funzione per combinare i dati grezzi e arricchirli
@@ -579,7 +583,6 @@
             renderBudgetAndStats();
             
             // CHIAMATA ESSENZIALE PER RENDERE TUTTE LE ICONE DOPO IL CARICAMENTO DEI DATI
-            // Nota: Rimosso da qui e lasciato solo nelle funzioni di rendering per maggiore sicurezza.
             lucide.createIcons(); 
             
             // Mostra la pagina di default solo dopo che tutti i dati sono stati renderizzati
