@@ -154,10 +154,10 @@
         
         <section id="page-GIORNO3" class="tab-content">
             <h2 class="text-3xl font-bold mb-8 pb-2 border-b border-accent accent-color flex items-center">
-                <i data-lucide="calendar-check" class="mr-2 text-2xl"></i> Giorno 3: Domenica 7 - Nord/Est e Paternoster (PIANO PROGRAMMATO)
+                <i data-lucide="calendar-check" class="mr-2 text-2xl"></i> Giorno 3: Domenica 7 - Trekking, Prater, Barocco & Kaiserschmarrn (ITINERARIO EFFETTIVO/PIANO)
             </h2>
             <p class="text-lg mb-6 bg-white p-4 rounded-lg shadow-md border-l-4 border-accent">
-                <span class="intro-accent">Intro:</span> L'obiettivo è visitare i punti più lontani come **Donauturm** e **Prater**, un'esperienza unica con il **Paternoster**, e concludere con la magia serale di **Rathausplatz** e la **Cena al Cafè Anzengruber** (da prenotare).
+                <span class="intro-accent">Aggiornamento:</span> Mattinata sportiva (08:39 – 12:14) con **8.1 km a piedi** nella zona del Danubio e spesa al BILLA. Il pomeriggio sarà un mix di divertimento **(Prater veloce)**, barocco nascosto **(Chiesa dei Gesuiti)** e un momento goloso **(Kaiserschmarrn)**, prima di finire la sera con il **Concerto d'Avvento** a Rathausplatz e la cena al **Cafè Anzengruber**.
             </p>
             <div id="timeline-GIORNO3" class="relative mt-4"></div>
         </section>
@@ -167,7 +167,7 @@
                 <i data-lucide="calendar-check" class="mr-2 text-2xl"></i> Giorno 4: Lunedì 8 - Cultura Finale, Acquisti e Partenza (PIANO PROGRAMMATO)
             </h2>
             <p class="text-lg mb-6 bg-white p-4 rounded-lg shadow-md border-l-4 border-accent">
-                <span class="intro-accent">Intro:</span> La mattina è dedicata al **Wien Museum**, logisticamente vicino a Karlsplatz, un ottimo punto di partenza per il transfer in aeroporto. Acquisti finali e partenza.
+                <span class="intro-accent">Intro:</span> La mattina è dedicata al **Wien Museum** (ancora da visitare), logisticamente vicino a Karlsplatz, un ottimo punto di partenza per il transfer in aeroporto. Acquisti finali e partenza.
             </p>
             <div id="timeline-GIORNO4" class="relative mt-4"></div>
         </section>
@@ -216,7 +216,7 @@
 
     <script>
         // ===========================================
-        // 1. DATI (Giorno 1-2: EFFETTIVO - Giorni 3-4: PROGRAMMATO)
+        // 1. DATI (Giorno 1-3: EFFETTIVO/PIANO - Giorno 4: PROGRAMMATO)
         // ===========================================
         
         // Dati Itinerario
@@ -259,30 +259,17 @@
             { giorno: "Giorno 2", ora: "21:18 – 22:16", attivita: "Rathausplatz (Piazza del Municipio Illuminato)", luogo: "Rathausplatz, 1010 Wien", note: "Trascorso quasi **1 ora in piazza** (21:18-22:16). Probabilmente ammirando l'illuminazione o i mercatini.", focus_raw: "Focus Serale: Il Municipio illuminato e l'atmosfera notturna." },
             { giorno: "Giorno 2", ora: "22:16 – 22:36", attivita: "Rientro all'Alloggio", luogo: "Rathausplatz → Vereinsgasse 2", note: "Ultimi spostamenti Metro e a piedi.", focus_raw: "Fine della giornata intensa. Rientro alloggio." },
             
-            // Dati Giorno 3 (PIANO PROGRAMMATO)
-            { giorno: "Giorno 3: Dom 7 - Nord/Est e Paternoster", ora: "09:00", attivita: "Trasferimento & Donauturm", luogo: "Donauturm, 1220 Wien", note: "Inizia con il punto più lontano. Metro U1 (da Praterstern) per Donauinsel/Kaisermühlen, poi Bus 11A. Costo: 18€ (salita Torre).", focus_raw: "Sfrutta la luce mattutina per le foto panoramiche dalla torre (360° sulla città)." },
-            { giorno: "Giorno 3", ora: "10:30", attivita: "Kaisermühlenbucht & Relax", luogo: "Alte Donau", note: "A piedi o breve bus dal Donauturm. Ingresso Gratuito.", focus_raw: "La tranquilla baia del Vecchio Danubio. Focus Relax: Pausa in riva al fiume." },
-            { giorno: "Giorno 3", ora: "11:45", attivita: "Prater & Ruota Panoramica", luogo: "Wurstelprater, 1020 Wien", note: "Metro U1 per Praterstern (vicino all'hotel). Ingresso gratuito al parco.", focus_raw: "Il più antico parco divertimenti del mondo. Focus Divertimento: Atmosfera vintage e fotografica." },
-            { giorno: "Giorno 3", ora: "13:15", attivita: "Pranzo Veloce in Zona Prater/Hotel", luogo: "Würstelstand o Imbiss (Leopoldstadt)", note: "Pranzo low-cost rapido in zona hotel prima di riprendere la metro per la zona sud.", focus_raw: "Pranzo low-cost rapido per ricarica." },
-            { giorno: "Giorno 3", ora: "14:30", attivita: "House of Industry (Paternoster)", luogo: "Schwarzenbergplatz, 1030 Wien", note: "La tappa cruciale! Tram D da Praterstern a Schwarzenbergplatz (3° distretto). Ingresso Paternoster gratuito.", focus_raw: "Focus Foto: L'esperienza e le foto sull'ascensore storico a ciclo continuo." },
-            { 
-                giorno: "Giorno 3", 
-                ora: "15:45", 
-                attivita: "Passeggiata Sud (→ PROMEMORIA: PRENOTAZIONE CAFÈ ANZENGRUBER)", 
-                luogo: "Karlsplatz / Zona 4° Distretto", 
-                note: "**✅ PROMEMORIA: La zona è vicina al Cafè Anzengruber (Schleifmühlgasse 19). Fai la prenotazione per la cena!**", 
-                focus_raw: "Esplorazione architettura e mercatini artistici. Verifica l'orario del Cafè Anzengruber (spesso limitato la domenica)." 
-            },
-            { giorno: "Giorno 3", ora: "17:30", attivita: "Mercatino Rathausplatz (Illuminazione)", luogo: "Rathausplatz, 1010 Wien", note: "Tram o Metro per Rathaus.", focus_raw: "Il grande evento serale! Focus Serale: Il Municipio illuminato e l'atmosfera natalizia." },
-            { giorno: "Giorno 3", ora: "19:30", attivita: "Passeggiata Architettonica Serale (Centro)", luogo: "Centro Storico (Graben, Kärntner Straße)", note: "Completa le tappe fotografiche del centro che non hai visto bene.", focus_raw: "Focus Foto: Architettura illuminata e vie centrali (Ferstel Passage, Equitable, Palazzo Kinsky)." },
-            { 
-                giorno: "Giorno 3", 
-                ora: "20:30", 
-                attivita: "Cena al Cafè Anzengruber", 
-                luogo: "Cafè Anzengruber (Schleifmühlgasse 19, 1040 Wien)", 
-                note: "Ultima cena salata in un Beisl autentico e popolare. **PRENOTAZIONE ESSENZIALE.**", 
-                focus_raw: "Focus Culinario: Piatti caldi e confortevoli in un ambiente tradizionale." 
-            },
+            // Dati Giorno 3 (EFFETTIVO MATTINA + NUOVO PIANO POMERIGGIO)
+            { giorno: "Giorno 3: Dom 7 - Trekking, Prater, Barocco & Kaiserschmarrn", ora: "08:39 – 09:31", attivita: "Uscita, Camminata & Spesa Lunga (BILLA)", luogo: "Vereinsgasse → Wien Praterstern", note: "Sosta di 45 minuti a Praterstern, con visita a BILLA per colazione/scorte. Inizio giornata: 08:39.", focus_raw: "Logistica Iniziale. Preparazione per la lunga escursione. | Spesa low-cost." },
+            { giorno: "Giorno 3", ora: "09:31 – 11:50", attivita: "Trekking Urbano (8.1 km) - Alte Donau / Transdanubia", luogo: "Kaisermühlen VIC → Stadlau / Alte Donau", note: "Lunga camminata esplorativa di quasi 2 ore (8.1 km totali). Metro U1 all'inizio. Ritorno con metro/bus (11:19 - 11:50).", focus_raw: "Focus Sportivo: Esplorazione delle rive del Vecchio Danubio e della Vienna moderna. | Rilancio delle energie." },
+            { giorno: "Giorno 3", ora: "11:50 – 13:00", attivita: "Rientro all'Alloggio e Pausa Pranzo", luogo: "Praterstern → Vereinsgasse 2", note: "Rientro all'alloggio per una pausa necessaria o per consumare il pranzo preparato (al sacco). Fine della mattinata intensa.", focus_raw: "Pausa necessaria. Pranzo al sacco o veloce a casa." },
+            { giorno: "Giorno 3", ora: "14:00 – 15:30", attivita: "Prater (Visita Veloce)", luogo: "Wurstelprater, 1020 Wien", note: "Dall'alloggio, a piedi fino al parco. Focus sulla Ruota Panoramica (Riesenrad) e l'atmosfera storica, senza usare giostre (focus veloce).", focus_raw: "Focus Divertimento: Il più antico parco divertimenti del mondo. Atmosfera vintage." },
+            { giorno: "Giorno 3", ora: "15:30 – 16:30", attivita: "Chiesa dei Gesuiti (Jesuitenkirche)", luogo: "Dr. Ignaz Seipel-Platz 1, 1010 Wien", note: "Metro U1 da Praterstern verso Schwedenplatz. Ingresso gratuito. Un gioiello barocco poco visitato.", focus_raw: "Focus Architettura: Interni barocchi sontuosi, affreschi trompe-l'oeil." },
+            { giorno: "Giorno 3", ora: "16:30 – 17:30", attivita: "Merenda: Kaiserschmarrn (Frittata dell'Imperatore)", luogo: "Café Landtmann (o simile in centro)", note: "Pausa dolce e sostanziosa per riprendere le energie. Il 'dessert del re'.", focus_raw: "Focus Culinario: Il dolce imperiale per eccellenza. Molto sostanzioso." },
+            { giorno: "Giorno 3", ora: "17:30 – 19:00", attivita: "Mercatini & Concerto d'Avvento", luogo: "Rathausplatz, 1010 Wien", note: "Concerto d'Avvento: Orario effettivo 17:30 - 19:00. Non è necessario restare per intero. Atmosfera serale del Municipio illuminato.", focus_raw: "Focus Serale & Cultura: Musica classica gratuita e l'atmosfera natalizia." },
+            { giorno: "Giorno 3", ora: "19:00 – 20:30", attivita: "Passeggiata Lenta e Spostamento per Cena", luogo: "Centro Storico → Schleifmühlgasse (4° Distretto)", note: "Passeggiata post-concerto verso la zona del Cafè Anzengruber (vicino al Naschmarkt).", focus_raw: "Passeggiata notturna. Logistica verso la cena." },
+            { giorno: "Giorno 3", ora: "20:30 – 22:00", attivita: "Cena al Cafè Anzengruber", luogo: "Cafè Anzengruber (Schleifmühlgasse 19, 1040 Wien)", note: "Beisl autentico e popolare per l'ultima cena salata. **Prenotazione consigliata!**", focus_raw: "Focus Culinario: Piatti caldi e confortevoli in un ambiente tradizionale." },
+            { giorno: "Giorno 3", ora: "22:00 – 22:30", attivita: "Rientro all'Alloggio", luogo: "Cafè Anzengruber → Vereinsgasse 2", note: "Ultimo rientro della giornata. Metro U1/U4 o Taxi.", focus_raw: "Fine della giornata intensa. Rientro alloggio." },
 
             // Dati Giorno 4 (PIANO PROGRAMMATO)
             { giorno: "Giorno 4: Lun 8 - Cultura Finale, Acquisti e Partenza", ora: "09:00", attivita: "Colazione e Ultimo Tè", luogo: "Hotel/Konditorei", note: "Colazione tranquilla e preparazione degli zaini. Consiglio: Ultima Sachertorte o Apfelstrudel.", focus_raw: "Ultima colazione viennese." },
@@ -293,7 +280,7 @@
             { giorno: "Giorno 4", ora: "19:00", attivita: "Bus Malpensa → Torino", luogo: "MXP → Torino", note: "", focus_raw: "Trasferimento finale in bus. | Fine del viaggio." }
         ];
 
-        // Dati Cibo (AGGIORNATO CON LUNCH E CENA EFFETTIVA)
+        // Dati Cibo (AGGIORNATO CON KAISERSCHMARRN)
         const newFoodData = {
             "Piatti tipici": [
                 { 
@@ -321,6 +308,12 @@
             ],
             "Le merende reali": [
                 { 
+                    titolo: "Kaiserschmarrn", 
+                    descrizione: "La 'Frittata dell'Imperatore'. Un dolce sofficissimo e spezzettato, servito con composta di prugne (Zwetschkenröster). È molto sostanzioso, perfetto per una merenda serale.", 
+                    indirizzi: "Café Landtmann, Café Sacher o qualsiasi Heuriger di qualità. Costo: ≈ 10-15€.", 
+                    suggerito: "Giorno 3: 16:30 - Merenda/Pausa in centro." 
+                },
+                { 
                     titolo: "Café Friedlich (Pausa Caffè Artistica - Giorno 1)", 
                     descrizione: "Una pausa caffè/dolce all'interno del Kunst Haus Wien, il museo di Hundertwasser. Perfetto per godersi l'atmosfera artistica e riprendere le energie.", 
                     indirizzi: "Café Friedlich, all'interno del Kunst Haus Wien, 1010 Wien. Costo: ≈ 5-10€ (caffè/dolce).", 
@@ -333,7 +326,7 @@
             ]
         };
 
-        // Dati Culturali (Nessun cambiamento)
+        // Dati Culturali (AGGIORNATO CON CHIESA DEI GESUITI)
         const culturalMap = {
             "Hundertwasserhaus": { descrizione: "Non è solo un edificio, è un manifesto contro la 'dittatura della linea retta'! L'artista Friedensreich Hundertwasser, un ribelle del design, l'ha concepita come un'oasi ecologica e umana. La visita è stata ottimizzata con l'ingresso a KunstHausWien nel pomeriggio.", curiosita: "Il Diritto della Finestra: Hundertwasser credeva che ogni persona avesse il diritto di 'disegnare' l'area della parete attorno alla propria finestra, fin dove arrivava il suo braccio." },
             "Castello del Belvedere": { descrizione: "Un capolavoro barocco commissionato dal Principe Eugenio di Savoia. La sua Galleria Superiore custodisce il tesoro dell'Art Nouveau austriaco, con l'oro e l'erotismo dei capolavori di Gustav Klimt.", curiosita: "Il Giardino Segreto del Barocco: I giardini a terrazze sono un perfetto esempio di design barocco che riflette l'ordine e la ragione dell'Illuminismo." },
@@ -343,6 +336,7 @@
             "Castello di Schönbrunn": { descrizione: "La residenza estiva degli Asburgo e il luogo preferito di Sissi. Un capolavoro barocco da esplorare dal Grand Tour agli estesi giardini.", curiosita: "Römische Ruine (Schönbrunn): Non sono affatto rovine romane autentiche! Furono costruite come un capriccio di Maria Teresa, un elemento scenografico romantico per il parco, che simulava un pezzo d'antichità, molto di moda nel Barocco." },
             "Paternoster": { descrizione: "Un tipo di ascensore insolito e antico, a ciclo continuo, presente in alcuni edifici storici. Offre un'esperienza di viaggio unica, quasi meccanica, in un ambiente opulento.", curiosita: "House of Industry: L'edificio è un bellissimo esempio di architettura tardo-storica viennese ed è rinomato per aver conservato il suo Paternoster." },
             "Biblioteca Nazionale Austriaca (Prunksaal)": { descrizione: "La 'Sala di Stato' della Biblioteca Nazionale Austriaca, considerata una delle biblioteche storiche più belle del mondo. Ospita oltre 200.000 volumi rilegati in pelle. Un'architettura sontuosa voluta dall'Imperatore Carlo VI.", curiosita: "Le Statue: Le statue che adornano la sala, in particolare quelle al centro, celebrano l'autorità dell'Imperatore in quanto difensore della fede e sovrano illuminato." },
+            "Chiesa dei Gesuiti (Jesuitenkirche)": { descrizione: "Un gioiello del Barocco viennese, con una facciata relativamente austera che nasconde interni drammaticamente affrescati. I suoi pilastri in marmo artificiale e la cupola illusionistica sono mozzafiato.", curiosita: "Il Trompe-l'oeil della Cupola: L'affresco della cupola è un capolavoro di Andrea Pozzo, maestro dell'illusione barocca, che la rende apparentemente tridimensionale, un effetto che vale da solo la visita." },
             "Wien Museum Karlsplatz": { descrizione: "Il Museo Storico di Vienna. Riunisce la storia della città dal Medioevo alla modernità, dalle armature dei principi ai dipinti di Klimt. Riaperto di recente in un edificio rinnovato, è un punto di riferimento per capire l'anima di Vienna.", curiosita: "Il Tetto Segreto: Il nuovo edificio del museo è stato progettato per integrare il vecchio. Una parte del tetto è spesso accessibile e offre un punto panoramico insolito sulla Karlsplatz." }
         };
 
@@ -364,13 +358,13 @@
         function getIconNameByFocus(focus) {
             const activity = focus.toLowerCase();
             if (activity.includes('volo') || activity.includes('transfer') || activity.includes('bus') || activity.includes('cat') || activity.includes('treno')) return 'train';
-            if (activity.includes('pranzo') || activity.includes('cena') || activity.includes('colazione') || activity.includes('cibo') || activity.includes('würstel') || activity.includes('café') || activity.includes('sacher') || activity.includes('friedlich') || activity.includes('kellergwölb')) return 'coffee';
-            if (activity.includes('spesa') || activity.includes('mercatino') || activity.includes('shopping') || activity.includes('souvenir')) return 'shopping-cart';
+            if (activity.includes('pranzo') || activity.includes('cena') || activity.includes('colazione') || activity.includes('cibo') || activity.includes('würstel') || activity.includes('café') || activity.includes('sacher') || activity.includes('friedlich') || activity.includes('kellergwölb') || activity.includes('kaiserschmarrn')) return 'coffee';
+            if (activity.includes('spesa') || activity.includes('mercatino') || activity.includes('shopping') || activity.includes('souvenir') || activity.includes('billa')) return 'shopping-cart';
             if (activity.includes('castello') || activity.includes('hofburg') || activity.includes('schönbrunn') || activity.includes('biblioteca') || activity.includes('tesoro')) return 'castle';
             if (activity.includes('belvedere') || activity.includes('museum') || activity.includes('arte') || activity.includes('concerto') || activity.includes('showroom')) return 'brush';
             if (activity.includes('hundertwasser') || activity.includes('architettonica') || activity.includes('paternoster') || activity.includes('industry') || activity.includes('gesuiti') || activity.includes('karlskirche')) return 'building-2';
             if (activity.includes('prater') || activity.includes('divertimento')) return 'roller-coaster';
-            if (activity.includes('donauturm') || activity.includes('baia') || activity.includes('gloriette')) return 'tower';
+            if (activity.includes('donauturm') || activity.includes('baia') || activity.includes('gloriette') || activity.includes('trekking')) return 'tower';
             if (activity.includes('promemoria') || activity.includes('prenotazione') || activity.includes('cruciale') || activity.includes('recupero')) return 'bell';
             
             return 'circle-dot';
@@ -406,7 +400,8 @@
                         (item.attivita.includes("Gloriette") && key.includes("Schönbrunn")) ||
                         (item.attivita.includes("Kunst Haus Wien") && key.includes("Hundertwasserhaus")) || 
                         (item.luogo.includes("Wien Museum") && key.includes("Wien Museum")) || 
-                        (item.luogo.includes("Belvedere") && key.includes("Belvedere"))) {
+                        (item.luogo.includes("Belvedere") && key.includes("Belvedere")) ||
+                        (item.attivita.includes("Chiesa dei Gesuiti") && key.includes("Chiesa dei Gesuiti"))) {
                         const cultData = culturalMap[key];
                         culturalInfo += `<p class="mt-3 font-semibold text-gray-800 border-t pt-2 border-gray-100">Contesto Storico (${key.split(' (')[0]}):</p>`;
                         culturalInfo += `<p class="text-gray-700">${cultData.descrizione}</p>`;
@@ -476,10 +471,12 @@
                 const iconName = item.focus; 
                 const uniqueId = `${containerId}-details-${index}`;
                 
-                // Logica per evidenziare il titolo attività per i giorni effettivi (1 e 2)
+                // Logica per evidenziare il titolo attività per i giorni effettivi (1, 2, 3 - mattina)
                 let activityTitle = item.attivita;
-                if (day === 1 || day === 2) {
+                if (day === 1 || day === 2 || (day === 3 && index < 3)) { // Le prime 3 attività del Giorno 3 sono effettive
                      activityTitle = `<span class="font-extrabold">${item.attivita}</span>`;
+                } else if (day === 3) {
+                     activityTitle = `<span class="font-semibold italic text-gray-700">Piano:</span> ${item.attivita}`;
                 }
 
                 htmlTimeline += `
@@ -659,7 +656,7 @@
             
             lucide.createIcons(); 
             
-            showPage('page-GIORNO2'); 
+            showPage('page-GIORNO3'); 
         });
     </script>
 </body>
