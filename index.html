@@ -164,10 +164,10 @@
 
         <section id="page-GIORNO4" class="tab-content">
             <h2 class="text-3xl font-bold mb-8 pb-2 border-b border-accent accent-color flex items-center">
-                <i data-lucide="calendar-check" class="mr-2 text-2xl"></i> Giorno 4: Lunedì 8 - Cultura Finale, Acquisti e Partenza (PIANO PROGRAMMATO)
+                <i data-lucide="calendar-check" class="mr-2 text-2xl"></i> Giorno 4: Lunedì 8 - Colazione Gourmet, Augustinerkirche & Rientro (ITINERARIO EFFETTIVO E CRONOLOGICO)
             </h2>
             <p class="text-lg mb-6 bg-white p-4 rounded-lg shadow-md border-l-4 border-accent">
-                <span class="intro-accent">Intro:</span> Ultima mattinata dedicata al **Wien Museum** (ancora da visitare), logisticamente vicino a Karlsplatz, un ottimo punto di partenza per il transfer in aeroporto. Acquisti finali e partenza.
+                <span class="intro-accent">Intro:</span> Ultima mattinata dedicata all'eleganza: colazione alla **Kurkonditorei OBERLAA**, rapida visita alla **Peterskirche** e una lunga e prioritaria visita alla **Augustinerkirche** (Chiesa nuziale Asburgica). Il pomeriggio è stato interamente dedicato al lungo viaggio di ritorno. **(Il Wien Museum è stato sostituito da questa mattinata culturale)**.
             </p>
             <div id="timeline-GIORNO4" class="relative mt-4"></div>
         </section>
@@ -216,7 +216,7 @@
 
     <script>
         // ===========================================
-        // 1. DATI (Giorno 1-3: EFFETTIVO/CRONOLOGICO - Giorno 4: PROGRAMMATO)
+        // 1. DATI (Giorno 1-4: EFFETTIVO/CRONOLOGICO)
         // ===========================================
         
         // Dati Itinerario
@@ -259,7 +259,7 @@
             { giorno: "Giorno 2", ora: "21:18 – 22:16", attivita: "Rathausplatz (Piazza del Municipio Illuminato)", luogo: "Rathausplatz, 1010 Wien", note: "Trascorso quasi **1 ora in piazza** (21:18-22:16). Probabilmente ammirando l'illuminazione o i mercatini.", focus_raw: "Focus Serale: Il Municipio illuminato e l'atmosfera notturna." },
             { giorno: "Giorno 2", ora: "22:16 – 22:36", attivita: "Rientro all'Alloggio", luogo: "Rathausplatz → Vereinsgasse 2", note: "Ultimi spostamenti Metro e a piedi.", focus_raw: "Fine della giornata intensa. Rientro alloggio." },
             
-            // Dati Giorno 3 (CRONOLOGIA EFFETTIVA CON DETTAGLI INTERNI)
+            // Dati Giorno 3 (EFFETTIVO E CRONOLOGICO)
             { giorno: "Giorno 3: Dom 7 - Trekking, Pausa Medica, Concerto in Sala & Gulasch", ora: "08:39 – 09:31", attivita: "Uscita, Camminata & Spesa Veloce (BILLA)", luogo: "Vereinsgasse → Wien Praterstern", note: "Sosta di 45 minuti a Praterstern, inclusa visita a BILLA.", focus_raw: "Logistica Iniziale. Preparazione per la lunga escursione. Spesa low-cost." },
             { giorno: "Giorno 3", ora: "09:31 – 11:50", attivita: "Trekking Urbano (8.1 km) - Alte Donau / Transdanubia", luogo: "Kaisermühlen VIC → Stadlau / Alte Donau", note: "Lunga camminata esplorativa di 8.1 km totali.", focus_raw: "Focus Sportivo: Esplorazione delle rive del Vecchio Danubio. Giornata da record (13 km totali)." },
             { giorno: "Giorno 3", ora: "11:50 – 15:19", attivita: "Rientro all'Alloggio e Lunga Pausa Medica/Pranzo", luogo: "Praterstern → Vereinsgasse 2", note: "**Pausa prolungata (3h 05m). Io ero rientrata per un mal di stomaco, mentre Paolo è andato a comprare medicine e il pranzo.**", focus_raw: "Riposo e ricarica. Logistica Medica e Pranzo gestito da Paolo." },
@@ -271,16 +271,23 @@
             { giorno: "Giorno 3", ora: "21:10 – 21:25", attivita: "Dolce: Kaiser's – Kaiser'schmarrn", luogo: "Kaiser's (vicino a Judengasse)", note: "Breve sosta di 15 minuti per il dessert: la tipica 'frittata dell'Imperatore'.", focus_raw: "Focus Culinario: Il dolce imperiale per eccellenza. Merenda/Cena dolce." },
             { giorno: "Giorno 3", ora: "21:25 – 21:44", attivita: "Rientro all'Alloggio", luogo: "Centro → Vereinsgasse 2", note: "Passeggiata digestiva e rientro. Fine della giornata da 13 km.", focus_raw: "Fine della giornata intensa." },
 
-            // Dati Giorno 4 (PIANO PROGRAMMATO)
-            { giorno: "Giorno 4: Lun 8 - Cultura Finale, Acquisti e Partenza", ora: "09:00", attivita: "Colazione e Ultimo Tè", luogo: "Hotel/Konditorei", note: "Colazione tranquilla e preparazione degli zaini. Consiglio: Ultima Sachertorte o Apfelstrudel.", focus_raw: "Ultima colazione viennese." },
-            { giorno: "Giorno 4", ora: "10:00", attivita: "Wien Museum Karlsplatz (Tappa finale)", luogo: "Wien Museum Karlsplatz", note: "Metro U4/U1 per Karlsplatz (4° distretto). Costo: ≈ 12€. Ottimo per l'aeroporto. **(Ultimo museo da visitare)**", focus_raw: "Focus Culturale: Storia civica di Vienna. L'ultimo museo richiesto." },
-            { giorno: "Giorno 4", ora: "11:30", attivita: "Acquisto Souvenir e Check-out", luogo: "Karlsplatz / Rientro Hotel", note: "Ultimi acquisti. Acquista Mozartkugel/Manner Wafers nei supermercati. Rientro in hotel per il check-out (12:00).", focus_raw: "Acquisti finali." },
-            { giorno: "Giorno 4", ora: "13:00", attivita: "Pranzo Veloce & Trasferimento Aeroporto", luogo: "Hotel → Aeroporto", note: "Pranzo rapido prima di dirigersi verso la S7 o il CAT. Logistica: **Consigliato il CAT** se si parte da Wien Mitte (16 min).", focus_raw: "Partenza da Vienna ore 16:35. Lasciarsi largo anticipo." },
-            { giorno: "Giorno 4", ora: "16:35 - 18:05", attivita: "Volo VIE → MXP", luogo: "VIE / MXP", note: "", focus_raw: "Volo di ritorno per Malpensa." },
-            { giorno: "Giorno 4", ora: "19:00", attivita: "Bus Malpensa → Torino", luogo: "MXP → Torino", note: "", focus_raw: "Trasferimento finale in bus. | Fine del viaggio." }
+            // Dati Giorno 4 (EFFETTIVO E CRONOLOGICO)
+            { giorno: "Giorno 4: Lun 8 - Colazione Gourmet, Augustinerkirche & Rientro", ora: "08:50 – 09:19", attivita: "Uscita & Spostamento in Centro", luogo: "Vereinsgasse → Praterstern → Centro", note: "Ultimi spostamenti in metro verso il 1° distretto.", focus_raw: "Logistica iniziale dell'ultimo giorno." },
+            { giorno: "Giorno 4", ora: "09:22 – 10:32", attivita: "Colazione/Merenda da Kurkonditorei OBERLAA", luogo: "Kurkonditorei OBERLAA (Neuer Markt)", note: "**Sosta di 1 ora e 10 minuti** per colazione o merenda. Gustare i dolci viennesi in una prestigiosa pasticceria.", focus_raw: "Focus Culinario: Ultima colazione viennese. Pasticceria di alta qualità." },
+            { giorno: "Giorno 4", ora: "10:39 – 10:46", attivita: "Chiesa di San Pietro (Peterskirche)", luogo: "Peterskirche, 1010 Wien", note: "Visita veloce di 7 minuti a questa chiesa barocca del centro.", focus_raw: "Focus Architettura: Cupola barocca e interni riccamente decorati. Tappa lampo." },
+            { giorno: "Giorno 4", ora: "10:50 – 12:42", attivita: "Chiesa di Sant'Agostino (Augustinerkirche)", luogo: "Augustinerkirche (Josefsplatz 1, 1010 Wien)", note: "**Visita molto lunga di 1 ora e 52 minuti.** Chiesa nuziale degli Asburgo. Noto per la Herzlgruft.", focus_raw: "Focus Cultura & Storico: Priorità assoluta del Giorno 4. Cuore Asburgico." },
+            
+            // PARTE 2: IL LUNGO VIAGGIO DI RITORNO (Giorno 4 EFFETTIVO)
+            { giorno: "Giorno 4", ora: "12:42 – 14:17", attivita: "Lunga Camminata (3.8 km) verso la Stazione", luogo: "Centro → Stazione di Rennweg", note: "Camminata prolungata di 1 ora e 35 minuti, evitando mezzi pubblici per l'ultimo tratto in centro.", focus_raw: "Ultimo trekking urbano. Logistica Trasporto (Rennweg è su S7 per l'aeroporto)." },
+            { giorno: "Giorno 4", ora: "14:20 – 14:41", attivita: "Treno Stazione Rennweg → Aeroporto", luogo: "Rennweg → Flughafen Wien (VIE)", note: "Viaggio in treno di 21 minuti.", focus_raw: "Trasferimento rapido e puntuale." },
+            { giorno: "Giorno 4", ora: "14:42 – 16:44", attivita: "Aeroporto di Vienna-Schwechat", luogo: "VIE", note: "Tempo dedicato al check-in e ai controlli.", focus_raw: "Logistica Aeroportuale." },
+            { giorno: "Giorno 4", ora: "16:44 – 18:05", attivita: "Volo VIE → MXP", luogo: "VIE / MXP", note: "Volo di rientro verso l'Italia.", focus_raw: "Viaggio aereo." },
+            { giorno: "Giorno 4", ora: "18:05 – 18:27", attivita: "Sbarco a Malpensa", luogo: "MXP T1", note: "Ritiro bagagli e spostamento al terminal bus.", focus_raw: "Logistica Aeroportuale." },
+            { giorno: "Giorno 4", ora: "18:27 – 20:36", attivita: "Bus Malpensa → Torino", luogo: "MXP → Torino Porta Susa", note: "Viaggio in autobus di 2 ore e 9 minuti.", focus_raw: "Trasferimento finale in bus." },
+            { giorno: "Giorno 4", ora: "20:36 – 21:19", attivita: "Rientro a Casa", luogo: "Torino Porta Susa → Casa (Via Fossata, 11)", note: "Camminata e ultimo tratto in auto verso l'arrivo finale alle 21:19.", focus_raw: "Fine ufficiale del viaggio." }
         ];
 
-        // Dati Cibo (AGGIORNATO CON SCHACHTELWIRT E KAISER'S EFFETTIVI)
+        // Dati Cibo (AGGIORNATO CON OBERLAA)
         const newFoodData = {
             "Piatti tipici": [
                 { 
@@ -313,6 +320,12 @@
             ],
             "Le merende reali": [
                 { 
+                    titolo: "Kurkonditorei OBERLAA (Effettivo Giorno 4)", 
+                    descrizione: "Una delle pasticcerie più rinomate di Vienna. **Hai consumato qui l'ultima colazione/merenda (1h 10m)**, scegliendo tra torte classiche, cioccolatini e pasticceria fresca.", 
+                    indirizzi: "Kurkonditorei OBERLAA (Neuer Markt, 1010 Wien). Costo: ≈ 10-20€.", 
+                    suggerito: "Giorno 4: 09:22 - Colazione/Merenda Finale." 
+                },
+                { 
                     titolo: "Kaiser's – Kaiser'schmarrn (Effettivo Giorno 3)", 
                     descrizione: "La 'Frittata dell'Imperatore'. Un dolce sofficissimo e spezzettato, servito con composta di prugne. Consumato qui come dessert serale.", 
                     indirizzi: "Kaiser's – Kaiser'schmarrn (vicino a Judengasse). Costo: ≈ 10-15€.", 
@@ -324,13 +337,12 @@
                     indirizzi: "Café Friedlich, all'interno del Kunst Haus Wien, 1010 Wien. Costo: ≈ 5-10€ (caffè/dolce).", 
                     suggerito: "Giorno 1: 12:00 - Pausa Calda (Esperienza effettiva)." 
                 },
-                { titolo: "Pausa Café/Atmosfera (Café Central)", descrizione: "L'esperienza essenziale del caffè viennese in un ambiente storico. Ottimo per riprendersi dalle lunghe camminate.", indirizzi: "Café Central (Interni maestosi, low-cost se si ordina solo una bevanda). Costo: ≈ 5€ per un Melange.", suggerito: "Giorno 4: 09:00 - Colazione/Merenda Finale." },
-                { titolo: "Apfelstrudel & Sachertorte", descrizione: "I classici viennesi: lo Strudel di mele e l'iconica torta al cioccolato e albicocca. Perfetti per salutare Vienna.", indirizzi: "Konditorei di alta qualità (come Sacher o Demel).", suggerito: "Giorno 4: 09:00 - Colazione/Merenda finale." },
-                { titolo: "Mozartkugel / Manner Wafers", descrizione: "Le famose palle di cioccolato al pistacchio e i wafer alla nocciola (Manner).", indirizzi: "Supermercati (Billa, Spar) o negozi Manner.", suggerito: "Giorno 4: 11:30 - Acquisto Souvenir / Snack." }
+                { titolo: "Apfelstrudel & Sachertorte", descrizione: "I classici viennesi: lo Strudel di mele e l'iconica torta al cioccolato e albicocca. Perfetti per salutare Vienna.", indirizzi: "Konditorei di alta qualità (come Sacher o Demel).", suggerito: "Alternativa all'Oberlaa." },
+                { titolo: "Mozartkugel / Manner Wafers", descrizione: "Le famose palle di cioccolato al pistacchio e i wafer alla nocciola (Manner).", indirizzi: "Supermercati (Billa, Spar) o negozi Manner.", suggerito: "Giorno 4: Ultimi Acquisti." }
             ]
         };
 
-        // Dati Culturali (AGGIORNATO CON CHIESA DEI GESUITI)
+        // Dati Culturali (AGGIORNATO CON AUGUSTINERKIRCHE)
         const culturalMap = {
             "Hundertwasserhaus": { descrizione: "Non è solo un edificio, è un manifesto contro la 'dittatura della linea retta'! L'artista Friedensreich Hundertwasser, un ribelle del design, l'ha concepita come un'oasi ecologica e umana. La visita è stata ottimizzata con l'ingresso a KunstHausWien nel pomeriggio.", curiosita: "Il Diritto della Finestra: Hundertwasser credeva che ogni persona avesse il diritto di 'disegnare' l'area della parete attorno alla propria finestra, fin dove arrivava il suo braccio." },
             "Castello del Belvedere": { descrizione: "Un capolavoro barocco commissionato dal Principe Eugenio di Savoia. La sua Galleria Superiore custodisce il tesoro dell'Art Nouveau austriaco, con l'oro e l'erotismo dei capolavori di Gustav Klimt.", curiosita: "Il Giardino Segreto del Barocco: I giardini a terrazze sono un perfetto esempio di design barocco che riflette l'ordine e la ragione dell'Illuminismo." },
@@ -340,15 +352,17 @@
             "Castello di Schönbrunn": { descrizione: "La residenza estiva degli Asburgo e il luogo preferito di Sissi. Un capolavoro barocco da esplorare dal Grand Tour agli estesi giardini.", curiosita: "Römische Ruine (Schönbrunn): Non sono affatto rovine romane autentiche! Furono costruite come un capriccio di Maria Teresa, un elemento scenografico romantico per il parco." },
             "Biblioteca Nazionale Austriaca (Prunksaal)": { descrizione: "La 'Sala di Stato' della Biblioteca Nazionale Austriaca, considerata una delle biblioteche storiche più belle del mondo. Ospita oltre 200.000 volumi rilegati in pelle.", curiosita: "Le Statue: Le statue che adornano la sala celebrano l'autorità dell'Imperatore Carlo VI in quanto difensore della fede e sovrano illuminato." },
             "Chiesa dei Gesuiti (Jesuitenkirche)": { descrizione: "Un gioiello del Barocco viennese, con una facciata relativamente austera che nasconde interni drammaticamente affrescati. I suoi pilastri in marmo artificiale e la cupola illusionistica sono mozzafiato.", curiosita: "Il Trompe-l'oeil della Cupola: L'affresco della cupola è un capolavoro di Andrea Pozzo, maestro dell'illusione barocca, che la rende apparentemente tridimensionale, un effetto che vale da solo la visita." },
-            "Wien Museum Karlsplatz": { descrizione: "Il Museo Storico di Vienna. Riunisce la storia della città dal Medioevo alla modernità, dalle armature dei principi ai dipinti di Klimt. Riaperto di recente in un edificio rinnovato, è un punto di riferimento per capire l'anima di Vienna.", curiosita: "Il Tetto Segreto: Il nuovo edificio del museo è stato progettato per integrare il vecchio. Una parte del tetto è spesso accessibile e offre un punto panoramico insolito sulla Karlsplatz." }
+            "Chiesa di Sant'Agostino (Augustinerkirche)": { descrizione: "La Chiesa di Sant'Agostino, nota per essere la **Chiesa nuziale degli Asburgo** (qui Sissi e Franz si sposarono). Ospita la *Herzlgruft* (Cripta dei Cuori), dove sono conservati i cuori di 54 membri degli Asburgo in urne d'argento. **Hai speso quasi due ore qui (Giorno 4).**", curiosita: "La Cripta dei Cuori: La separazione del cuore dal corpo era una tradizione asburgica che simboleggiava la purezza dell'anima e la permanenza della dinastia." },
+            "Peterskirche": { descrizione: "La Chiesa di San Pietro. Esempio sublime del barocco viennese, con una facciata concava che si affaccia su una piccola piazza. Gli interni sono ricchi di ori e affreschi.", curiosita: "La Leggenda: Si dice che la chiesa originaria fosse stata fondata nientemeno che da Carlo Magno." },
+            "Wien Museum Karlsplatz": { descrizione: "Il Museo Storico di Vienna. **Nota: Questa visita, precedentemente in programma, è stata sostituita dalle chiese nel Giorno 4.**", curiosita: "Il Tetto Segreto: Il nuovo edificio del museo è stato progettato per integrare il vecchio. Una parte del tetto è spesso accessibile e offre un punto panoramico insolito sulla Karlsplatz." }
         };
 
         // Dati Budget (Mantenuti uguali)
         const budgetData = [
             { categoria: "Alloggio (3 notti)", costo: 243.00, icon: 'bed' },
             { categoria: "Ingressi & Biglietti (Cultura)", costo: 132.00, icon: 'ticket' },
-            { categoria: "Trasporti (Pass 72h + CAT A/R)", costo: 93.40, icon: 'train' }, 
-            { categoria: "Cibo & Bevande (Stimato per 4 giorni)", costo: 320.00, icon: 'sandwich' }, // Mantenuto alto per compensare i caffè e i pranzi centrali
+            { categoria: "Trasporti (Pass 72h + Treno A/R)", costo: 93.40, icon: 'train' }, 
+            { categoria: "Cibo & Bevande (Stimato per 4 giorni)", costo: 320.00, icon: 'sandwich' }, 
             { categoria: "Spese Varie & Souvenir", costo: 150.00, icon: 'shopping-bag' }
         ];
 
@@ -360,15 +374,15 @@
         
         function getIconNameByFocus(focus) {
             const activity = focus.toLowerCase();
-            if (activity.includes('volo') || activity.includes('transfer') || activity.includes('bus') || activity.includes('cat') || activity.includes('treno')) return 'train';
-            if (activity.includes('pranzo') || activity.includes('cena') || activity.includes('colazione') || activity.includes('cibo') || activity.includes('würstel') || activity.includes('café') || activity.includes('sacher') || activity.includes('friedlich') || activity.includes('gulasch') || activity.includes('schachtelwirt') || activity.includes('kellergwölb') || activity.includes('kaiserschmarrn')) return 'coffee';
+            if (activity.includes('volo') || activity.includes('transfer') || activity.includes('bus') || activity.includes('treno') || activity.includes('aeroporto')) return 'train';
+            if (activity.includes('pranzo') || activity.includes('cena') || activity.includes('colazione') || activity.includes('cibo') || activity.includes('würstel') || activity.includes('café') || activity.includes('sacher') || activity.includes('friedlich') || activity.includes('gulasch') || activity.includes('schachtelwirt') || activity.includes('kellergwölb') || activity.includes('kaiserschmarrn') || activity.includes('oberlaa')) return 'coffee';
             if (activity.includes('spesa') || activity.includes('mercatino') || activity.includes('shopping') || activity.includes('souvenir') || activity.includes('billa')) return 'shopping-cart';
             if (activity.includes('castello') || activity.includes('hofburg') || activity.includes('schönbrunn') || activity.includes('biblioteca') || activity.includes('tesoro')) return 'castle';
             if (activity.includes('belvedere') || activity.includes('museum') || activity.includes('arte') || activity.includes('concerto') || activity.includes('showroom') || activity.includes('musica') || activity.includes('rathaus')) return 'brush';
-            if (activity.includes('hundertwasser') || activity.includes('architettonica') || activity.includes('karlskirche') || activity.includes('gesuiti') || activity.includes('chiesa')) return 'building-2';
+            if (activity.includes('hundertwasser') || activity.includes('architettonica') || activity.includes('karlskirche') || activity.includes('gesuiti') || activity.includes('chiesa') || activity.includes('peterskirche') || activity.includes('augustinerkirche')) return 'building-2';
             if (activity.includes('prater') || activity.includes('divertimento') || activity.includes('daemoniun') || activity.includes('ruota')) return 'roller-coaster';
             if (activity.includes('donauturm') || activity.includes('baia') || activity.includes('gloriette') || activity.includes('trekking') || activity.includes('sportivo')) return 'tower';
-            if (activity.includes('promemoria') || activity.includes('prenotazione') || activity.includes('cruciale') || activity.includes('medica')) return 'bell';
+            if (activity.includes('promemoria') || activity.includes('prenotazione') || activity.includes('cruciale') || activity.includes('medica') || activity.includes('riposo')) return 'bell';
             
             return 'circle-dot';
         }
@@ -380,8 +394,7 @@
          */
         function createMapsLink(location) {
             const encodedLocation = encodeURIComponent(location.replace(/\s+/g, ' ').trim());
-            // Uso il dominio base per Maps, non il placeholder
-            return `<a href="https://maps.google.com/?q=${encodedLocation}" target="_blank" class="text-blue-600 hover:text-blue-800 underline font-semibold">Ottieni indicazioni su Google Maps</a>`;
+            return `<a href="https://www.google.com/maps/search/?api=1&query=${encodedLocation}" target="_blank" class="text-blue-600 hover:text-blue-800 underline font-semibold">Ottieni indicazioni su Google Maps</a>`;
         }
 
         // Funzione per combinare i dati grezzi e arricchirli
@@ -402,12 +415,13 @@
                         (item.attivita.includes("Prunksaal") && key.includes("Biblioteca Nazionale")) ||
                         (item.attivita.includes("Gloriette") && key.includes("Schönbrunn")) ||
                         (item.attivita.includes("Kunst Haus Wien") && key.includes("Hundertwasserhaus")) || 
-                        (item.luogo.includes("Wien Museum") && key.includes("Wien Museum")) || 
                         (item.luogo.includes("Belvedere") && key.includes("Belvedere")) ||
                         (item.attivita.includes("Chiesa dei Gesuiti") && key.includes("Chiesa dei Gesuiti")) ||
+                        (item.attivita.includes("Peterskirche") && key.includes("Peterskirche")) ||
+                        (item.attivita.includes("Augustinerkirche") && key.includes("Chiesa di Sant'Agostino")) ||
                         (item.luogo.includes("Rathaus") && key.includes("Rathausplatz"))) {
                         const cultData = culturalMap[key];
-                        culturalInfo += `<p class="mt-3 font-semibold text-gray-800 border-t pt-2 border-gray-100">Contesto Storico (${key.split(' (')[0]}):</p>`;
+                        culturalInfo += `<p class="mt-3 font-semibold text-gray-800 border-t pt-2 border-gray-100">Contesto Storico (${key.split(' (')[0].replace('Chiesa di Sant\'Agostino', 'Augustinerkirche')}):</p>`;
                         culturalInfo += `<p class="text-gray-700">${cultData.descrizione}</p>`;
                         culturalInfo += `<p class="italic text-gray-600 mt-1"><span class="accent-color">Curiosità:</span> ${cultData.curiosita}</p>`;
                         break; 
@@ -475,13 +489,7 @@
                 const iconName = item.focus; 
                 const uniqueId = `${containerId}-details-${index}`;
                 
-                // Logica per evidenziare il titolo attività per i giorni effettivi (1, 2, 3)
-                let activityTitle = item.attivita;
-                if (day === 4) { // Giorno 4 è solo un piano
-                     activityTitle = `<span class="font-semibold italic text-gray-700">Piano:</span> ${item.attivita}`;
-                } else {
-                    activityTitle = `<span class="font-extrabold">${item.attivita}</span>`;
-                }
+                let activityTitle = `<span class="font-extrabold">${item.attivita}</span>`;
 
                 htmlTimeline += `
                     <div class="timeline-item relative py-4">
@@ -522,7 +530,7 @@
                 if (item.giorno !== lastDay) {
                     htmlSummary += `
                         <h3 class="text-xl font-bold mt-6 pb-1 border-b-2 border-gray-300 accent-color">
-                            Giorno ${item.giorno} ${item.giorno < 4 ? '(Effettivo)' : '(Piano)'}
+                            Giorno ${item.giorno} (Effettivo)
                         </h3>
                         <ul class="list-disc list-inside space-y-1 ml-4">
                     `;
@@ -556,7 +564,6 @@
                 let htmlContent = '';
 
                 if (container) {
-                    // Preserve the title and start appending
                     let existingTitle = container.querySelector('h3').outerHTML;
                     container.innerHTML = existingTitle; 
                 }
@@ -660,8 +667,8 @@
             
             lucide.createIcons(); 
             
-            // Imposta il Giorno 3 come pagina iniziale, dato che è l'ultimo aggiornamento
-            showPage('page-GIORNO3'); 
+            // Imposta il Giorno 4 come pagina iniziale, dato che è l'ultimo aggiornamento
+            showPage('page-GIORNO4'); 
         });
     </script>
 </body>
