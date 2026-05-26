@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Danimarca On The Road - Nadia & Fulvio</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <style>
+        /* Palette Vichingo & Fiaba (Default / Giorni 1, 2, 5, 6, 7) */
+        :root {
+            --bg-main: #111827;
+            --bg-card: #1f2937;
+            --text-primary: #f9fafb;
+            --text-muted: #9ca3af;
+            --accent-forest: #10b981;
+            --accent-gold: #d97706;
+            --border-color: #374151;
+        }
+
+        /* Stile Spigoloso Globale Coerente */
+        * {
+            border-radius: 0px !important;
+        }
+
+        .focus-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+        }
+        .focus-content.open {
+            max-height: 1200px;
+            transition: max-height 0.5s ease-in;
+        }
+    </style>
+</head>
+<body class="bg-[#111827] text-[#f9fafb] font-mono ease-in-out duration-300" id="global-body">
+
+    <!-- COPERTINA PRINCIPALE -->
+    <section id="page-home" class="min-h-screen flex flex-col justify-between p-6 md:p-12 border-8 border-[#d97706] m-4">
+        <div class="max-w-4xl mx-auto w-full my-auto">
+            <p class="text-[#d97706] tracking-widest text-sm uppercase font-bold mb-2">// AVVENTURA FRATELLO & SORELLA</p>
+            <h1 class="text-4xl md:text-7xl font-black tracking-tighter uppercase mb-4 text-[#10b981]">
+                Danimarca<br><span class="text-white">On The Road</span>
+            </h1>
+            <p class="text-lg md:text-xl text-[#9ca3af] max-w-2xl border-l-4 border-[#10b981] pl-4 my-6">
+                Da Torino alle scogliere UNESCO, passando per il cuore pulsante dei mattoncini LEGO, fino alle antiche sale dei re vichinghi e ai canali geometrici di Copenaghen. Il diario di viaggio definitivo di Nadia e Fulvio.
+            </p>
+
+            <!-- MENU DI RIEPILOGO (NAVIGAZIONE PRINCIPALE) -->
+            <div class="mt-12">
+                <h3 class="text-xs uppercase text-[#9ca3af] tracking-widest font-bold mb-4">Seleziona un giorno per entrare nell'itinerario:</h3>
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2">
+                    <button onclick="navigateTo('day1')" class="text-left p-3 border border-[#374151] hover:border-[#10b981] hover:bg-[#1f2937] transition group">
+                        <span class="block text-xs text-[#d97706]">27.05 - GIORNO 1</span>
+                        <span class="font-bold text-sm group-hover:text-[#10b981]">Stevns Klint & Storebælt</span>
+                    </button>
+                    <button onclick="navigateTo('day2')" class="text-left p-3 border border-[#374151] hover:border-[#10b981] hover:bg-[#1f2937] transition group">
+                        <span class="block text-xs text-[#d97706]">28.05 - GIORNO 2</span>
+                        <span class="font-bold text-sm group-hover:text-[#10b981]">Egeskov & Hans C. Andersen</span>
+                    </button>
+                    <button onclick="navigateTo('day3')" class="text-left p-3 border border-[#374151] hover:border-[#10b981] hover:bg-[#1f2937] transition group">
+                        <span class="block text-xs text-red-600 font-bold">29.05 - GIORNO 3 🧩</span>
+                        <span class="font-bold text-sm group-hover:text-blue-600">LegoHouse (Billund)</span>
+                    </button>
+                    <button onclick="navigateTo('day4')" class="text-left p-3 border border-[#374151] hover:border-[#10b981] hover:bg-[#1f2937] transition group">
+                        <span class="block text-xs text-red-600 font-bold">30.05 - GIORNO 4 🧩</span>
+                        <span class="font-bold text-sm group-hover:text-blue-600">Legoland Original Park</span>
+                    </button>
+                    <button onclick="navigateTo('day5')" class="text-left p-3 border border-[#374151] hover:border-[#10b981] hover:bg-[#1f2937] transition group">
+                        <span class="block text-xs text-[#d97706]">31.05 - GIORNO 5</span>
+                        <span class="font-bold text-sm group-hover:text-[#10b981]">Vichinghi, Roskilde & SMK</span>
+                    </button>
+                    <button onclick="navigateTo('day6')" class="text-left p-3 border border-[#374151] hover:border-[#10b981] hover:bg-[#1f2937] transition group">
+                        <span class="block text-xs text-[#d97706]">01.06 - GIORNO 6</span>
+                        <span class="font-bold text-sm group-hover:text-[#10b981]">Copenaghen CPH Card</span>
+                    </button>
+                    <button onclick="navigateTo('day7')" class="text-left p-3 border border-[#374151] hover:border-[#10b981] hover:bg-[#1f2937] transition group">
+                        <span class="block text-xs text-[#d97706]">02.06 - GIORNO 7</span>
+                        <span class="font-bold text-sm group-hover:text-[#10b981]">Gran Finale & Giardini Tivoli</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="text-center text-xs text-[#9ca3af] mt-8">
+            Torino ➔ Copenaghen • Maggio/Giugno 2026
+        </div>
+    </section>
+
+    <!-- STRUTTURA DELLE PAGINE DEI SINGOLI GIORNI -->
+
+    <!-- GIORNO 1 -->
+    <section id="page-day1" class="hidden min-h-screen p-4 md:p-12 max-w-5xl mx-auto">
+        <!-- Header Navigazione Fissa Giorno -->
+        <div class="flex justify-between items-center border-b border-[#374151] pb-4 mb-8">
+            <button onclick="navigateTo('home')" class="text-xs uppercase border border-[#374151] px-4 py-2 hover:bg-[#1f2937] text-[#9ca3af] hover:text-white">◀ Torna al Menu</button>
+            <span class="text-xs font-bold text-[#d97706]">GIORNO 1 DI 7</span>
+            <button onclick="navigateTo('day2')" class="text-xs uppercase bg-[#10b981] text-black font-bold px-4 py-2 hover:bg-emerald-400">Giorno 2 ▶</button>
+        </div>
+
+        <div class="mb-8">
+            <h2 class="text-3xl md:text-5xl font-black uppercase text-white mb-2">27.05 - Stevns Klint e lo Storebælt</h2>
+            <p class="text-[#9ca3af] italic">L'avventura danese ha inizio. Atterrati nella capitale, si ritira l'auto per fuggire subito verso il silenzio della costa, attraversando ponti ingegneristici che sembrano sospesi nel nulla prima di raggiungere le calde atmosfere della Fionia.</p>
+        </div>
+
+        <!-- TIMELINE DEL GIORNO -->
+        <div class="space-y-8 border-l-2 border-[#374151] pl-6 ml-2">
+            
+            <!-- ATTIVITA 1 -->
+            <div class="relative">
+                <div class="absolute -left-[31px] top-1 bg-[#10b981] w-4 h-4 border-4 border-[#111827]"></div>
+                <span class="text-xs font-bold bg-[#1f2937] px-2 py-1 text-[#10b981]">11:10 - 12:15</span>
+                <h3 class="text-xl font-bold mt-2">Atterraggio a Copenaghen, Ritiro Auto e Dragør</h3>
+                <p class="text-[#9ca3af] text-sm mt-1">Passeggiata nel paesino storico dei pescatori (7 km - 10 min dall'aeroporto).</p>
+                <div class="bg-[#1f2937] p-4 my-3 border-l-4 border-[#d97706] text-xs">
+                    <span class="font-bold block text-[#d97706] uppercase">💡 Live Tip:</span> Parcheggiate vicino al porto. Camminate tra i vicoli di casette gialle con i tetti di paglia del XVIII secolo.
+                </div>
+                <!-- BOTTONI INTERATTIVI -->
+                <div class="flex flex-wrap gap-2 mt-3">
+                    <button onclick="toggleFocus('d1a1-st')" class="bg-[#374151] hover:bg-[#4b5563] text-xs px-3 py-1.5 font-bold uppercase">Focus Storico</button>
+                    <button onclick="toggleFocus('d1a1-let')" class="bg-[#374151] hover:bg-[#4b5563] text-xs px-3 py-1.5 font-bold uppercase">Focus Letterario</button>
+                    <button onclick="toggleFocus('d1a1-cin')" class="bg-[#374151] hover:bg-[#4b5563] text-xs px-3 py-1.5 font-bold uppercase">Focus Cinematografico</button>
+                    <button onclick="toggleFocus('d1a1-food')" class="bg-[#d97706] text-black hover:bg-amber-500 text-xs px-3 py-1.5 font-bold uppercase">Cosa mangiare qui 🍽️</button>
+                </div>
+                <!-- PANNELLI DEI CONTENUTI ESTESI -->
+                <div id="d1a1-st" class="focus-content bg-[#1f2937] border border-[#374151] p-4 mt-2 text-sm text-[#9ca3af] space-y-2">
+                    <p>Il borgo marinaro di Dragør affonda le sue radici storiche nel XII secolo, quando si sviluppò come un florido e cruciale porto di pesca e di salatura delle aringhe, strettamente legato ai commerci della potente Lega Anseatica. Nel corso del XVI secolo, il Re Cristiano II invitò ufficialmente un folto gruppo di coloni olandesi a stabilirsi nella vicina area di Amager per promuovere l'orticoltura e rifornire la corte reale. Questa fusione culturale tra marinai danesi e agricoltori olandesi ha plasmato in modo indelebile l'architettura locale, l'organizzazione urbana e persino i costumi tradizionali. Camminare oggi tra queste vie acciottolate significa calpestare la storia vivente di una comunità che ha saputo difendere la propria identità marinara e commerciale attraverso i secoli, resistendo ai grandi incendi e mantenendo intatto lo spirito di un tempo in cui il porto era il vero baricentro economico dell'intera regione dello Øresund.</p>
+                </div>
+                <div id="d1a1-let" class="focus-content bg-[#1f2937] border border-[#374151] p-4 mt-2 text-sm text-[#9ca3af] space-y-2">
+                    <p>La letteratura legata ai piccoli borghi marinari danesi evoca costantemente il contrasto poetico e malinconico tra la stabilità rassicurante della terraferma, rappresentata dalle mura domestiche intonacate di giallo, e l'immensità mutevole e imprevedibile del mare aperto. Dragør, con la sua quiete architettonica e il respiro costante della costa, sembra uscita direttamente dalle pagine più intime della letteratura scandinava del XIX secolo, dove il vento del nord porta con sé storie di lunghi viaggi, attese struggenti e leggende di pescatori. L'atmosfera sospesa del paese incarna perfettamente quella sensazione di isolamento contemplativo che molti scrittori danesi hanno descritto nei loro diari e racconti, descrivendo i piccoli villaggi costieri non come luoghi marginali, ma come veri e propri custodi dell'anima più autentica, riflessiva e silente della nazione, lontana dalle frenesie della vicina capitale.</p>
+                </div>
+                <div id="d1a1-cin" class="focus-content bg-[#1f2937] border border-[#374151] p-4 mt-2 text-sm text-[#9ca3af] space-y-2">
+                    <p>Dal punto di vista cinematografico, la straordinaria conservazione urbana di Dragør ha reso il borgo un set a cielo aperto ideale e ambitissimo per numerose produzioni cinematografiche e televisive danesi a sfondo storico e drammatico. Le tonalità calde del giallo ocra delle facciate, i tetti di paglia spessi e i vicoli stretti e geometrici offrono ai direttori della fotografia una tavolozza di colori naturali e una luce radente nordica che evoca immediatamente un passato idilliaco ma rigoroso. La cittadina è stata spesso utilizzata per ricreare atmosfere d'epoca settecentesca e ottocentesca, dove la macchina da presa può muoversi liberamente a 360 gradi senza la necessità di interventi digitali invasivi, catturando l'essenza visiva di una Danimarca d'altri tempi che sopravvive miracolosamente intatta a pochi minuti di distanza dalle infrastrutture ultramoderne dell'aeroporto internazionale.</p>
+                </div>
+                <div id="d1a1-food" class="focus-content bg-[#1f2937] border-2 border-[#d97706] p-4 mt-2 text-sm text-white">
+                    <p class="font-bold text-[#d97706] mb-1">SUGGERIMENTO CULINARIO:</p>
+                    Per uno spuntino rapido prima di mettervi in viaggio, comprate un Hindbærsnitte (dolce tradizionale ai lamponi composto da strati di frolla e glassa) nella bageri storica del paese.
+                </div>
+            </div>
+
+            <!-- ATTIVITA 2 -->
+            <div class="relative">
+                <div class="absolute -left-[31px] top-1 bg-[#10b981] w-4 h-4 border-4 border-[#111827]"></div>
+                <span class="text-xs font-bold bg-[#1f2937] px-2 py-1 text-[#10b981]">12:30 - 16:00</span>
+                <h3 class="text-xl font-bold mt-2">Le Scogliere UNESCO Stevns Klint</h3>
+                <p class="text-[#9ca3af] text-sm mt-1">Passeggiata geologica e visita alla suggestiva Chiesa di Højerup. Pranzo al sacco.</p>
+                <div class="bg-[#1f2937] p-4 my-3 border-l-4 border-[#d97706] text-xs">
+                    <span class="font-bold block text-[#d97706] uppercase">💡 Live Tip:</span> Nella chiesa, affacciatevi dal balcone panoramico dove nel 1928 il coro è crollato in mare a causa dell'erosione. Cercate con lo sguardo la sottile striscia scura di argilla (Fiskeler) tra la roccia bianca, la prova geologica mondiale dell'estinzione dei dinosauri avvenuta 66 milioni di anni fa.
+                </div>
+                <div class="flex flex-wrap gap-2 mt-3">
+                    <button onclick="toggleFocus('d1a2-st')" class="bg-[#374151] hover:bg-[#4b5563] text-xs px-3 py-1.5 font-bold uppercase">Focus Storico</button>
+                    <button onclick="toggleFocus('d1a2-let')" class="bg-[#374151] hover:bg-[#4b5563] text-xs px-3 py-1.5 font-bold uppercase">Focus Letterario</button>
+                    <button onclick="toggleFocus('d1a2-cin')" class="bg-[#374151] hover:bg-[#4b5563] text-xs px-3 py-1.5 font-bold uppercase">Focus Cinematografico</button>
+                    <button onclick="toggleFocus('d1a2-food')" class="bg-[#d97706] text-black hover:bg-amber-500 text-xs px-3 py-1.5 font-bold uppercase">Cosa mangiare qui 🍽️</button>
+                </div>
+                <div id="d1a2-st" class="focus-content bg-[#1f2937] border border-[#374151] p-4 mt-2 text-sm text-[#9ca3af] space-y-2">
+                    <p>Le scogliere di Stevns Klint rappresentano un archivio geologico di inestimabile valore scientifico planetario, motivo per cui sono state meritatamente dichiarate Patrimonio dell'Umanità UNESCO. La rupe di gesso racconta un capitolo drammatico della storia della Terra: racchiusa tra gli strati rocciosi si trova una striscia di argilla scura, chiamata 'Fiskeler' (argilla da pesce), che testimonia l'impatto del gigantesco meteorite di Chicxulub in Messico circa 66 milioni di anni fa, evento che portò all'estinzione di massa del Cretaceo-Paleogene, spazzando via i dinosauri. Sullo sfondo di questa imponente cornice naturale sorge la chiesa di Højerup, edificata in stile romanico attorno all'anno 1200 da un marinaio riconoscente scampato a un naufragio. Per secoli, la scogliera ha inesorabilmente arretrato a causa della violenta erosione del mare, fino al tragico e spettacolare crollo del 16 marzo 1928, quando l'intero coro della chiesa precipitò nel vuoto, lasciando la navata drammaticamente sospesa sull'abisso.</p>
+                </div>
+                <div id="d1a2-let" class="focus-content bg-[#1f2937] border border-[#374151] p-4 mt-2 text-sm text-[#9ca3af] space-y-2">
+                    <p>Il paesaggio sublime e vertiginoso di Stevns Klint ha profondamente ispirato la letteratura e il folklore danese, legando la maestosità della falesia a miti antichi e racconti di forze della natura personificate. Secondo le leggende popolari locali, le scogliere sono la dimora del potente Re di Stevns (Stevns活ongen), uno spirito guardiano che abita le caverne di gesso e interviene per proteggere la regione dalle invasioni straniere o dalle tempeste più distruttive. Questo connubio unico tra Geologia e Mito ha affascinato poeti e scrittori del romanticismo nordeuropeo, che vedevano nella chiesa mozzata di Højerup il simbolo perfetto della fragilità umana di fronte alla potenza monumentale e inarrestabile del tempo e degli elementi, trasformando la scogliera in una metafora letteraria della transitorietà e del confronto eterno tra le opere dell'uomo e l'eternità della pietra.</p>
+                </div>
+                <div id="d1a2-cin" class="focus-content bg-[#1f2937] border border-[#374151] p-4 mt-2 text-sm text-[#9ca3af] space-y-2">
+                    <p>Nel cinema contemporaneo e nei documentari scientifici internazionali, Stevns Klint è stata ampiamente ripresa per l'incredibile impatto visivo del contrasto cromatico tra il bianco accecante del gesso, il verde della vegetazione sommitale e l'azzurro profondo del Mar Baltico. La chiesa parzialmente crollata offre un'inquadratura cinematografica naturale di rara potenza drammatica, spesso utilizzata in pellicole d'autore nordeuropee per simboleggiare la fine del mondo, la solitudine esistenziale o la sacralità della natura. La luce radente che colpisce la falesia nelle diverse ore del giorno crea ombre profonde sulle pareti tormentate dall'erosione, offrendo ai registi una scenografia naturale priva di artifizi, capace di comunicare visivamente un senso di vertigine e di profonda connessione con la storia cosmica e geologica del nostro intero pianeta.</p>
+                </div>
+                <div id="d1a2-food" class="focus-content bg-[#1f2937] border-2 border-[#d97706] p-4 mt-2 text-sm text-white">
+                    <p class="font-bold text-[#d97706] mb-1">SUGGERIMENTO CULINARIO:</p>
+                    Godetevi il pranzo al sacco seduti sull'erba alta con i piedi a penzoloni sul gesso bianco della scogliera, ammirando l'orizzonte infinito del Baltico.
+                </div>
+            </div>
+
+            <!-- ATTIVITA 3 -->
+            <div class="relative">
+                <div class="absolute -left-[31px] top-1 bg-[#10b981] w-4 h-4 border-4 border-[#111827]"></div>
+                <span class="text-xs font-bold bg-[#1f2937] px-2 py-1 text-[#10b981]">16:00 - 19:30</span>
+                <h3 class="text-xl font-bold mt-2">Spiaggia di Halsskov, Ponte Storebælt e Nyborg</h3>
+                <p class="text-[#9ca3af] text-sm mt-1">Sosta ai piedi del colosso ingegneristico e passaggio veloce a Nyborg al tramonto.</p>
+                <div class="bg-[#1f2937] p-4 my-3 border-l-4 border-[#d97706] text-xs">
+                    <span class="font-bold block text-[#d97706] uppercase">💡 Live Tip:</span> Fermatevi sulla spiaggia di Halsskov, appena prima del casello, per ammirare l'immensità del ponte dal basso. A Nyborg fate un passaggio veloce sotto le mura del castello medievale. La luce del tramonto sul ponte sospeso vi regalerà un ricordo visivo potente.
+                </div>
+                <div class="flex flex-wrap gap-2 mt-3">
+                    <button onclick="toggleFocus('d1a3-st')" class="bg-[#374151] hover:bg-[#4b5563] text-xs px-3 py-1.5 font-bold uppercase">Focus Storico</button>
+                    <button onclick="toggleFocus('d1a3-let')" class="bg-[#374151] hover:bg-[#4b5563] text-xs px-3 py-1.5 font-bold uppercase">Focus Letterario</button>
+                    <button onclick="toggleFocus('d1a3-cin')" class="bg-[#374151] hover:bg-[#4b5563] text-xs px-3 py-1.5 font-bold uppercase">Focus Cinematografico</button>
+                    <button onclick="toggleFocus('d1a3-food')" class="bg-[#d97706] text-black hover:bg-amber-500 text-xs px-3 py-1.5 font-bold uppercase">Cosa mangiare qui 🍽️</button>
+                </div>
+                <div id="d1a3-st" class="focus-content bg-[#1f2937] border border-[#374151] p-4 mt-2 text-sm text-[#9ca3af] space-y-2">
+                    <p>Il collegamento fisso del Grande Belt (Storebæltsforbindelsen), inaugurato nel 1998, ha rivoluzionato per sempre la geografia, l'economia e i trasporti della Danimarca, unendo l'isola di Sjælland a quella di Fionia. Prima della sua ciclopica costruzione, l'attraversamento dello stretto dipendeva interamente da un fitto sistema di traghetti storici. Il ponte sospeso orientale, con la sua campata centrale di 1624 metri, si colloca orgogliosamente tra le strutture sospese più lunghe del mondo, un capolavoro assoluto di ingegneria civile contemporanea. Sul versante opposto, la cittadina di Nyborg accoglie i viaggiatori con un carico storico diametralmente opposto: il suo imponente castello (Nyborg Slot), fondato nel 1170, rappresenta uno dei monumenti medievali fortificati più importanti del paese, avendo ospitato per secoli il Danehof, il primissimo parlamento storico dei re danesi, dove venne firmata la prima costituzione del regno nel 1282.</p>
+                </div>
+                <div id="d1a3-let" class="focus-content bg-[#1f2937] border border-[#374151] p-4 mt-2 text-sm text-[#9ca3af] space-y-2">
+                    <p>La transizione fisica tra le diverse isole danesi attraverso opere ingegneristiche colossali evoca nella letteratura contemporanea il tema del superamento dei confini naturali e della connessione umana. Laddove un tempo gli scrittori ottocenteschi descrivevano la navigazione lenta, nebbiosa e incerta dello Storebælt a bordo di battelli a vapore, oggi il ponte viene narrato come una linea d'acciaio tesa e geometrica che squarcia il paesaggio marino. Questo salto temporale e spaziale trova un perfetto contrappunto letterario a Nyborg, le cui pietre medievali sussurrano racconti di cavalieri, intrighi di corte e cronache regali. La contrapposizione tra la velocità del nastro autostradale sospeso nel vento e la staticità monumentale del castello medievale offre un affascinante spunto di riflessione sulla coesistenza tra la modernità iperconnessa e le radici storiche profonde della nazione.</p>
+                </div>
+                <div id="d1a3-cin" class="focus-content bg-[#1f2937] border border-[#374151] p-4 mt-2 text-sm text-[#9ca3af] space-y-2">
+                    <p>Nel cinema e nelle produzioni televisive, il ponte dello Storebælt è diventato un'icona visiva imprescindibile della modernità scandinava, spesso utilizzato in inquadrature aeree spettacolari o in sequenze di viaggio automobilistiche che enfatizzano il design infrastrutturale e l'estetica industriale del paese. Le sue linee pulite, i piloni monumentali che si stagliano contro i cieli mutevoli e i cavi d'acciaio geometrici creano una scenografia fantascientifica di forte impatto visivo. Nyborg, al contrario, con il suo castello e i fossati storici, offre scenari ideali per serie tv storiche e drammi in costume, consentendo ai registi di girare sequenze che evocano le atmosfere austere del medioevo nordeuropeo, sfruttando la luce calda e dorata del tramonto che si riflette sulle antiche corti in mattoni rossi.</p>
+                </div>
+                <div id="d1a3-food" class="focus-content bg-[#1f2937] border-2 border-[#d97706] p-4 mt-2 text-sm text-white">
+                    <p class="font-bold text-[#d97706] mb-1">SUGGERIMENTO CULINARIO:</p>
+                    Una tazza di caffè caldo da asporto da bere sulla spiaggia ventosa di Halsskov, guardando le auto scivolare silenziose a centinaia di metri d'altezza sul Grande Belt.
+                </div>
+            </div>
+
+            <!-- ATTIVITA 4 -->
+            <div class="relative">
+                <div class="absolute -left-[31px] top-1 bg-[#10b981] w-4 h-4 border-4 border-[#111827]"></div>
+                <span class="text-xs font-bold bg-[#1f2937] px-2 py-1 text-[#10b981]">19:30+</span>
+                <h3 class="text-xl font-bold mt-2">Arrivo a Odense e Cena allo Storms Pakhus</h3>
+                <p class="text-[#9ca3af] text-sm mt-1">Immersione nell'atmosfera serale della città natale di Andersen e street food autentico.</p>
+                <div class="bg-[#1f2937] p-4 my-3 border-l-4 border-[#d97706] text-xs">
+                    <span class="font-bold block text-[#d97706] uppercase">💡 Live Tip:</span> Lo Storms Pakhus è la tana dei locali. Evitate il cibo internazionale e cercate lo stand tradizionale per ordinare un vero Smørrebrød con aringa o un fegato spalmabile tiepido (leverpostej) con bacon, accompagnato da una birra artigianale della Fionia.
+                </div>
+                <div class="flex flex-wrap gap-2 mt-3">
+                    <button onclick="toggleFocus('d1a4-st')" class="bg-[#374151] hover:bg-[#4b5563] text-xs px-3 py-1.5 font-bold uppercase">Focus Storico</button>
+                    <button onclick="toggleFocus('d1a4-let')" class="bg-[#374151] hover:bg-[#4b5563] text-xs px-3 py-1.5 font-bold uppercase">Focus Letterario</button>
+                    <button onclick="toggleFocus('d1a4-cin')" class="bg-[#374151] hover:bg-[#4b5563] text-xs px-3 py-1.5 font-bold uppercase">Focus Cinematografico</button>
+                    <button onclick="toggleFocus('d1a4-food')" class="bg-[#d97706] text-black hover:bg-amber-500 text-xs px-3 py-1.5 font-bold uppercase">Cosa mangiare qui 🍽️</button>
+                </div>
+                <div id="d1a4-st" class="focus-content bg-[#1f2937] border border-[#374151] p-4 mt-2 text-sm text-[#9ca3af] space-y-2">
+                    <p>Odense è una delle città più antiche di tutta la Danimarca, avendo celebrato solennemente il suo millennio nel lontano 1988. Il suo nome deriva direttamente dal culto di Odino (Odins Vi, ovvero il santuario di Odino), la divinità suprema della complessa mitologia norrena, a testimonianza dell'enorme importanza religiosa e strategica che il sito ricopriva in epoca pre-cristiana e vichinga. Nel corso dei secoli successivi, la città si trasformò in un ricchissimo centro ecclesiastico e commerciale nel cuore geografico della fertile isola di Fionia. Lo Storms Pakhus, che oggi ospita il vivace mercato gastronomico coperto, è esso stesso un monumento di archeologia industriale: un imponente magazzino portuale risalente al 1942, un tempo utilizzato per lo stoccaggio di legname e merci agricole, sapientemente recuperato per diventare il fulcro sociale, culturale e aggregativo della comunità locale contemporanea.</p>
+                </div>
+                <div id="d1a4-let" class="focus-content bg-[#1f2937] border border-[#374151] p-4 mt-2 text-sm text-[#9ca3af] space-y-2">
+                    <p>L'ingresso a Odense rappresenta per ogni viaggiatore l'inizio di un dialogo serrato e inevitabile con la letteratura mondiale, essendo la città natale dell'immortale Hans Christian Andersen. Camminando tra i suoi quartieri storici, le ombre delle case a graticcio sembrano materializzare le atmosfere delle sue celebri fiabe, scritte attingendo a piene mani dai ricordi d'infanzia trascorsi tra la povertà, le superstizioni popolari e la vibrante vita artigiana della Odense dei primi dell'Ottocento. Lo Storms Pakhus, pur nella sua veste industriale e moderna, prosegue questa narrazione comunitaria raccogliendo le voci, le risate e i racconti della Odense odierna, configurandosi come uno spazio in cui la tradizione orale e la convivialità tipicamente danese (l'essenza autentica della Hygge) continuano a svilupparsi e a rinnovarsi giorno dopo giorno attorno al fuoco del cibo condiviso.</p>
+                </div>
+                <div id="d1a4-cin" class="focus-content bg-[#1f2937] border border-[#374151] p-4 mt-2 text-sm text-[#9ca3af] space-y-2">
+                    <p>I grandi magazzini industriali riconvertiti come lo Storms Pakhus offrono ai registi cinematografici e ai creatori di contenuti contemporanei ambientazioni visive straordinarie, caratterizzate da un'estetica 'urban chic' e industriale di grande tendenza. Le ampie campate in legno originale del tetto, le strutture in acciaio a vista e la fitta rete di luci calde e insegne al neon degli stand gastronomici creano un contrasto cromatico e volumetrico estremamente fotogenico. Questo spazio dinamico e affollato viene spesso utilizzato nelle produzioni televisive danesi per rappresentare lo stile di vita moderno, informale e inclusivo delle città universitarie scandinave, dove il passato industriale non viene demolito ma integrato creativamente nella vita quotidiana, offrendo inquadrature ricche di dettagli, calore umano e movimento continuo.</p>
+                </div>
+                <div id="d1a4-food" class="focus-content bg-[#1f2937] border-2 border-[#d97706] p-4 mt-2 text-sm text-white">
+                    <p class="font-bold text-[#d97706] mb-1">SUGGERIMENTO CULINARIO:</p>
+                    Ordinate un vero Smørrebrød con aringa marinata o un fegato spalmabile tiepido (leverpostej) con bacon croccante e funghi, accompagnato da una birra artigianale locale della Fionia.
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- GIORNO 2 -->
+    <section id="page-day2" class="hidden min-h-screen p-4 md:p-12 max-w-5xl mx-auto">
+        <div class="flex justify-between items-center border-b border-[#374151] pb-4 mb-8">
+            <button onclick="navigateTo('day1')" class="text-xs uppercase border border-[#374151] px-4 py-2 hover:bg-[#1f2937] text-[#9ca3af] hover:text-white">◀ Giorno 1</button>
+            <span class="text-xs font-bold text-[#d97706]">GIORNO 2 DI 7</span>
+            <button onclick="navigateTo('day3')" class="text-xs uppercase bg-[#10b981] text-black font-bold px-4 py-2 hover:bg-emerald-400">Giorno 3 ▶</button>
+        </div>
+
+        <div class="mb-8">
+            <h2 class="text-3xl md:text-5xl font-black uppercase text-white mb-2">28.05 - Egeskov e le fiabe di Andersen</h2>
+            <p class="text-[#9ca3af] italic">Una giornata sospesa tra l'eleganza rinascimentale di uno dei castelli sull'acqua più belli d'Europa e l'immaginario poetico di Hans Christian Andersen nei vicoli storici di Odense.</p>
+        </div>
+
+        <div class="space-y-8 border-l-2 border-[#374151] pl-6 ml-2">
+            <!-- ATTIVITA 1: EGESKOV -->
+            <div>
+                <span class="text-xs font-bold bg-[#1f2937] px-2 py-1 text-[#10b981]">09:30 - 13:00</span>
+                <h3 class="text-xl font-bold mt-2">Il Castello Rinascimentale di Egeskov</h3>
+                <p class="text-[#9ca3af] text-sm mt-1">Visita al castello sull'acqua meglio conservato d'Europa, ai giardini storici e alle mostre d'epoca.</p>
+                <div class="bg-[#1f2937] p-4 my-3 border-l-4 border-[#d97706] text-xs">
+                    <span class="font-bold block text-[#d97706] uppercase">💡 Live Tip:</span> Entrate subito nel castello prima dell'arrivo dei bus turistici. Dedicate del tempo alla strepitosa collezione di auto e moto d'epoca nei padiglioni esterni e non perdetevi il labirinto di siepi progettato da un poeta danese.
+                </div>
+                <div class="flex flex-wrap gap-2 mt-3">
+                    <button onclick="toggleFocus('d2a1-st')" class="bg-[#374151] hover:bg-[#4b5563] text-xs px-3 py-1.5 font-bold uppercase">Focus Storico</button>
+                    <button onclick="toggleFocus('d2a1-let')" class="bg-[#374151] hover:bg-[#4b5563] text-xs px-3 py-1.5 font-bold uppercase">Focus Letterario</button>
+                    <button onclick="toggleFocus('d2a1-cin')" class="bg-[#374151] hover:bg-[#4b5563] text-xs px-3 py-1.5 font-bold uppercase">Focus Cinematografico</button>
+                    <button onclick="toggleFocus('d2a1-food')" class="bg-[#d97706] text-black hover:bg-amber-500 text-xs px-3 py-1.5 font-bold uppercase">Cosa mangiare qui 🍽️</button>
+                </div>
+                <div id="d2a1-st" class="focus-content bg-[#1f2937] border border-[#374151] p-4 mt-2 text-sm text-[#9ca3af] space-y-2">
+                    <p>Il castello di Egeskov, edificato nel 1554 da Frands Brockenhuus, sorge nel bel mezzo di un piccolo lago nel sud della Fionia. La sua costruzione monumentale fu dettata dalle forti tensioni politiche e dalle violente rivolte civili causate dalla Riforma protestante che incendiarono la Danimarca in quegli anni. Per gettare le fondamenta di questa formidabile fortezza rinascimentale sull'acqua, fu necessario abbattere un intero bosco di querce, da cui deriva letteralmente il nome Egeskov (che significa infatti 'bosco di querce'). La struttura a doppia murata, le feritoie difensive, i piombatoi e il ponte levatoio testimoniano la sua funzione originaria di fortezza militare inespugnabile, passata poi nei secoli alle storiche dinastie nobiliari Ahlefeldt-Laurvig-Bille, che hanno trasformato la proprietà terriera circostante in uno degli esempi più raffinati e premiati di giardino formale e collezionismo d'epoca dell'intera Europa settentrionale.</p>
+                </div>
+                <div id="d2a1-let" class="focus-content bg-[#1f2937] border border-[#374151] p-4 mt-2 text-sm text-[#9ca3af] space-y-2">
+                    <p>Egeskov incarna in modo sublime il topos letterario del castello incantato e della dimora aristocratica custode di segreti secolari e leggende misteriose. Nei solai storici della fortezza giace da secoli una misteriosa bambola di legno tradizionale: la leggenda popolare narra che se la bambola dovesse mai essere rimossa dal suo cuscino, l'intero castello sprofonderebbe nel lago durante la notte di Natale. Questa ricca tradizione gotica e fantastica si fonde magnificamente con la geometria poetica del celebre labirinto di siepi monumentale, progettato dal noto scrittore e poeta danese Piet Hein. Labirinto che diventa un labirinto letterario e filosofico, una metafora fisica del viaggio interiore dell'uomo e delle scelte della vita, celebrando l'unione perfetta tra la nobile architettura rinascimentale e l'inventiva letteraria scandinava.</p>
+                </div>
+                <div id="d2a1-cin" class="focus-content bg-[#1f2937] border border-[#374151] p-4 mt-2 text-sm text-[#9ca3af] space-y-2">
+                    <p>Nelle produzioni cinematografiche internazionali di genere storico e fantasy, Egeskov rappresenta una location di straordinario impatto visivo, grazie alla sua architettura simmetrica in mattoni rossi che emerge direttamente dallo specchio d'acqua. I riflessi fluttuanti sulle pareti del castello, le guglie eleganti e i giardini perfettamente simmetrici offrono ai registi scenografie naturali di rara opulenza formale. I padiglioni adiacenti, che ospitano la strepitosa e gigantesca collezione di auto, aerei e moto d'epoca, costituiscono inoltre un set ideale per pellicole storiche dedicate alla prima metà del Novecento, regalando inquadrature dinamiche in cui il fascino retrò della tecnologia meccanica si sposa magistralmente con la solennità senza tempo della fortezza rinascimentale danese.</p>
+                </div>
+                <div id="d2a1-food" class="focus-content bg-[#1f2937] border-2 border-[#d97706] p-4 mt-2 text-sm text-white">
+                    <p class="font-bold text-[#d97706] mb-1">SUGGERIMENTO CULINARIO:</p>
+                    Prima di partire per il castello, fate colazione da Brød - Danish Bread House a Odense: ordinate un caffè lungo e una Kanelsnegl (girella alla cannella) sfornata al mattino.
+                </div>
+            </div>
+
+            <!-- ATTIVITA 2: MUSEO ANDERSEN -->
+            <div>
+                <span class="text-xs font-bold bg-[#1f2937] px-2 py-1 text-[#10b981]">14:00 - 17:00</span>
+                <h3 class="text-xl font-bold mt-2">Il Nuovo Museo Andersen di Kengo Kuma</h3>
+                <p class="text-[#9ca3af] text-sm mt-1">Immersione sonora ed espositiva nell'universo fantastico dello scrittore, tra architettura organica e giardini fiabeschi.</p>
+                <div class="bg-[#1f2937] p-4 my-3 border-l-4 border-[#d97706] text-xs">
+                    <span class="font-bold block text-[#d97706] uppercase">💡 Live Tip:</span> L'architettura fluttuante dell'archistar Kengo Kuma si fonde interamente con i giardini. Usate le cuffie interattive al massimo: la mostra non segue una cronologia rigida, ma è un viaggio sonoro immersivo dentro la mente dello scrittore. Più tardi, scendete nella cripta della vicina Cattedrale per vedere lo scheletro del re vichingo Canuto il Santo.
+                </div>
+                <div class="flex flex-wrap gap-2 mt-3">
+                    <button onclick="toggleFocus('d2a2-st')" class="bg-[#374151] hover:bg-[#4b5563] text-xs px-3 py-1.5 font-bold uppercase">Focus Storico</button>
+                    <button onclick="toggleFocus('d2a2-let')" class="bg-[#374151] hover:bg-[#4b5563] text-xs px-3 py-1.5 font-bold uppercase">Focus Letterario</button>
+                    <button onclick="toggleFocus('d2a2-cin')" class="bg-[#374151] hover:bg-[#4b5563] text-xs px-3 py-1.5 font-bold uppercase">Focus Cinematografico</button>
+                    <button onclick="toggleFocus('d2a2-food')" class="bg-[#d97706] text-black hover:bg-amber-500 text-xs px-3 py-1.5 font-bold uppercase">Cosa mangiare qui 🍽️</button>
+                </div>
+                <div id="d2a2-st" class="focus-content bg-[#1f2937] border border-[#374151] p-4 mt-2 text-sm text-[#9ca3af] space-y-2">
+                    <p>Il nuovissimo museo H.C. Andersens Hus, inaugurato recentemente nel cuore storico di Odense, rappresenta una rivoluzione totale nel concetto di spazio espositivo biografico. L'opera porta la firma del celeberrimo architetto giapponese Kengo Kuma, il quale si è ispirato alla celebre fiaba 'L'acciarino magico', in cui un albero cavo nasconde un immenso mondo sotterraneo. La struttura si sviluppa prevalentemente sottoterra, lasciando che in superficie emergano solo curve eleganti in legno cilindrico e siepi verdi che ridefiniscono l'assetto urbano della vecchia Odense. Storicamente, il museo ingloba la minuscola casa natale originale di Andersen, creando un cortocircuito architettonico straordinario tra le umilissime origini ottocentesche dello scrittore e l'avanguardia ingegneristica e sostenibile del XXI secolo.</p>
+                </div>
+                <div id="d2a2-let" class="focus-content bg-[#1f2937] border border-[#374151] p-4 mt-2 text-sm text-[#9ca3af] space-y-2">
+                    <p>Questo spazio non è semplicemente un contenitore di cimeli, ma la traduzione fisica e tridimensionale della poetica letteraria di Andersen. Kengo Kuma ha deliberatamente eliminato le pareti lineari e i percorsi gerarchici, creando uno spazio fluido, ambiguo e fluttuante in cui il confine tra realtà e finzione, tra sopra e sotto, sfuma costantemente, proprio come nelle fiabe dello scrittore. I testi letterari, i ritagli di carta originali realizzati da Andersen e le sue riflessioni sulla solitudine, sul viaggio e sull'alterità prendono vita attraverso un sofisticato sistema di audio-guide spaziali interattive, trasformando la visita in un'esperienza letteraria totale in cui il visitatore cammina letteralmente 'dentro' la struttura narrativa anderseniana.</p>
+                </div>
+                <div id="d2a2-cin" class="focus-content bg-[#1f2937] border border-[#374151] p-4 mt-2 text-sm text-[#9ca3af] space-y-2">
+                    <p>Dal punto di vista dell'immagine e della scenografia contemporanea, il museo di Kengo Kuma è un capolavoro di luci, trasparenze e design multimediale. Registi cinematografici, video-artisti ed esperti di architettura da tutto il mondo studiano il modo in cui la luce naturale penetra obliquamente dal soffitto giardino nelle sale ipogee, creando ombre organiche in continuo movimento. L'interazione tra installazioni digitali d'avanguardia, proiezioni cinematografiche d'autore e schermi interattivi perfettamente integrati nel legno e nel vetro rende lo spazio un set multimediale immersivo, in cui la narrazione visiva contemporanea amplifica il fascino antico della parola scritta, offrendo inquadrature mozzafiato sospese tra minimalismo giapponese e calore fiabesco nordeuropeo.</p>
+                </div>
+                <div id="d2a2-food" class="focus-content bg-[#1f2937] border-2 border-[#d97706] p-4 mt-2 text-sm text-white">
+                    <p class="font-bold text-[#d97706] mb-1">SUGGERIMENTO CULINARIO:</p>
+                    Pranzo leggero e rapido in centro da Café Cuckoo's Nest per assaggiare un classico Stjerneskud (smørrebrød ricco con platessa fritta e al vapore, gamberetti freschi, asparagi e caviale). Per cena a Vejle, puntate al Café Den Blå Avis per le mitiche Frikadeller (polpette danesi) con salsa al prezzemolo.
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- GIORNO 3 (CAMBIO PALETTE: LEGO BRIGHTS) -->
+    <section id="page-day3" class="hidden min-h-screen p-4 md:p-12 max-w-5xl mx-auto bg-white text-gray-900 border-t-8 border-blue-600">
+        <div class="flex justify-between items-center border-b-2 border-gray-200 pb-4 mb-8">
+            <button onclick="navigateTo('day2')" class="text-xs uppercase border border-gray-300 px-4 py-2 hover:bg-gray-100 font-bold text-gray-600">◀ Giorno 2</button>
+            <span class="text-xs font-black text-red-600 tracking-widest">🧩 GIORNO 3 DI 7 [LEGO MODE]</span>
+            <button onclick="navigateTo('day4')" class="text-xs uppercase bg-yellow-400 text-black font-black px-4 py-2 hover:bg-yellow-300">Giorno 4 ▶</button>
+        </div>
+
+        <div class="mb-8">
+            <h2 class="text-3xl md:text-5xl font-black uppercase text-blue-600 mb-2">29.05 - LegoHouse: Home of the Brick</h2>
+            <p class="text-gray-600 italic font-sans font-bold">Oggi si entra nel santuario della creatività pura a Billund, dove il grande design scandinavo incontra l'immaginazione nel paese esatto in cui tutto è iniziato.</p>
+        </div>
+
+        <div class="space-y-8 border-l-4 border-yellow-400 pl-6 ml-2">
+            <div>
+                <span class="text-xs font-black bg-red-600 text-white px-2 py-1">10:00 - 18:00</span>
+                <h3 class="text-2xl font-black text-gray-900 mt-2">La Casa del Mattoncino a Billund</h3>
+                <p class="text-gray-700 text-sm mt-1 font-sans">Giornata intera dentro l'incredibile struttura architettonica a blocchi progettata dallo studio BIG (Bjarke Ingels Group).</p>
+                <div class="bg-blue-50 p-4 my-3 border-l-4 border-blue-600 text-xs font-sans text-gray-800">
+                    <span class="font-bold block text-blue-600 uppercase">🧩 Lego Tip:</span> Al ristorante Mini Chef incastrate i vostri veri mattoncini per comporre l'ordine, scansionatelo sullo schermo e godetevi i robot meccanici che vi servono il pranzo in enormi contenitori LEGO. Nel pomeriggio passate almeno venti minuti nella History Collection nel seminterrato, una macchina del tempo nostalgica con le scatole LEGO storiche dagli anni '50 a oggi. Al rientro a Vejle, cercate sul porto il Fjordenhus di Olafur Eliasson.
+                </div>
+                <div class="flex flex-wrap gap-2 mt-3">
+                    <button onclick="toggleFocus('d3a1-st')" class="bg-gray-200 hover:bg-gray-300 text-gray-900 text-xs px-3 py-1.5 font-bold uppercase">Focus Storico</button>
+                    <button onclick="toggleFocus('d3a1-let')" class="bg-gray-200 hover:bg-gray-300 text-gray-900 text-xs px-3 py-1.5 font-bold uppercase">Focus Letterario</button>
+                    <button onclick="toggleFocus('d3a1-cin')" class="bg-gray-200 hover:bg-gray-300 text-gray-900 text-xs px-3 py-1.5 font-bold uppercase">Focus Cinematografico</button>
+                    <button onclick="toggleFocus('d3a1-food')" class="bg-yellow-400 text-black hover:bg-yellow-300 text-xs px-3 py-1.5 font-bold uppercase">Cosa mangiare qui 🍽️</button>
+                </div>
+                <div id="d3a1-st" class="focus-content bg-gray-50 border border-gray-200 p-4 mt-2 text-sm text-gray-700 space-y-2 font-sans">
+                    <p>La storia della LEGO inizia nel 1932 nella modesta bottega di Ole Kirk Christiansen, un falegname rimasto vedovo che, durante la Grande Depressione, iniziò a fabbricare giocattoli di legno per mantenere la famiglia. Il nome 'LEGO' unisce le parole danesi 'Leg Godt' (Gioca Bene). Nel 1949, l'azienda introdusse i primi mattoncini di plastica ad incastro automatico, ma fu solo nel 1958 che venne brevettato il celebre sistema di tubi interni che garantisce la stabilità delle costruzioni odierne. La LegoHouse, inaugurata nel 2017 nel centro esatto di Billund, sorge sul sito del vecchio municipio ed è stata progettata dal celeberrimo studio d'architettura BIG di Bjarke Ingels. L'edificio è composto da 21 enormi blocchi bianchi sovrapposti disposti come una gigantesca piramide di mattoncini LEGO, sormontata dal leggendario 'Masterpiece Block', che celebra a livello globale il trionfo della creatività, della modularità geometrica e della persistenza storica di un'idea familiare trasformatasi nel gioco più famoso del pianeta.</p>
+                </div>
+                <div id="d3a1-let" class="focus-content bg-gray-50 border border-gray-200 p-4 mt-2 text-sm text-gray-700 space-y-2 font-sans">
+                    <p>La filosofia intrinseca della LEGO si connette strettamente alle grandi teorie pedagogiche e letterarie nordeuropee sull'infanzia, che vedono il gioco non come un mero passatempo, ma come l'attività intellettuale più nobile e fondativa per lo sviluppo della mente umana. Nel saggio 'Homo Ludens' di Johan Huizinga o nelle riflessioni sulla creatività di Gianni Rodari, l'atto di combinare elementi base per dare vita a mondi infiniti trova una risonanza perfetta nella modularità della LegoHouse. Questo spazio si configura come una narrazione letteraria aperta, un libro in cui la trama non è scritta in modo rigido dall'autore, ma viene destrutturata e ricomposta continuamente dal lettore-creatore. La LegoHouse celebra proprio l'immaginazione narrativa senza confini, un luogo in cui le storie prendono forma plastica attraverso la combinazione geometrica di piccolissimi mattoncini colorati.</p>
+                </div>
+                <div id="d3a1-cin" class="focus-content bg-gray-50 border border-gray-200 p-4 mt-2 text-sm text-gray-700 space-y-2 font-sans">
+                    <p>L'architettura audace e iper-colorata della LegoHouse rappresenta un sogno visivo per registi, direttori della fotografia e documentaristi di tutto il mondo. Lo studio BIG ha concepito l'edificio per essere vissuto come un set cinematografico continuo, in cui ogni zona colore (Rosso per la creatività, Blu per la logica, Verde per la narrazione sociale, Giallo per le emozioni) impone una precisa identità cromatica e visiva immediata alle riprese. I documentari dedicati al design, come le serie d'architettura su Netflix, evidenziano la pulizia geometrica delle sue linee esterne che contrasta con l'esplosione cromatica delle installazioni interne, come il monumentale 'Albero della Creatività', alto più di 15 metri. La struttura offre inquadrature simmetriche spettacolari, perfette per esprimere l'estetica pop e l'ottimismo tecnologico del grande design danese contemporaneo.</p>
+                </div>
+                <div id="d3a1-food" class="focus-content bg-yellow-100 border-2 border-yellow-400 p-4 mt-2 text-sm text-gray-900 font-sans font-bold">
+                    <p class="text-blue-600 mb-1">SUGGERIMENTO CULINARIO LEGO:</p>
+                    Pranzo obbligatorio al ristorante MINI CHEF: usate i mattoncini per comporre il menu, passateli nello scanner e fatevi servire i vostri piatti direttamente dai simpatici robot di cucina all'interno di enormi bento box LEGO a incastro. Per colazione a Vejle, passate da Palles Bageri per i tipici Wienerbrød sfogliati al burro.
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- GIORNO 4 (LEGO BRIGHTS CONTINUA) -->
+    <section id="page-day4" class="hidden min-h-screen p-4 md:p-12 max-w-5xl mx-auto bg-white text-gray-900 border-t-8 border-red-600">
+        <div class="flex justify-between items-center border-b-2 border-gray-200 pb-4 mb-8">
+            <button onclick="navigateTo('day3')" class="text-xs uppercase border border-gray-300 px-4 py-2 hover:bg-gray-100 font-bold text-gray-600">◀ Giorno 3</button>
+            <span class="text-xs font-black text-red-600 tracking-widest">🧩 GIORNO 4 DI 7 [LEGO MODE]</span>
+            <button onclick="navigateTo('day5')" class="text-xs uppercase bg-[#10b981] text-black font-bold px-4 py-2 hover:bg-emerald-400">Giorno 5 ▶</button>
+        </div>
+
+        <div class="mb-8">
+            <h2 class="text-3xl md:text-5xl font-black uppercase text-red-600 mb-2">30.05 - Legoland Billund</h2>
+            <p class="text-gray-600 italic font-sans font-bold">Il mito assoluto d'infanzia prende vita nel parco a tema originale del 1968, sospeso tra riproduzioni monumentali in miniatura e adrenalina di plastica.</p>
+        </div>
+
+        <div class="space-y-8 border-l-4 border-red-600 pl-6 ml-2">
+            <div>
+                <span class="text-xs font-black bg-blue-600 text-white px-2 py-1">10:00 - 18:30</span>
+                <h3 class="text-2xl font-black text-gray-900 mt-2">Il Parco Storico di Legoland</h3>
+                <p class="text-gray-700 text-sm mt-1 font-sans">Esplorazione completa delle aree tematiche del parco originale di Billund.</p>
+                <div class="bg-red-50 p-4 my-3 border-l-4 border-red-600 text-xs font-sans text-gray-800">
+                    <span class="font-bold block text-red-600 uppercase">🧩 Parco Tip:</span> Dirigetevi subito verso le attrazioni principali sul fondo del parco (Polar X-plorer) per evitare le code della tarda mattinata. Lasciate il Miniland (l'area dei monumenti in miniatura realizzati con milioni di pezzi originali) per il primo pomeriggio, quando avrete bisogno di un ritmo più rilassato e contemplativo.
+                </div>
+                <div class="flex flex-wrap gap-2 mt-3">
+                    <button onclick="toggleFocus('d4a1-st')" class="bg-gray-200 hover:bg-gray-300 text-gray-900 text-xs px-3 py-1.5 font-bold uppercase">Focus Storico</button>
+                    <button onclick="toggleFocus('d4a1-let')" class="bg-gray-200 hover:bg-gray-300 text-gray-900 text-xs px-3 py-1.5 font-bold uppercase">Focus Letterario</button>
+                    <button onclick="toggleFocus('d4a1-cin')" class="bg-gray-200 hover:bg-gray-300 text-gray-900 text-xs px-3 py-1.5 font-bold uppercase">Focus Cinematografico</button>
+                    <button onclick="toggleFocus('d4a1-food')" class="bg-yellow-400 text-black hover:bg-yellow-300 text-xs px-3 py-1.5 font-bold uppercase">Cosa mangiare qui 🍽️</button>
+                </div>
+                <div id="d4a1-st" class="focus-content bg-gray-50 border border-gray-200 p-4 mt-2 text-sm text-gray-700 space-y-2 font-sans">
+                    <p>Legoland Billund, inaugurato gloriosamente il 7 giugno 1968 accanto alla fabbrica originaria di LEGO, rappresenta il primissimo e storico parco a tema della celebre azienda danese. L'idea nacque dalla geniale intuizione di Godtfred Kirk Christiansen (figlio del fondatore), il quale, esasperato dalle migliaia di visitatori che affollavano costantemente la fabbrica per ammirare i modelli in esposizione, decise di creare un giardino espositivo all'aperto dedicato esclusivamente alle creazioni in miniatura. Nel suo primissimo anno di apertura, il parco registrò lo straordinario record di oltre 620.000 visitatori, surclassando ogni più rosea aspettativa. Il cuore pulsante del parco rimane l'iconica area 'Miniland', una minuziosa e monumentale opera di ingegneria in miniatura che riproduce fedelmente canali, città, porti e monumenti danesi e internazionali, realizzata interamente utilizzando oltre 20 milioni di mattoncini classici, testimoniando l'evoluzione del brand da manifattura locale a impero globale dell'intrattenimento.</p>
+                </div>
+                <div id="d4a1-let" class="focus-content bg-gray-50 border border-gray-200 p-4 mt-2 text-sm text-gray-700 space-y-2 font-sans">
+                    <p>La fascinazione letteraria per il mondo in miniatura vanta radici illustri, che spaziano dai celeberrimi 'Viaggi di Gulliver' di Jonathan Swift fino ai racconti fantastici della letteratura per l'infanzia. L'area Miniland di Legoland materializza esattamente questo profondo archetipo letterario, permettendo ai visitatori di sentirsi giganti benevoli all'interno di un mondo lillipuziano straordinariamente dettagliato. La riduzione in scala di città reali stimola una profonda riflessione sulla percezione dello spazio, sulla complessità dell'architettura umana e sul potere dell'astrazione. Questo spazio ludico e letterario celebra la capacità tipicamente umana di mappare il mondo visibile attraverso il microcosmo, creando una narrazione visiva immediata e universale capace di dialogare con lo spirito d'osservazione e l'immaginazione di grandi e bambini.</p>
+                </div>
+                <div id="d4a1-cin" class="focus-content bg-gray-50 border border-gray-200 p-4 mt-2 text-sm text-gray-700 space-y-2 font-sans">
+                    <p>Sul piano cinematografico e televisivo, Legoland Billund rappresenta un'immensa e inesauribile fonte di ispirazione visiva, strettamente legata all'estetica dei celebri mattoncini celebrata anche nei fortunati film di animazione della Warner Bros ('The LEGO Movie'). La tecnica del passo uno (stop-motion) e le moderne inquadrature con lenti macro trovano in questo parco un terreno di sperimentazione visiva eccezionale. Il Miniland offre ai registi la possibilità di girare sequenze che simulano città reali ma con la texture inconfondibile della plastica lucida, creando cortocircuiti visivi unici. La luce solare che illumina le piccole imbarcazioni in movimento nei canali artificiali di mattoncini crea un'atmosfera cinematografica pop e iper-reale, studiata attentamente dai creatori di contenuti visivi di tutto il mondo.</p>
+                </div>
+                <div id="d4a1-food" class="focus-content bg-yellow-100 border-2 border-yellow-400 p-4 mt-2 text-sm text-gray-900 font-sans font-bold">
+                    <p class="text-red-600 mb-1">SUGGERIMENTO CULINARIO DEL GIORNO:</p>
+                    Per la cena intermedia lungo la strada verso il pernotto a Ringe, fermatevi a Middelfart, sul vecchio ponte della Fionia. Cercate una locanda sul porto per un Flæskesteg sandwich (panino con arrosto di maiale tradizionale e cotenna croccante) da gustare guardando le barche nel mare.
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- GIORNO 5 (RITORNO A PALETTE VICHINGO & FIABA) -->
+    <section id="page-day5" class="hidden min-h-screen p-4 md:p-12 max-w-5xl mx-auto">
+        <div class="flex justify-between items-center border-b border-[#374151] pb-4 mb-8">
+            <button onclick="navigateTo('day4')" class="text-xs uppercase border border-[#374151] px-4 py-2 hover:bg-[#1f2937] text-[#9ca3af] hover:text-white">◀ Giorno 4</button>
+            <span class="text-xs font-bold text-[#d97706]">GIORNO 5 DI 7</span>
+            <button onclick="navigateTo('day6')" class="text-xs uppercase bg-[#10b981] text-black font-bold px-4 py-2 hover:bg-emerald-400">Giorno 6 ▶</button>
+        </div>
+
+        <div class="mb-8">
+            <h2 class="text-3xl md:text-5xl font-black uppercase text-white mb-2">31.05 - Lejre, i Vichinghi, Roskilde e Copenaghen</h2>
+            <p class="text-[#9ca3af] italic">La domenica dell'epopea vichinga e dei tesori reali. Si attraversa lo Sjælland per connettere la storia antica con l'underground artistico e monumentale della capitale.</p>
+        </div>
+
+        <div class="space-y-8 border-l-2 border-[#374151] pl-6 ml-2">
+            <!-- LEJRE -->
+            <div>
+                <span class="text-xs font-bold bg-[#1f2937] px-2 py-1 text-[#10b981]">11:00 - 13:15</span>
+                <h3 class="text-xl font-bold mt-2">Sagnlandet Lejre: La Valle dei Re</h3>
+                <p class="text-[#9ca3af] text-sm mt-1">Immersione nella splendida ricostruzione archeologica sperimentale di un villaggio dell'Età del Ferro e dei Vichinghi.</p>
+                <div class="bg-[#1f2937] p-4 my-3 border-l-4 border-[#d97706] text-xs">
+                    <span class="font-bold block text-[#d97706] uppercase">💡 Live Tip:</span> Camminate decisi verso la Kongehallen, la più grande e maestosa sala dei re vichinghi mai ricostruita al mondo su basi archeologiche reali. Mangiate il vostro pranzo al sacco vicino al fuoco acceso.
+                </div>
+                <div class="flex flex-wrap gap-2 mt-3">
+                    <button onclick="toggleFocus('d5a1-st')" class="bg-[#374151] hover:bg-[#4b5563] text-xs px-3 py-1.5 font-bold uppercase">Focus Storico</button>
+                    <button onclick="toggleFocus('d5a1-let')" class="bg-[#374151] hover:bg-[#4b5563] text-xs px-3 py-1.5 font-bold uppercase">Focus Letterario</button>
+                    <button onclick="toggleFocus('d5a1-cin')" class="bg-[#374151] hover:bg-[#4b5563] text-xs px-3 py-1.5 font-bold uppercase">Focus Cinematografico</button>
+                </div>
+                <div id="d5a1-st" class="focus-content bg-[#1f2937] border border-[#374151] p-4 mt-2 text-sm text-[#9ca3af] space-y-2">
+                    <p>Sagnlandet Lejre (la Terra delle Leggende) è uno dei centri di archeologia sperimentale più prestigiosi e vasti d'Europa, fondato nel 1964 per testare concretamente sul campo le ipotesi di vita preistorica e medievale. La vera perla del sito è la maestosa Kongehallen (la Sala dei Re), solennemente inaugurata nel 2020 dopo anni di minuziosi scavi e studi archeologici. Questa imponente e straordinaria struttura in legno, lunga ben 61 metri e alta 13, rappresenta la fedele e accurata ricostruzione della più grande sala reale vichinga mai scoperta in Danimarca, risalente all'anno 800 d.C. Gli scavi hanno dimostrato che Lejre non era un semplice villaggio di contadini, bensì la primissima e leggendaria sede della dinastia reale degli Scylding (Skjoldungerne), il fulcro politico, sacro, militare e dinastico primordiale da cui prese forma il futuro e unificato Regno di Danimarca.</p>
+                </div>
+                <div id="d5a1-let" class="focus-content bg-[#1f2937] border border-[#374151] p-4 mt-2 text-sm text-[#9ca3af] space-y-2">
+                    <p>Lejre occupa un posto assolutamente centrale, sacro e leggendario nella storia della letteratura mondiale, essendo il teatro geografico ed epico principale in cui si sviluppano le vicende del celeberrimo poema anglosassone 'Beowulf', pilastro fondativo della letteratura nordeuropee. La monumentale Kongehallen ricostruita a Sagnlandet coincide idealmente con il mitico 'Heorot', il favoloso e splendente palazzo del Re Hrothgar descritto nel poema, le cui travi di legno risuonavano di canti, banchetti e brindisi prima delle sanguinose e devastanti incursioni del mostro Grendel. Entrare in questa sala monumentale, respirare l'odore acuto del legno intagliato a mano e del fumo di torba significa immergersi direttamente nelle radici della mitologia e dell'epica pagana, dove la grande letteratura si fonde in modo indissolubile con l'archeologia dei re guerrieri.</p>
+                </div>
+                <div id="d5a1-cin" class="focus-content bg-[#1f2937] border border-[#374151] p-4 mt-2 text-sm text-[#9ca3af] space-y-2">
+                    <p>Il potenziale visivo ed estetico di Lejre ha fortemente influenzato l'immaginario cinematografico e televisivo moderno legato al mondo dei norreni, ispirando le scenografie di serie di enorme successo mondiale come 'Vikings' e 'The Last Kingdom'. La maestosità geometrica delle travi in legno di quercia della Kongehallen, i focolari centrali che proiettano ombre lunghe e drammatiche sulle pareti riccamente intagliate con motivi zoomorfi offrono ai registi una ricostruzione storica filologicamente perfetta. La luce naturale filtrata attraverso le piccole aperture del tetto crea un chiaroscuro denso, sporco e affascinante, che i direttori della fotografia sfruttano per restituire sullo schermo tutta la solennità, il mistero e la ruvida eleganza della prima età medievale scandinava.</p>
+                </div>
+            </div>
+
+            <!-- ROSKILDE -->
+            <div>
+                <span class="text-xs font-bold bg-[#1f2937] px-2 py-1 text-[#10b981]">13:45 - 15:35</span>
+                <h3 class="text-xl font-bold mt-2">Le Navi Vichinghe e la Cattedrale di Roskilde</h3>
+                <p class="text-[#9ca3af] text-sm mt-1">I cinque scafi originali salvati dal fiordo e la maestosa chiesa gotica pantheon dei Re.</p>
+                <div class="bg-[#1f2937] p-4 my-3 border-l-4 border-[#d97706] text-xs">
+                    <span class="font-bold block text-[#d97706] uppercase">💡 Live Tip:</span> Posteggiate gratuitamente al porto. Al museo, andate dritti al padiglione sul fiordo per ammirare i cinque scafi affondati nel 1000 d.C. Poi salite a piedi attraverso il parco (Byparken) verso la Cattedrale gotica in mattoni rossi, che custodisce ben 40 tombe reali tra cui quella di re Cristiano IV.
+                </div>
+                <div class="flex flex-wrap gap-2 mt-3">
+                    <button onclick="toggleFocus('d5a2-st')" class="bg-[#374151] hover:bg-[#4b5563] text-xs px-3 py-1.5 font-bold uppercase">Focus Storico</button>
+                    <button onclick="toggleFocus('d5a2-let')" class="bg-[#374151] hover:bg-[#4b5563] text-xs px-3 py-1.5 font-bold uppercase">Focus Letterario</button>
+                    <button onclick="toggleFocus('d5a2-cin')" class="bg-[#374151] hover:bg-[#4b5563] text-xs px-3 py-1.5 font-bold uppercase">Focus Cinematografico</button>
+                </div>
+                <div id="d5a2-st" class="focus-content bg-[#1f2937] border border-[#374151] p-4 mt-2 text-sm text-[#9ca3af] space-y-2">
+                    <p>Roskilde è stata la gloriosa capitale della Danimarca fino al 1443, fungendo da baricentro spirituale e politico del regno. Il Museo delle Navi Vichinghe sorge sulle sponde del fiordo ed è stato costruito appositamente nel 1969 per ospitare i cinque straordinari scafi originali (le navi di Skuldelev), deliberatamente affondati attorno all'anno 1040 per bloccare l'accesso al canale e proteggere la ricca città dagli attacchi navali nemici. Poco distante, la maestosa Cattedrale di Roskilde (Roskilde Domkirke), fondata nel XII secolo dal Vescovo Absalon in stile gotico in mattoni rossi, rappresenta il pantheon monumentale della monarchia danese: al suo interno sono custodite le spoglie mortali di ben 40 sovrani, tracciando l'intera evoluzione dinastica della nazione da Harold Dente Azzurro fino ai re dell'era moderna.</p>
+                </div>
+                <div id="d5a2-let" class="focus-content bg-[#1f2937] border border-[#374151] p-4 mt-2 text-sm text-[#9ca3af] space-y-2">
+                    <p>La cattedrale di Roskilde e i relitti del suo fiordo occupano uno spazio profondamente lirico e malinconico nelle cronache letterarie scandinave e nelle saghe medievali (come la celebre 'Gesta Danorum' di Saxo Grammaticus). La coesistenza nello stesso perimetro urbano delle navi da guerra pagane che solcavano gli oceani e delle maestose cappelle gotiche cristiane dei re rappresenta il fulcro letterario della transizione spirituale della Danimarca. Scrittori e poeti hanno spesso descritto le alte torri della cattedrale che si specchiano sulle acque scure del fiordo come il simbolo per eccellenza della memoria storica nazionale, un luogo di pellegrinaggio letterario in cui il silenzio delle tombe reali dialoga eternamente con il sussurro del vento marino che batte implacabile sulle rive dell'antico porto vichingo.</p>
+                </div>
+                <div id="d5a2-cin" class="focus-content bg-[#1f2937] border border-[#374151] p-4 mt-2 text-sm text-[#9ca3af] space-y-2">
+                    <p>L'architettura brutalista in cemento armato del museo di Roskilde, che incornicia gli scafi vichinghi stagliati direttamente contro la luce naturale del fiordo retrostante, è considerata un capolavoro di scenografia espositiva e cinematografica. I registi storici utilizzano la luce argentea del Baltico che penetra dalle enormi vetrate per esaltare il profilo tormentato del legno millenario delle navi. La Cattedrale, d'altro canto, con le sue maestose e ricchissime cappelle laterali decorate con affreschi epici e monumenti funebri barocchi e neoclassici, offre scenari di incredibile opulenza formale per riprese cinematografiche dedicate alla monarchia, regalando giochi di prospettive e altezze vertiginose che amplificano visivamente il senso del sacro, della morte e della regalità monumentale.</p>
+                </div>
+            </div>
+
+            <!-- COPENAGHEN PRIMO ASSAGGIO -->
+            <div>
+                <span class="text-xs font-bold bg-[#1f2937] px-2 py-1 text-[#10b981]">16:10 - 22:00+</span>
+                <h3 class="text-xl font-bold mt-2">SMK, Kastellet e la Notte a Nyhavn</h3>
+                <p class="text-[#9ca3af] text-sm mt-1">L'arrivo nella capitale: l'arte nazionale, la cittadella a stella e i riflessi serali dei canali.</p>
+                <div class="bg-[#1f2937] p-4 my-3 border-l-4 border-[#d97706] text-xs">
+                    <span class="font-bold block text-[#d97706] uppercase">💡 Live Tip:</span> Tappa obbligatoria per cena da Gasoline Grill (nella vicina stazione di Vesterport): addentate uno dei burger più famosi del mondo prima di camminare tra i riflessi delle navi storiche e delle case colorate di Nyhavn di notte.
+                </div>
+                <div class="flex flex-wrap gap-2 mt-3">
+                    <button onclick="toggleFocus('d5a3-food')" class="bg-[#d97706] text-black hover:bg-amber-500 text-xs px-3 py-1.5 font-bold uppercase">Cosa mangiare qui 🍽️</button>
+                </div>
+                <div id="d5a3-food" class="focus-content bg-[#1f2937] border-2 border-[#d97706] p-4 mt-2 text-sm text-white">
+                    <p class="font-bold text-[#d97706] mb-1">SUGGERIMENTO CULINARIO:</p>
+                    Cena da Gasoline Grill a Vesterport: ordinate il loro leggendario Cheeseburger (servito in un cartoccio minimalista), considerato uno dei migliori del pianeta, e poi godetevi una birra fresca passeggiando tra le luci di Nyhavn.
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- GIORNO 6 -->
+    <section id="page-day6" class="hidden min-h-screen p-4 md:p-12 max-w-5xl mx-auto">
+        <div class="flex justify-between items-center border-b border-[#374151] pb-4 mb-8">
+            <button onclick="navigateTo('day5')" class="text-xs uppercase border border-[#374151] px-4 py-2 hover:bg-[#1f2937] text-[#9ca3af] hover:text-white">◀ Giorno 5</button>
+            <span class="text-xs font-bold text-[#d97706]">GIORNO 6 DI 7</span>
+            <button onclick="navigateTo('day7')" class="text-xs uppercase bg-[#10b981] text-black font-bold px-4 py-2 hover:bg-emerald-400">Giorno 7 ▶</button>
+        </div>
+
+        <div class="mb-8">
+            <h2 class="text-3xl md:text-5xl font-black uppercase text-white mb-2">01.06 - Copenaghen Città Reale e Christiania</h2>
+            <p class="text-[#9ca3af] italic">Il lunedì della Copenaghen Card. Un mix serrato di palazzi reali, tesori della corona, serre vittoriane e canali alternativi.</p>
+        </div>
+
+        <div class="space-y-8 border-l-2 border-[#374151] pl-6 ml-2">
+            <!-- DETTAGLIO REALE -->
+            <div>
+                <span class="text-xs font-bold bg-[#1f2937] px-2 py-1 text-[#10b981]">08:00 - 17:00</span>
+                <h3 class="text-xl font-bold mt-2">Diamante Nero, Museo Nazionale, Amalienborg e Rosenborg</h3>
+                <p class="text-[#9ca3af] text-sm mt-1">I grandi monumenti centrali, i tesori della corona nei sotterranei blindati e la maestosità di Marmorkirken.</p>
+                <div class="bg-[#1f2937] p-4 my-3 border-l-4 border-[#d97706] text-xs">
+                    <span class="font-bold block text-[#d97706] uppercase">💡 Live Tip:</span> Al Museo Nazionale cercate il leggendario Carro del Sole di Trundholm. A Rosenborg scendete nei sotterranei blindati per ammirare le corone d'oro e i gioielli di smeraldo della regina. Nell'Orto Botanico salite le scale in ghisa della serra Palmhuset per camminare ad altezza chioma.
+                </div>
+                <div class="flex flex-wrap gap-2 mt-3">
+                    <button onclick="toggleFocus('d6a1-st')" class="bg-[#374151] hover:bg-[#4b5563] text-xs px-3 py-1.5 font-bold uppercase">Focus Storico</button>
+                    <button onclick="toggleFocus('d6a1-food')" class="bg-[#d97706] text-black hover:bg-amber-500 text-xs px-3 py-1.5 font-bold uppercase">Cosa mangiare qui 🍽️</button>
+                </div>
+                <div id="d6a1-st" class="focus-content bg-[#1f2937] border border-[#374151] p-4 mt-2 text-sm text-[#9ca3af] space-y-2">
+                    <p>Il castello di Rosenborg rappresenta un gioiello assoluto di architettura rinascimentale in stile olandese, fatto edificare nel 1606 dall'eclettico ed energico Re Cristiano IV come residenza estiva di piacere, fuori dalle mura difensive della città. Il re, che governò per ben 59 anni segnando profondamente l'assetto monumentale di Copenaghen, curò personalmente molti dettagli del progetto. Con il passare dei secoli, Rosenborg perse la funzione di residenza reale attiva per trasformarsi, già nel 1838, in un museo cronologico della dinastia reale. I suoi scrigni sotterranei corazzati, protetti da imponenti sistemi di sicurezza, custodiscono i tesori più preziosi dello Stato: le corone d'oro massiccio tempestate di diamanti dei re assoluti, lo scettro del comando e i favolosi gioielli di smeraldo che la Regina indossa ancora oggi durante le cerimonie ufficiali di gala.</p>
+                </div>
+                <div id="d6a1-food" class="focus-content bg-[#1f2937] border-2 border-[#d97706] p-4 mt-2 text-sm text-white">
+                    <p class="font-bold text-[#d97706] mb-1">SUGGERIMENTO CULINARIO:</p>
+                    Pranzo al mercato dello street food di Broens Gadekøkken, proprio oltre il ponte pedonale. Ordinate un classico Smørrebrød d'autore al volo da mangiare seduti sulle banchine di legno guardando le barche passare nel canale.
+                </div>
+            </div>
+
+            <!-- GUGLIA E CHRISTIANIA -->
+            <div>
+                <span class="text-xs font-bold bg-[#1f2937] px-2 py-1 text-[#10b981]">18:15 - 21:30</span>
+                <h3 class="text-xl font-bold mt-2">Vor Frelsers Kirke e la Città Libera di Christiania</h3>
+                <p class="text-[#9ca3af] text-sm mt-1">La spettacolare salita sulla guglia a spirale esterna ed esplorazione del quartiere autogestito.</p>
+                <div class="bg-[#1f2937] p-4 my-3 border-l-4 border-[#d97706] text-xs">
+                    <span class="font-bold block text-[#d97706] uppercase">💡 Live Tip:</span> Salite gli ultimi spaventosi scalini di legno esterni della guglia d'oro per la vista geometrica più bella sui canali. A Christiania rispettate scrupolosamente i divieti fotografici indicati nella zona centrale (Pusher Street) e cenate in totale tranquillità nel collettivo biologico Morgenstedet.
+                </div>
+                <div class="flex flex-wrap gap-2 mt-3">
+                    <button onclick="toggleFocus('d6a2-st')" class="bg-[#374151] hover:bg-[#4b5563] text-xs px-3 py-1.5 font-bold uppercase">Focus Storico</button>
+                    <button onclick="toggleFocus('d6a2-food')" class="bg-[#d97706] text-black hover:bg-amber-500 text-xs px-3 py-1.5 font-bold uppercase">Cosa mangiare qui 🍽️</button>
+                </div>
+                <div id="d6a2-st" class="focus-content bg-[#1f2937] border border-[#374151] p-4 mt-2 text-sm text-[#9ca3af] space-y-2">
+                    <p>La Chiesa del Nostro Redentore (Vor Frelsers Kirke), inaugurata nel 1695 nel quartiere di Christianshavn, è celeberrima in tutto il mondo per la sua straordinaria guglia barocca a spirale, completata nel 1752. La leggenda metropolitana narra che l'architetto si sia suicidato gettandosi dalla guglia dopo essersi accorto di aver ruotato la spirale in senso antiorario contrariamente ai desideri reali, ma la realtà storica attesta la sua morte felice anni dopo. Poco distante sorge Christiania, la famosa Città Libera fondata nel 1971 quando un gruppo di hippy, artisti e occupanti abusivi abbatté le recinzioni di una vasta base militare abbandonata (la caserma di Bådsmandsstræde). Questo esperimento sociale unico di autogestione, democrazia diretta e collettivismo ha resistito per decenni a tensioni legali e politiche, rappresentando oggi una delle realtà comunitarie più discusse d'Europa.</p>
+                </div>
+                <div id="d6a2-food" class="focus-content bg-[#1f2937] border-2 border-[#d97706] p-4 mt-2 text-sm text-white">
+                    <p class="font-bold text-[#d97706] mb-1">SUGGERIMENTO CULINARIO:</p>
+                    Fermatevi a cena da Morgenstedet a Christiania: un collettivo bio-vegetariano gestito all'interno di una vecchia casa di legno autocostruita, dove si assapora ottimo cibo genuino cucinato a turni dai residenti della comunità.
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- GIORNO 7 -->
+    <section id="page-day7" class="hidden min-h-screen p-4 md:p-12 max-w-5xl mx-auto">
+        <div class="flex justify-between items-center border-b border-[#374151] pb-4 mb-8">
+            <button onclick="navigateTo('day6')" class="text-xs uppercase border border-[#374151] px-4 py-2 hover:bg-[#1f2937] text-[#9ca3af] hover:text-white">◀ Giorno 6</button>
+            <span class="text-xs font-bold text-[#d97706]">GIORNO 7 DI 7</span>
+            <button onclick="navigateTo('home')" class="text-xs uppercase bg-[#d97706] text-black font-bold px-4 py-2 hover:bg-amber-500">Fine Viaggio 🏁</button>
+        </div>
+
+        <div class="mb-8">
+            <h2 class="text-3xl md:text-5xl font-black uppercase text-white mb-2">02.06 - Christiansborg, Glyptoteket e Giardini Tivoli</h2>
+            <p class="text-[#9ca3af] italic">Il gran finale barocco e neoclassico. Musei monumentali, il tour in battello lungo i canali e la magia serale del parco divertimenti storico di Tivoli.</p>
+        </div>
+
+        <div class="space-y-8 border-l-2 border-[#374151] pl-6 ml-2">
+            <!-- MATTINA E POMERIGGIO -->
+            <div>
+                <span class="text-xs font-bold bg-[#1f2937] px-2 py-1 text-[#10b981]">10:00 - 17:00</span>
+                <h3 class="text-xl font-bold mt-2">Palazzo di Christiansborg, Old Library e Glyptoteket</h3>
+                <p class="text-[#9ca3af] text-sm mt-1">Le sale di rappresentanza con gli arazzi della regina, una biblioteca segreta in ghisa e le palme della gipsoteca.</p>
+                <div class="bg-[#1f2937] p-4 my-3 border-l-4 border-[#d97706] text-xs">
+                    <span class="font-bold block text-[#d97706] uppercase">💡 Live Tip:</span> A Christiansborg scendete sotto il palazzo per vedere le rovine dell'XI secolo. Alle 14:00 godetevi la visita alla Old University Library, un luogo accademico segreto fuori dai circuiti di massa. Alla Glyptoteket rilassatevi sulle panchine del maestoso giardino d'inverno sotto la grande cupola di vetro.
+                </div>
+                <div class="flex flex-wrap gap-2 mt-3">
+                    <button onclick="toggleFocus('d7a1-st')" class="bg-[#374151] hover:bg-[#4b5563] text-xs px-3 py-1.5 font-bold uppercase">Focus Storico</button>
+                    <button onclick="toggleFocus('d7a1-food')" class="bg-[#d97706] text-black hover:bg-amber-500 text-xs px-3 py-1.5 font-bold uppercase">Cosa mangiare qui 🍽️</button>
+                </div>
+                <div id="d7a1-st" class="focus-content bg-[#1f2937] border border-[#374151] p-4 mt-2 text-sm text-[#9ca3af] space-y-2">
+                    <p>Il Palazzo di Christiansborg, situato sull'isoletta di Slotsholmen, è il cuore politico della Danimarca, sede del Parlamento (Folketing), degli uffici del Primo Ministro e delle Sale di Rappresentanza Reale. Questa imponente struttura detiene un primato storico unico al mondo: è il terzo palazzo edificato nello stesso identico punto. Il primo castello fortificato fu fondato nel 1167 dal leggendario Vescovo Absalon; le sue suggestive fondamenta medievali in pietra scura sono tuttora visitabili scendendo nei sotterranei ipogei del palazzo attuale. I due complessi successivi vennero spietatamente distrutti da giganteschi incendi storici nel 1794 e nel 1884. L'attuale maestoso edificio, completato in stile neobarocco nel 1928, simboleggia l'unione indissolubile e democratica tra la secolare tradizione monarchica e la sovranità popolare contemporanea dello Stato danese.</p>
+                </div>
+                <div id="d7a1-food" class="focus-content bg-[#1f2937] border-2 border-[#d97706] p-4 mt-2 text-sm text-white">
+                    <p class="font-bold text-[#d97706] mb-1">SUGGERIMENTO CULINARIO:</p>
+                    Comprate uno Smørrebrød d'asporto d'eccellenza da Domhusets Smørrebrød lungo la strada per consumarlo velocemente prima di entrare nei musei.
+                </div>
+            </div>
+
+            <!-- TOUR IN BATTELLO E TIVOLI -->
+            <div>
+                <span class="text-xs font-bold bg-[#1f2937] px-2 py-1 text-[#10b981]">17:30 - 23:00</span>
+                <h3 class="text-xl font-bold mt-2">Canal Tour Stromma e Magia ai Giardini Tivoli</h3>
+                <p class="text-[#9ca3af] text-sm mt-1">Navigazione al tramonto sul lato destro e l'atmosfera ottocentesca del parco divertimenti più antico.</p>
+                <div class="bg-[#1f2937] p-4 my-3 border-l-4 border-[#d97706] text-xs">
+                    <span class="font-bold block text-[#d97706] uppercase">💡 Live Tip:</span> Sul battello sedetevi a destra per fotografare al meglio la Sirenetta. A Tivoli prendete posto sulle panchine di legno del Pantomime Theatre alle 19:40 per lo spettacolo Harlequin Skeleton. Cenate liberamente alla Tivoli Food Hall. Alle 23:00 prendete il treno regionale sotterraneo dalla Stazione Centrale: vi porta al Terminal 3 dell'aeroporto in soli 13 minuti netti!
+                </div>
+                <div class="flex flex-wrap gap-2 mt-3">
+                    <button onclick="toggleFocus('d7a2-st')" class="bg-[#374151] hover:bg-[#4b5563] text-xs px-3 py-1.5 font-bold uppercase">Focus Storico</button>
+                    <button onclick="toggleFocus('d7a2-food')" class="bg-[#d97706] text-black hover:bg-amber-500 text-xs px-3 py-1.5 font-bold uppercase">Cosa mangiare qui 🍽️</button>
+                </div>
+                <div id="d7a2-st" class="focus-content bg-[#1f2937] border border-[#374151] p-4 mt-2 text-sm text-[#9ca3af] space-y-2">
+                    <p>I Giardini di Tivoli, inaugurati solennemente il 15 agosto 1843 dal fondatore Georg Carstensen, rappresentano uno dei parchi divertimento storici più antichi e intatti del pianeta. Carstensen ottenne la licenza reale direttamente dal Re Cristiano VIII, convincendolo con una frase rimasta celebre nella storia della diplomazia: 'Quando il popolo si diverte, non pensa alla politica'. Il parco affascinò a tal punto Hans Christian Andersen da ispirargli la celebre fiaba 'L'usignolo', e Walt Disney rimase così profondamente stregato dall'organizzazione, dall'eleganza floreale e dalle luci serali di Tivoli da utilizzarlo come modello di ispirazione diretto per la nascita di Disneyland. Il padiglione del Pantomime Theatre, edificato all'aperto nel 1874 in un raffinato stile cinese, custodisce la tradizione intatta della commedia dell'arte, con il sipario meccanico a coda di pavone che si apre ancora oggi svelando le storie senza tempo di Arlecchino e Colombina.</p>
+                </div>
+                <div id="d7a2-food" class="focus-content bg-[#1f2937] border-2 border-[#d97706] p-4 mt-2 text-sm text-white">
+                    <p class="font-bold text-[#d97706] mb-1">SUGGERIMENTO CULINARIO DI COMMIATO:</p>
+                    Per l'ultima cena andate alla Tivoli Food Hall: ognuno può ordinare da uno stand diverso (ottimi i piatti tradizionali rivisitati in chiave street food moderno) e mangiare insieme nei grandi tavoli comuni di legno. Prima di andare in aeroporto, bevete l'ultima birra danese seduti sulla banchina in pietra di Nyhavn di notte.
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- LOGICA JAVASCRIPT PER INTERATTIVITÀ, CAMBIO PAGINE E CAMBIO TEMA D'ACCENTO -->
+    <script>
+        // Sistema di navigazione Multi-Pagina
+        function navigateTo(pageId) {
+            // Nascondi tutte le sezioni
+            document.querySelectorAll('section').forEach(section => {
+                section.classList.add('hidden');
+            });
+            
+            // Mostra la sezione richiesta
+            const targetPage = document.getElementById('page-' + pageId);
+            targetPage.classList.remove('hidden');
+            
+            // Scroll automatico all'inizio della nuova pagina
+            window.scrollTo(0, 0);
+
+            // GESTIONE DINAMICA DEI TEMI (Vichingo vs LEGO)
+            const body = document.getElementById('global-body');
+            
+            if (pageId === 'day3' || pageId === 'day4') {
+                // TEMA LEGO BRIGHTS: Sfondo bianco, scritte scure
+                body.style.backgroundColor = '#ffffff';
+                body.style.color = '#111827';
+            } else {
+                // TEMA VICHINGO & FIABA (DEFAULT): Sfondo ardesia, scritte chiare
+                body.style.backgroundColor = '#111827';
+                body.style.color = '#f9fafb';
+            }
+        }
+
+        // Sistema per espandere/comprimere i Focus storici e di cibo
+        function toggleFocus(elementId) {
+            const block = document.getElementById(elementId);
+            block.classList.toggle('open');
+        }
+    </script>
+</body>
+</html>
