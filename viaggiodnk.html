@@ -3,186 +3,189 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Danimarca Immersiva - Diario di Viaggio</title>
-    <!-- Tailwind CSS -->
+    <title>Danimarca On The Road - Nadia & Fulvio</title>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-    <!-- FontAwesome per Icone -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Chart.js per Grafici -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
+        :root {
+            --bg-main: #111827;
+            --bg-card: #1f2937;
+            --text-primary: #f9fafb;
+            --text-muted: #9ca3af;
+            --accent-forest: #10b981;
+            --accent-gold: #d97706;
+            --border-color: #374151;
+        }
+
+        /* Stile Spigoloso Globale Coerente */
+        * {
+            border-radius: 0px !important;
+        }
+
         .focus-content {
             max-height: 0;
             overflow: hidden;
-            transition: max-height 0.4s ease-out, padding 0.4s ease-out;
+            transition: max-height 0.3s ease-out;
         }
         .focus-content.open {
-            max-height: 1500px;
-            transition: max-height 0.8s ease-in, padding 0.4s ease-in;
+            max-height: 1400px;
+            transition: max-height 0.5s ease-in;
         }
-        .tab-btn.active {
-            background-color: #3b82f6;
-            color: white;
-        }
-        /* Color Palette LEGO per Giorni 3 e 4 */
-        .lego-red { border-color: #E60012; }
-        .lego-blue { border-color: #0055A5; }
-        .lego-yellow { border-color: #F2CD37; }
-        .lego-green { border-color: #00AA47; }
-        .lego-text-yellow { color: #F2CD37; }
     </style>
 </head>
-<body class="bg-gray-50 text-gray-800 font-sans antialiased">
+<body class="bg-[#111827] text-[#f9fafb] font-mono ease-in-out duration-300" id="global-body">
 
-    <!-- HERO COVER -->
-    <header class="relative bg-blue-900 text-white shadow-xl rounded-b-3xl overflow-hidden">
-        <div class="absolute inset-0 bg-cover bg-center opacity-30" style="background-image: url('https://images.unsplash.com/photo-1513622470522-26c3c8a854bc?auto=format&fit=crop&w=1200&q=80');"></div>
-        <div class="relative max-w-6xl mx-auto px-6 py-16 text-center md:py-24">
-            <span class="bg-red-600 text-white text-xs font-bold uppercase px-3 py-1 rounded-full shadow-md tracking-wider">Maggio - Giugno 2026</span>
-            <h1 class="text-4xl md:text-6xl font-black tracking-tight mt-4 drop-shadow-md">Danimarca On The Road</h1>
-            <p class="text-lg md:text-xl text-blue-100 mt-2 max-w-2xl mx-auto drop-shadow">Dai Vichinghi ai Mattoncini LEGO, fino ai segreti di Copenaghen</p>
-            <div class="mt-6 flex flex-wrap justify-center gap-4 text-sm font-semibold text-blue-200">
-                <span><i class="fa-solid var(--fa-car) mr-1 text-red-400"></i> Auto a Noleggio (Gg 1-5)</span>
-                <span><i class="fa-solid var(--fa-credit-card) mr-1 text-green-400"></i> Copenhagen Card 72h (Gg 5-7)</span>
-            </div>
-        </div>
-    </header>
+    <section id="page-home" class="min-h-screen flex flex-col justify-between p-6 md:p-12 border-8 border-[#d97706] m-4">
+        <div class="max-w-4xl mx-auto w-full my-auto">
+            <p class="text-[#d97706] tracking-widest text-sm uppercase font-bold mb-2">// AVVENTURA FRATELLO & SORELLA</p>
+            <h1 class="text-4xl md:text-7xl font-black tracking-tighter uppercase mb-4 text-[#10b981]">
+                Danimarca<br><span class="text-white">On The Road</span>
+            </h1>
+            <p class="text-lg md:text-xl text-[#9ca3af] max-w-2xl border-l-4 border-[#10b981] pl-4 my-6">
+                Da Torino alle scogliere UNESCO, passando per il cuore pulsante dei mattoncini LEGO, fino alle antiche sale dei re vichinghi e ai canali geometrici di Copenaghen. Il diario di viaggio definitivo di Nadia e Fulvio.
+            </p>
 
-    <!-- MAIN NAVIGATION BAR -->
-    <nav class="sticky top-0 z-50 bg-white/90 backdrop-blur shadow-md border-b border-gray-200 mt-4">
-        <div class="max-w-7xl mx-auto px-4 overflow-x-auto flex space-x-2 py-3 scrollbar-none">
-            <button onclick="switchTab('g1')" id="btn-g1" class="tab-btn active px-4 py-2 text-sm font-bold rounded-xl transition whitespace-nowrap"><i class="fa-solid var(--fa-calendar-day) mr-1"></i> G1: Stevns Klint</button>
-            <button onclick="switchTab('g2')" id="btn-g2" class="tab-btn px-4 py-2 text-sm font-bold rounded-xl text-gray-600 hover:bg-gray-100 transition whitespace-nowrap"><i class="fa-solid var(--fa-book-open) mr-1"></i> G2: Odense</button>
-            <button onclick="switchTab('g3')" id="btn-g3" class="tab-btn px-4 py-2 text-sm font-bold rounded-xl text-gray-600 hover:bg-gray-100 transition whitespace-nowrap"><i class="fa-solid var(--fa-cubes) mr-1"></i> G3: LegoHouse</button>
-            <button onclick="switchTab('g4')" id="btn-g4" class="tab-btn px-4 py-2 text-sm font-bold rounded-xl text-gray-600 hover:bg-gray-100 transition whitespace-nowrap"><i class="fa-solid var(--fa-gamepad) mr-1"></i> G4: Legoland</button>
-            <button onclick="switchTab('g5')" id="btn-g5" class="tab-btn px-4 py-2 text-sm font-bold rounded-xl text-gray-600 hover:bg-gray-100 transition whitespace-nowrap"><i class="fa-solid var(--fa-shield-halved) mr-1"></i> G5: Roskilde</button>
-            <button onclick="switchTab('g6')" id="btn-g6" class="tab-btn px-4 py-2 text-sm font-bold rounded-xl text-gray-600 hover:bg-gray-100 transition whitespace-nowrap"><i class="fa-solid var(--fa-landmark) mr-1"></i> G6: Cph Arte</button>
-            <button onclick="switchTab('g7')" id="btn-g7" class="tab-btn px-4 py-2 text-sm font-bold rounded-xl text-gray-600 hover:bg-gray-100 transition whitespace-nowrap"><i class="fa-solid var(--fa-ship) mr-1"></i> G7: Cph Canali</button>
-            <button onclick="switchTab('stats')" id="btn-stats" class="tab-btn px-4 py-2 text-sm font-bold rounded-xl text-gray-600 hover:bg-gray-100 transition whitespace-nowrap"><i class="fa-solid var(--fa-chart-pie) mr-1"></i> Statistiche</button>
-        </div>
-    </nav>
-
-    <!-- CONTENT CONTAINERS -->
-    <main class="max-w-6xl mx-auto px-4 py-8">
-
-        <!-- ================= GIORNO 1 ================= -->
-        <div id="tab-g1" class="tab-content block space-y-6">
-            <div class="bg-blue-50 border-l-4 border-blue-500 p-4 rounded-r-xl shadow-sm mb-6">
-                <h2 class="text-2xl font-black text-blue-900">27.05 - Giorno 1: Le Scogliere UNESCO Stevns Klint e il grande ponte dello Storebælt</h2>
-                <p class="text-sm text-blue-700 mt-1"><i class="fa-solid var(--fa-route) mr-1"></i> Itinerario Logistico complessivo: Copenaghen Aeroporto → Dragør (7 km) → Stevns Klint (80 km) → Storebælt Sosta (100 km) → Nyborg → Odense (55 km). Totale: ~242 km in auto.</p>
-            </div>
-
-            <!-- Attrazione 1: Dragør -->
-            <div class="bg-white rounded-2xl p-6 shadow-md border border-gray-100">
-                <div class="flex flex-wrap justify-between items-start gap-2 mb-4">
-                    <div>
-                        <span class="text-xs font-bold text-blue-600 bg-blue-100 px-2 py-1 rounded-md">11:10 - 12:30</span>
-                        <h3 class="text-xl font-bold text-gray-900 mt-1">Atterraggio a Copenaghen, Noleggio e Borgo di Dragør</h3>
-                    </div>
-                    <div class="text-xs text-gray-500 text-right">
-                        <div><i class="fa-solid var(--fa-car) mr-1"></i> 7 km | 10 min</div>
-                        <div>Mezzo: Auto a Noleggio</div>
-                    </div>
-                </div>
-                <p class="text-gray-600 text-sm mb-4">Ritiro dell'auto programmato per le 11:45. Trasferimento immediato a Dragør, un antico villaggio di pescatori perfettamente conservato con casette gialle del XVIII secolo e tetti di paglia.</p>
-                <div class="bg-amber-50 p-3 rounded-xl border border-amber-200 text-sm mb-4">
-                    <strong class="text-amber-800"><i class="fa-solid var(--fa-utensils) mr-1"></i> Spuntino/Pranzo veloce:</strong> Assaggia un *Stjerneskud* (pane di segale con filetto di platessa fritto e al vapore) presso i chioschi del porto di Dragør prima di rimetterti in marcia.
-                </div>
-                <!-- Pulsanti Focus -->
-                <div class="flex flex-wrap gap-2">
-                    <button onclick="toggleFocus('g1-dragor-ist')" class="bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-1.5 rounded-lg text-xs font-bold transition"><i class="fa-solid var(--fa-building-columns) mr-1"></i> Focus Storico</button>
-                    <button onclick="toggleFocus('g1-dragor-cin')" class="bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-1.5 rounded-lg text-xs font-bold transition"><i class="fa-solid var(--fa-video) mr-1"></i> Focus Cinematografico</button>
-                </div>
-                <!-- Contenuti Focus -->
-                <div id="g1-dragor-ist" class="focus-content bg-gray-50 rounded-xl mt-4"><p class="p-4 text-xs text-gray-600 leading-relaxed">Dragør venne fondata nel XIV secolo e crebbe rapidamente grazie ai privilegi commerciali concessi per la pesca e la salagione delle aringhe nel Sund. Nel XVI secolo, il re Cristiano II invitò coloni olandesi ad insediarsi nella vicina Amager per sviluppare l'agricoltura e rifornire la corte; l'influenza olandese è ancora visibile nell'architettura locale e nei cognomi storici. Durante la Seconda Guerra Mondiale, il porto di Dragør giocò un ruolo cruciale nella spettacolare operazione di salvataggio degli ebrei danesi: i pescatori locali, a rischio della propria vita, organizzarono imbarcazioni clandestine per trasportare centinaia di rifugiati attraverso lo stretto fino alla neutrale Svezia, sottraendoli alle deportazioni naziste.</p></div>
-                <div id="g1-dragor-cin" class="focus-content bg-gray-50 rounded-xl mt-4"><p class="p-4 text-xs text-gray-600 leading-relaxed">Le pittoresche e immacolate stradine accottolate di Dragør, contornate dalle caratteristiche mura giallo ocra e infissi bianchi o verdi, sono state utilizzate frequentemente come set naturale per diverse produzioni televisive storiche danesi e film d'epoca nordici. Passeggiando lungo il porto vecchio sembra di camminare all'interno di un film drammatico scandinavo sulla marineria del Settecento. La sua atmosfera senza tempo ha ispirato anche numerosi direttori della fotografia per l'illuminazione soffusa e i forti contrasti cromatici marittimi.</p></div>
-            </div>
-
-            <!-- Attrazione 2: Stevns Klint -->
-            <div class="bg-white rounded-2xl p-6 shadow-md border border-gray-100">
-                <div class="flex flex-wrap justify-between items-start gap-2 mb-4">
-                    <div>
-                        <span class="text-xs font-bold text-blue-600 bg-blue-100 px-2 py-1 rounded-md">13:40 - 16:00</span>
-                        <h3 class="text-xl font-bold text-gray-900 mt-1">Scogliere di Stevns Klint e Chiesa di Højerup</h3>
-                    </div>
-                    <div class="text-xs text-gray-500 text-right">
-                        <div><i class="fa-solid var(--fa-car) mr-1"></i> 80 km | 1h 10m</div>
-                        <div>Costo: Gratuito / Parcheggio</div>
-                    </div>
-                </div>
-                <p class="text-gray-600 text-sm mb-4">Arrivo alle imponenti scogliere di gesso bianco, patrimonio UNESCO. Visita alla celebre chiesetta medievale di Højerup, il cui coro è parzialmente crollato in mare a causa dell'erosione nel 1928.</p>
-                <div class="bg-amber-50 p-3 rounded-xl border border-amber-200 text-sm mb-4">
-                    <strong class="text-amber-800"><i class="fa-solid var(--fa-basket-shopping) mr-1"></i> Pranzo al Sacco:</strong> Consumazione del pranzo al sacco nell'area picnic panoramica sopra la scogliera, con vista mozzafiato sul Mar Baltico.
-                </div>
-                <div class="flex flex-wrap gap-2">
-                    <button onclick="toggleFocus('g1-stevns-ist')" class="bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-1.5 rounded-lg text-xs font-bold transition"><i class="fa-solid var(--fa-building-columns) mr-1"></i> Focus Scientifico/Storico</button>
-                    <button onclick="toggleFocus('g1-stevns-let')" class="bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-1.5 rounded-lg text-xs font-bold transition"><i class="fa-solid var(--fa-book) mr-1"></i> Focus Letterario</button>
-                </div>
-                <div id="g1-stevns-ist" class="focus-content bg-gray-50 rounded-xl mt-4"><p class="p-4 text-xs text-gray-600 leading-relaxed">Stevns Klint è considerata uno dei migliori siti al mondo per osservare visivamente lo strato di "argilla ittica" (Fiskeler) risalente al limite Cretaceo-Paleogene (limite K-Pg). Questo sottile strato scuro testimonia l'impatto del catastrofico meteorite di Chicxulub in Messico circa 66 milioni di anni fa, che causò l'estinzione di massa di oltre il 75% delle specie viventi terrestri, compresi i dinosauri non uccelli. Dal punto di vista storico-architettonico, la chiesa di Højerup Gamle Kirke fu edificata intorno al 1250 in pietra calcarea locale; la leggenda narrava che la chiesa si spostasse di un passo verso l'interno ogni notte di Natale per salvarsi dal baratro, ma il 16 marzo 1928 la natura batté il mito e il coro precipitò a causa di una imponente frana della parete rocciosa sottostante.</p></div>
-                <div id="g1-stevns-let" class="focus-content bg-gray-50 rounded-xl mt-4"><p class="p-4 text-xs text-gray-600 leading-relaxed">Le scogliere spettacolari e la chiesa sospesa nel vuoto hanno alimentato per secoli il folklore e la letteratura romantica danese. Poeti e scrittori dell'Ottocento hanno romanzato la figura del "Re della Scogliera" (Klintekongen), uno spirito mitologico protettore che dimorava nelle caverne di gesso e governava i venti del Baltico. La drammaticità del coro sospeso nel vuoto evoca i temi della fragilità umana di fronte alla sublime e indomabile forza degli elementi naturali, tipica del romanticismo nordico.</p></div>
-            </div>
-
-            <!-- Attrazione 3: Storebælt -->
-            <div class="bg-white rounded-2xl p-6 shadow-md border border-gray-100">
-                <div class="flex flex-wrap justify-between items-start gap-2 mb-4">
-                    <div>
-                        <span class="text-xs font-bold text-blue-600 bg-blue-100 px-2 py-1 rounded-md">16:00 - 19:30</span>
-                        <h3 class="text-xl font-bold text-gray-900 mt-1">Sosta Panoramica e Attraversamento del Ponte dello Storebælt</h3>
-                    </div>
-                    <div class="text-xs text-gray-500 text-right">
-                        <div><i class="fa-solid var(--fa-car) mr-1"></i> 155 km totali</div>
-                        <div>Pedaggio: ~35€</div>
-                    </div>
-                </div>
-                <p class="text-gray-600 text-sm mb-4">Sosta fotografica ai piedi del mastodontico ponte sospeso dal lato della Selandia. Successivo spettacolare attraversamento stradale con la luce del tardo pomeriggio. Sosta intermedia rapida nella cittadina fortificata di Nyborg, appena sbarcati sull'isola di Fionia.</p>
-                <div class="flex flex-wrap gap-2">
-                    <button onclick="toggleFocus('g1-ponte-ist')" class="bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-1.5 rounded-lg text-xs font-bold transition"><i class="fa-solid var(--fa-building-columns) mr-1"></i> Focus Ingegneristico</button>
-                </div>
-                <div id="g1-ponte-ist" class="focus-content bg-gray-50 rounded-xl mt-4"><p class="p-4 text-xs text-gray-600 leading-relaxed">Il collegamento fisso del Grande Belt (Storebæltsforbindelsen) è un'opera ingegneristica titanica inaugurata nel 1998 che ha unito stabilmente le isole di Selandia e Fionia, sostituendo i secolari traghetti. Il ponte sospeso orientale vanta una campata centrale di ben 1624 metri, posizionandosi tra le più lunghe al mondo, e i suoi piloni strallati raggiungono i 254 metri d'altezza. Storicamente, la vicina Nyborg ospita il Nyborg Slot, il castello medievale dove nel 1282 il re Erik Klipping firmò la prima costituzione danese (Handfæstning), rendendo la città la prima vera capitale storica in cui si riuniva il parlamento medievale noto come Danehof.</p></div>
-            </div>
-
-            <!-- Attrazione 4: Odense Centro e Storms Pakhus -->
-            <div class="bg-white rounded-2xl p-6 shadow-md border border-gray-100">
-                <div class="flex flex-wrap justify-between items-start gap-2 mb-4">
-                    <div>
-                        <span class="text-xs font-bold text-blue-600 bg-blue-100 px-2 py-1 rounded-md">19:30 - Serata</span>
-                        <h3 class="text-xl font-bold text-gray-900 mt-1">Arrivo ad Odense e Cena allo Storms Pakhus</h3>
-                    </div>
-                    <div class="text-xs text-gray-500 text-right">
-                        <div><i class="fa-solid var(--fa-location-dot) mr-1"></i> Centro Città</div>
-                        <div>Pernotto: Odense</div>
-                    </div>
-                </div>
-                <p class="text-gray-600 text-sm mb-4">Passeggiata esplorativa notturna nel quartiere storico pavimentato in pietra. Cena dinamica all'interno dello Storms Pakhus, un fantastico mercato coperto dedicato allo street food ricavato in un maestoso vecchio magazzino industriale.</p>
-                <div class="bg-amber-50 p-3 rounded-xl border border-amber-200 text-sm mb-4">
-                    <strong class="text-amber-800"><i class="fa-solid var(--fa-utensils) mr-1"></i> Cosa mangiare qui:</strong> Presso lo Storms Pakhus c'è l'imbarazzo della scelta. Ti consigliamo lo *Smørrebrød* contemporaneo rivisitato o i famosi tacos artigianali con carne stufata locale, accompagnati da una birra artigianale del birrificio fionico Albani.
+            <div class="mt-12">
+                <h3 class="text-xs uppercase text-[#9ca3af] tracking-widest font-bold mb-4">Seleziona un giorno per entrare nell'itinerario:</h3>
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2">
+                    <button onclick="navigateTo('day1')" class="text-left p-3 border border-[#374151] hover:border-[#10b981] hover:bg-[#1f2937] transition group cursor-pointer">
+                        <span class="block text-xs text-[#d97706]">27.05 - GIORNO 1</span>
+                        <span class="font-bold text-sm group-hover:text-[#10b981]">Stevns Klint & Storebælt</span>
+                    </button>
+                    <button onclick="navigateTo('day2')" class="text-left p-3 border border-[#374151] hover:border-[#10b981] hover:bg-[#1f2937] transition group cursor-pointer">
+                        <span class="block text-xs text-[#d97706]">28.05 - GIORNO 2</span>
+                        <span class="font-bold text-sm group-hover:text-[#10b981]">Egeskov & Hans C. Andersen</span>
+                    </button>
+                    <button onclick="navigateTo('day3')" class="text-left p-3 border border-[#374151] hover:border-[#10b981] hover:bg-[#1f2937] transition group cursor-pointer">
+                        <span class="block text-xs text-red-600 font-bold">29.05 - GIORNO 3 🧩</span>
+                        <span class="font-bold text-sm group-hover:text-blue-600">LegoHouse (Billund)</span>
+                    </button>
+                    <button onclick="navigateTo('day4')" class="text-left p-3 border border-[#374151] hover:border-[#10b981] hover:bg-[#1f2937] transition group cursor-pointer">
+                        <span class="block text-xs text-red-600 font-bold">30.05 - GIORNO 4 🧩</span>
+                        <span class="font-bold text-sm group-hover:text-blue-600">Legoland Original Park</span>
+                    </button>
+                    <button onclick="navigateTo('day5')" class="text-left p-3 border border-[#374151] hover:border-[#10b981] hover:bg-[#1f2937] transition group cursor-pointer">
+                        <span class="block text-xs text-[#d97706]">31.05 - GIORNO 5</span>
+                        <span class="font-bold text-sm group-hover:text-[#10b981]">Vichinghi, Roskilde & SMK</span>
+                    </button>
+                    <button onclick="navigateTo('day6')" class="text-left p-3 border border-[#374151] hover:border-[#10b981] hover:bg-[#1f2937] transition group cursor-pointer">
+                        <span class="block text-xs text-[#d97706]">01.06 - GIORNO 6</span>
+                        <span class="font-bold text-sm group-hover:text-[#10b981]">Copenaghen CPH Card</span>
+                    </button>
+                    <button onclick="navigateTo('day7')" class="text-left p-3 border border-[#374151] hover:border-[#10b981] hover:bg-[#1f2937] transition group cursor-pointer">
+                        <span class="block text-xs text-[#d97706]">02.06 - GIORNO 7</span>
+                        <span class="font-bold text-sm group-hover:text-[#10b981]">Gran Finale & Giardini Tivoli</span>
+                    </button>
                 </div>
             </div>
         </div>
+        <div class="text-center text-xs text-[#9ca3af] mt-8">
+            Torino ➔ Copenaghen • Maggio/Giugno 2026
+        </div>
+    </section>
 
-        <!-- ================= GIORNO 2 ================= -->
-        <div id="tab-g2" class="tab-content hidden space-y-6">
-            <div class="bg-blue-50 border-l-4 border-blue-500 p-4 rounded-r-xl shadow-sm mb-6">
-                <h2 class="text-2xl font-black text-blue-900">28.05 - Giorno 2: Il Castello d'Acqua di Egeskov e le fiabe di Andersen</h2>
-                <p class="text-sm text-blue-700 mt-1"><i class="fa-solid var(--fa-route) mr-1"></i> Logistica: Odense → Castello di Egeskov (34 km - 40 min) → Ritorno a Odense (34 km - 40 min) → Viaggio serale verso Vejle (72 km - 1h).</p>
+    <section id="page-day1" class="hidden min-h-screen p-4 md:p-12 max-w-5xl mx-auto">
+        <div class="flex justify-between items-center border-b border-[#374151] pb-4 mb-8">
+            <button onclick="navigateTo('home')" class="text-xs uppercase border border-[#374151] px-4 py-2 hover:bg-[#1f2937] text-[#9ca3af] hover:text-white cursor-pointer">◀ Menu</button>
+            <span class="text-xs font-bold text-[#d97706]">GIORNO 1 DI 7</span>
+            <button onclick="navigateTo('day2')" class="text-xs uppercase bg-[#10b981] text-black font-bold px-4 py-2 hover:bg-emerald-400 cursor-pointer">Giorno 2 ▶</button>
+        </div>
+
+        <div class="mb-8">
+            <h2 class="text-3xl md:text-5xl font-black uppercase text-white mb-2">27.05 - Stevns Klint e lo Storebælt</h2>
+            <p class="text-[#9ca3af] italic">L'avventura danese ha inizio. Atterrati nella capitale, si ritira l'auto per fuggire subito verso il silenzio della costa, attraversando ponti ingegneristici che sembrano sospesi nel nulla prima di raggiungere le calde atmosfere della Fionia.</p>
+        </div>
+
+        <div class="space-y-12 border-l-2 border-[#374151] pl-6 ml-2">
+            
+            <div class="relative bg-[#1f2937] p-6 border border-[#374151]">
+                <div class="absolute -left-[35px] top-6 bg-[#d97706] w-4 h-4 border-4 border-[#111827]"></div>
+                <span class="text-xs font-bold bg-[#111827] border border-[#d97706] px-2 py-1 text-[#d97706]">LOGISTICA & TRASFERIMENTO</span>
+                <h3 class="text-xl font-bold mt-2 text-white">Ritiro Auto a Copenaghen Aeroporto (CPH)</h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 my-4 text-xs text-[#9ca3af]">
+                    <div><span class="font-bold text-white block">Orario stimato:</span> 11:10 - 12:15</div>
+                    <div><span class="font-bold text-white block">Tratta:</span> CPH Terminal 3 ➔ Dragør</div>
+                    <div><span class="font-bold text-white block">Distanza / Tempo:</span> 7.2 km / 12 min</div>
+                </div>
+                <p class="text-sm text-[#9ca3af]">Atterraggio e superamento dei controlli doganali rapidi. Raggiungimento dei banchi di noleggio auto situati presso il Car Rental Centre (servito da navetta gratuita dai terminal). Ispezione del veicolo prima della partenza.</p>
+                <div class="bg-[#111827] p-3 mt-3 border-l-2 border-[#d97706] text-xs text-[#9ca3af]">
+                    <span class="font-bold block text-[#d97706]">⚠️ NOTA LOGISTICA:</span> Accertarsi che il dispositivo BroBizz o la lettura della targa per i pedaggi autostradali (Ponte Storebælt) siano correttamente attivi nel contratto di noleggio.
+                </div>
             </div>
 
-            <!-- Attrazione 1: Castello di Egeskov -->
-            <div class="bg-white rounded-2xl p-6 shadow-md border border-gray-100">
-                <div class="flex flex-wrap justify-between items-start gap-2 mb-4">
-                    <div>
-                        <span class="text-xs font-bold text-blue-600 bg-blue-100 px-2 py-1 rounded-md">09:30 - 13:00</span>
-                        <h3 class="text-xl font-bold text-gray-900 mt-1">Castello di Egeskov (Egeskov Slot)</h3>
-                    </div>
-                    <div class="text-xs text-gray-500 text-right">
-                        <div><i class="fa-solid var(--fa-clock) mr-1"></i> Durata: 3h 30m</div>
-                        <div>Ingresso: ~40€</div>
-                    </div>
+            <div class="relative bg-[#1f2937] p-6 border border-[#374151]">
+                <div class="absolute -left-[35px] top-6 bg-[#10b981] w-4 h-4 border-4 border-[#111827]"></div>
+                <span class="text-xs font-bold bg-[#111827] border border-[#10b981] px-2 py-1 text-[#10b981]">ATTRAZIONE</span>
+                <h3 class="text-2xl font-black mt-2 text-white">Il Borgo Marinaro di Dragør</h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 my-3 text-xs text-[#9ca3af] border-y border-[#374151] py-3">
+                    <div><span class="font-bold text-white block">📍 Posizione:</span> Porto Vecchio, Dragør (Amager)</div>
+                    <div><span class="font-bold text-white block">⏳ Tempo di Visita:</span> 1 ora e 30 minuti</div>
+                    <div><span class="font-bold text-white block">💶 Costo:</span> Gratuito (Accesso libero)</div>
                 </div>
-                <p class="text-gray-600 text-sm mb-4">Esplorazione del castello rinascimentale in mezzo a un lago, dei labirinti di siepi, delle mostre di auto d'epoca e della favolosa casa delle bambole "Titania's Palace".</p>
-                <div class="flex flex-wrap gap-2">
-                    <button onclick="toggleFocus('g2-egeskov-ist')" class="bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-1.5 rounded-lg text-xs font-bold transition"><i class="fa-solid var(--fa-building-columns) mr-1"></i> Focus Storico</button>
-                    <button onclick="toggleFocus('g2-egeskov-cul')" class="bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-1.5 rounded-lg text-xs font-bold transition"><i class="fa-solid var(--fa-utensils) mr-1"></i> Focus Culizionario</button>
+                <p class="text-sm text-[#9ca3af]">Un tuffo nel passato a pochi minuti dalle piste di volo. Il borgo conserva intatte oltre 70 case storiche della comunità di pescatori.</p>
+                <div class="bg-[#111827] p-4 my-3 border-l-4 border-[#d97706] text-xs">
+                    <span class="font-bold block text-[#d97706] uppercase">💡 Live Tip:</span> Parcheggiate vicino al porto (attenzione ai dischi orari danesi!). Camminate senza meta lungo Strandstræde tra i vicoli di casette gialle con i tetti di paglia del XVIII secolo.
                 </div>
-                <div id="g2-egeskov-ist" class="focus-content bg-gray-50 rounded-xl mt-4"><p class="p-4 text-xs text-gray-600 leading-relaxed">Costruito da Frands Brockenhuus e completato nel 1554, Egeskov è uno dei castelli ad acqua in stile tardo-gotico e rinascimentale meglio conservati d'Europa. Sorge su un basamento di pali di legno di quercia infissi verticalmente nel letto di un laghetto profondo fino a 5 metri; la leggenda dice che per ottenere le fondamenta fu abbattuto un intero bosco di querce, da cui il nome *Egeskov* (bosco di querce). Il castello fu edificato in un periodo di forti tensioni civili e religiose legate alla Riforma Protestante (la tana del conte, *Grevens Fejde*), motivo per cui presenta feritoie per cannoni, doppie mura difensive e un ponte levatoio.</p></div>
-                <div id="g2-egeskov-cul" class="focus-content bg-gray-50 rounded-xl mt-4"><p class="p-4 text-xs text-gray-600 leading-relaxed">I grandiosi giardini barocchi e botanici circostanti includono un rinomato orto di erbe officinali e piante aromatiche s
+                <div class="flex flex-wrap gap-2 mt-4">
+                    <button onclick="toggleFocus('d1-dragor-st')" class="bg-[#374151] hover:bg-[#4b5563] text-xs px-3 py-1.5 font-bold uppercase cursor-pointer">Focus Storico</button>
+                    <button onclick="toggleFocus('d1-dragor-let')" class="bg-[#374151] hover:bg-[#4b5563] text-xs px-3 py-1.5 font-bold uppercase cursor-pointer">Focus Letterario</button>
+                    <button onclick="toggleFocus('d1-dragor-cin')" class="bg-[#374151] hover:bg-[#4b5563] text-xs px-3 py-1.5 font-bold uppercase cursor-pointer">Focus Cinematografico</button>
+                    <button onclick="toggleFocus('d1-dragor-food')" class="bg-[#d97706] text-black hover:bg-amber-500 text-xs px-3 py-1.5 font-bold uppercase cursor-pointer">Cosa mangiare 🍽️</button>
+                </div>
+                <div id="d1-dragor-st" class="focus-content text-sm text-[#9ca3af] space-y-2 pt-2"><p class="bg-[#111827] p-4 border border-[#374151]">Il borgo marinaro di Dragør affonda le sue radici storiche nel XII secolo, quando si sviluppò come un florido e cruciale porto di pesca e di salatura delle aringhe, strettamente legato ai commerci della potente Lega Anseatica. Nel corso del XVI secolo, il Re Cristiano II invitò ufficialmente un folto gruppo di coloni olandesi a stabilirsi nella vicina area di Amager per promuovere l'orticoltura e rifornire la corte reale. Questa fusione culturale tra marinai danesi e agricoltori olandesi ha plasmato in modo indelebile l'architettura locale.</p></div>
+                <div id="d1-dragor-let" class="focus-content text-sm text-[#9ca3af] space-y-2 pt-2"><p class="bg-[#111827] p-4 border border-[#374151]">La letteratura legata ai piccoli borghi marinari danesi evoca costantemente il contrasto poetico e malinconico tra la stabilità rassicurante della terraferma, rappresentata dalle mura domestiche intonacate di giallo, e l'immensità mutevole e imprevedibile del mare aperto. Dragør incarna perfettamente quella sensazione di isolamento contemplativo che molti scrittori danesi hanno descritto nei loro diari e racconti, descrivendo i piccoli villaggi costieri non come luoghi marginali, ma come veri e propri custodi dell'anima più autentica.</p></div>
+                <div id="d1-dragor-cin" class="focus-content text-sm text-[#9ca3af] space-y-2 pt-2"><p class="bg-[#111827] p-4 border border-[#374151]">Dal punto di vista cinematografico, la straordinaria conservazione urbana di Dragør ha reso il borgo un set a cielo aperto ideale e ambitissimo per numerose produzioni cinematografiche e televisive danesi a sfondo storico e drammatico. Le tonalità calde del giallo ocra delle facciate, i tetti di paglia spessi e i vicoli stretti e geometrici offrono ai direttori della fotografia una tavolozza di colori naturali e una luce radente nordica che evoca immediatamente un passato idilliaco ma rigoroso.</p></div>
+                <div id="d1-dragor-food" class="focus-content text-sm text-white space-y-2 pt-2"><p class="bg-[#111827] p-4 border-2 border-[#d97706]"><span class="font-bold text-[#d97706] block mb-1">SUGGERIMENTO CULINARIO:</span> Per uno spuntino rapido prima di mettervi in viaggio, comprate un Hindbærsnitte (dolce tradizionale ai lamponi composto da strati di frolla e glassa) nella bageri storica del paese, oppure provate le aringhe affumicate direttamente al porto.</p></div>
+            </div>
+
+            <div class="relative bg-[#1f2937] p-6 border border-[#374151]">
+                <div class="absolute -left-[35px] top-6 bg-[#d97706] w-4 h-4 border-4 border-[#111827]"></div>
+                <span class="text-xs font-bold bg-[#111827] border border-[#d97706] px-2 py-1 text-[#d97706]">LOGISTICA & TRASFERIMENTO</span>
+                <h3 class="text-xl font-bold mt-2 text-white">Trasferimento verso la Costa del Sud</h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 my-4 text-xs text-[#9ca3af]">
+                    <div><span class="font-bold text-white block">Orario stimato:</span> 12:15 - 13:15</div>
+                    <div><span class="font-bold text-white block">Tratta:</span> Dragør ➔ Højerup (Stevns Klint)</div>
+                    <div><span class="font-bold text-white block">Distanza / Tempo:</span> 72.8 km / 1 ora</div>
+                </div>
+                <p class="text-sm text-[#9ca3af]">Guida lungo l'autostrada E20 in direzione sud-ovest, uscendo verso la strada secondaria 261. Il percorso si snoda tra i campi coltivati e offre i primi scorci della campagna rurale dell'isola di Sjælland.</p>
+            </div>
+
+            <div class="relative bg-[#1f2937] p-6 border border-[#374151]">
+                <div class="absolute -left-[35px] top-6 bg-[#10b981] w-4 h-4 border-4 border-[#111827]"></div>
+                <span class="text-xs font-bold bg-[#111827] border border-[#10b981] px-2 py-1 text-[#10b981]">ATTRAZIONE UNESCO</span>
+                <h3 class="text-2xl font-black mt-2 text-white">Le Scogliere UNESCO di Stevns Klint</h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 my-3 text-xs text-[#9ca3af] border-y border-[#374151] py-3">
+                    <div><span class="font-bold text-white block">📍 Posizione:</span> Højerup Bygade 30, Store Heddinge</div>
+                    <div><span class="font-bold text-white block">⏳ Tempo di Visita:</span> 2 ore e 30 minuti</div>
+                    <div><span class="font-bold text-white block">💶 Costo:</span> Parcheggio circa 40 DKK. Chiesa gratuita.</div>
+                </div>
+                <p class="text-sm text-[#9ca3af]">Una maestosa falesia di gesso bianco a picco sul Baltico che custodisce il segreto geologico della fine dell'era dei dinosauri.</p>
+                <div class="bg-[#111827] p-4 my-3 border-l-4 border-[#d97706] text-xs">
+                    <span class="font-bold block text-[#d97706] uppercase">💡 Live Tip:</span> Nella vecchia chiesa di Højerup, affacciatevi dal balcone panoramico sospeso. Nel 1928 il coro è crollato in mare. Cercate sulla parete di roccia la sottile striscia scura di argilla (Fiskeler).
+                </div>
+                <div class="flex flex-wrap gap-2 mt-4">
+                    <button onclick="toggleFocus('d1-stevns-st')" class="bg-[#374151] hover:bg-[#4b5563] text-xs px-3 py-1.5 font-bold uppercase cursor-pointer">Focus Storico</button>
+                    <button onclick="toggleFocus('d1-stevns-let')" class="bg-[#374151] hover:bg-[#4b5563] text-xs px-3 py-1.5 font-bold uppercase cursor-pointer">Focus Letterario</button>
+                    <button onclick="toggleFocus('d1-stevns-cin')" class="bg-[#374151] hover:bg-[#4b5563] text-xs px-3 py-1.5 font-bold uppercase cursor-pointer">Focus Cinematografico</button>
+                    <button onclick="toggleFocus('d1-stevns-food')" class="bg-[#d97706] text-black hover:bg-amber-500 text-xs px-3 py-1.5 font-bold uppercase cursor-pointer">Cosa mangiare 🍽️</button>
+                </div>
+                <div id="d1-stevns-st" class="focus-content text-sm text-[#9ca3af] space-y-2 pt-2"><p class="bg-[#111827] p-4 border border-[#374151]">Le scogliere di Stevns Klint rappresentano un archivio geologico di inestimabile valore scientifico planetario. Racchiusa tra gli strati rocciosi si trova una striscia di argilla scura, chiamata 'Fiskeler', che testimonia l'impatto del gigantesco meteorite di Chicxulub in Messico circa 66 milioni di anni fa. Sullo sfondo sorge la chiesa di Højerup, edificata attorno all'anno 1200.</p></div>
+                <div id="d1-stevns-let" class="focus-content text-sm text-[#9ca3af] space-y-2 pt-2"><p class="bg-[#111827] p-4 border border-[#374151]">Il paesaggio sublime e vertiginoso ha profondamente ispirato la letteratura e il folklore danese, legando la maestosità della falesia a miti antichi. Secondo le leggende popolari locali, le scogliere sono la dimora del potente Re di Stevns (Stevns活ongen), uno spirito guardiano che abita le caverne di gesso e interviene per proteggere la regione.</p></div>
+                <div id="d1-stevns-cin" class="focus-content text-sm text-[#9ca3af] space-y-2 pt-2"><p class="bg-[#111827] p-4 border border-[#374151]">Nel cinema contemporaneo e nei documentari scientifici internazionali, Stevns Klint è stata ampiamente ripresa per l'incredibile impatto visivo del contrasto cromatico tra il bianco accecante del gesso, il verde della vegetazione e l'azzurro del Mar Baltico. La chiesa parzialmente crollata offre un'inquadratura cinematografica naturale di rara potenza drammatica.</p></div>
+                <div id="d1-stevns-food" class="focus-content text-sm text-white space-y-2 pt-2"><p class="bg-[#111827] p-4 border-2 border-[#d97706]"><span class="font-bold text-[#d97706] block mb-1">SUGGERIMENTO CULINARIO:</span> Godetevi il pranzo al sacco seduti sull'erba alta con i piedi a penzoloni sul gesso bianco della scogliera, ammirando l'orizzonte infinito del Baltico, portando con voi del pane di segale e formaggi locali.</p></div>
+            </div>
+
+            <div class="relative bg-[#1f2937] p-6 border border-[#374151]">
+                <div class="absolute -left-[35px] top-6 bg-[#d97706] w-4 h-4 border-4 border-[#111827]"></div>
+                <span class="text-xs font-bold bg-[#111827] border border-[#d97706] px-2 py-1 text-[#d97706]">LOGISTICA & TRASFERIMENTO</span>
+                <h3 class="text-xl font-bold mt-2 text-white">Attraversamento dello Sjælland verso lo Storebælt</h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 my-4 text-xs text-[#9ca3af]">
+                    <div><span class="font-bold text-white block">Orario stimato:</span> 16:00 - 17:15</div>
+                    <div><span class="font-bold text-white block">Tratta:</span> Stevns Klint ➔ Spiaggia di Halsskov</div>
+                    <div><span class="font-bold text-white block">Distanza / Tempo:</span> 108 km / 1 ora 15 min</div>
+                </div>
+                <p class="text-sm text-[#9ca3af]">Rientro sulla grande viabilità autostradale (E20). La strada taglia orizzontalmente l'isola fino ad arrivare alla costa occidentale, dove sorge la gigantesca infrastruttura del ponte sospeso.</p>
+            </div>
+
+            <div class="relative bg-[#1f2937] p-6 border border-[#374151]">
+                <div class="absolute -left-[35px] top-6 bg-[#10b981] w-4 h-4 border-4 border-[#111827]"></div>
+                <span class="text-xs font-bold bg-[#111827] border border-[#10
