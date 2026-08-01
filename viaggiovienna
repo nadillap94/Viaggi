@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vienna Imperiale - Guida Interattiva Modulare</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <style>
+        /* DESIGN SYSTEM IMPERIALE */
+        :root {
+            --color-primary: #8C0000; /* Bordeaux Scuro (rich red) */
+            --color-secondary: #C8AA50; /* Oro Antico (muted gold) */
+            --color-background: #FAF8F4; /* Crema/Bianco Sporco */
+            --color-text: #2c2c2c;
+            --color-nav-bg: #4A4A4A; /* Grigio scuro per la navbar */
+        }
+
+        body {
+            font-family: 'Georgia', serif;
+            background-color: var(--color-background);
+            color: var(--color-text);
+        }
+
+        /* HEADER & NAV BAR */
+        .header-bg {
+            background-color: var(--color-primary);
+            color: white;
+            border-bottom: 6px solid var(--color-secondary);
+        }
+        .nav-bg {
+            background-color: var(--color-nav-bg); 
+        }
+        .nav-button {
+            transition: all 0.2s;
+            flex-shrink: 0; 
+        }
+        .nav-button:hover {
+            background-color: #6C0000;
+        }
+        .active-tab { 
+            background-color: var(--color-primary);
+            font-weight: bold;
+            border-bottom: 3px solid var(--color-secondary);
+        }
+        .intro-accent {
+            color: var(--color-secondary); 
+            font-weight: bold; 
+        }
+
+        /* VISUALIZZAZIONE TIMELINE */
+        .accent-color { color: var(--color-primary); }
+        .border-accent { border-color: var(--color-secondary); }
+        .timeline-item { border-left: 2px solid var(--color-secondary); }
+        .timeline-point {
+            background-color: var(--color-primary);
+            border: 4px solid var(--color-secondary);
+        }
+        .details-btn { background-color: var(--color-primary); }
+        .details-btn:hover { background-color: #6C0000; }
+
+        /* VETRINE CIBO */
+        .food-showcase {
+            background-color: white;
+            border-top: 5px solid var(--color-primary);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        /* SEZIONI PAGINA */
+        .tab-content {
+            display: none; 
+            min-height: 85vh; 
+        }
+        
+        /* OTTIMIZZAZIONE PER LA STAMPA (PDF) */
+        @media print {
+            body { background-color: white !important; color: black !important; font-size: 10pt; }
+            .fixed-element, .no-print { display: none !important; }
+            .header-bg {
+                background-color: white !important; color: black !important;
+                border-bottom: 1px solid black !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+            .timeline-item { border-left: 1px dashed gray; }
+            .timeline-point { background-color: white !important; border-color: black !important; }
+            
+            .tab-content { display: block !important; } 
+            .hidden { display: block !important; } 
+            
+            #page-PANORAMICA, #page-GIORNO1, #page-GIORNO2, #page-GIORNO3, #page-GIORNO4, #page-CIBO, #page-BUDGET {
+                 page-break-after: always; 
+            }
+            #page-BUDGET { page-break-after: avoid; }
+        }
+    </style>
+</head>
+<body>
+    <header class="header-bg shadow-lg fixed top-0 w-full z-50 h-12 md:h-14 fixed-element">
+        <div class="max-w-6xl mx-auto px-4 py-2 md:py-3">
+            <h1 class="text-lg md:text-xl font-extrabold tracking-wider text-center pt-0.5">GUIDA VIENNA: L'EFFICACIA IMPERIALE</h1>
+        </div>
+    </header>
+
+    <nav class="nav-bg fixed top-12 md:top-14 w-full z-40 shadow-xl h-10 fixed-element">
+        <div class="max-w-6xl mx-auto px-4">
+            <div class="flex overflow-x-auto whitespace-nowrap justify-start md:justify-center gap-1 text-sm md:text-base pt-1">
+                <button onclick="showPage('page-PANORAMICA')" class="nav-button px-3 py-0.5 text-white" data-page="page-PANORAMICA">PANORAMICA</button>
+                <button onclick="showPage('page-GIORNO1')" class="nav-button px-3 py-0.5 text-white" data-page="page-GIORNO1">GIORNO 1: VENERDÌ 5</button>
+                <button onclick="showPage('page-GIORNO2')" class="nav-button px-3 py-0.5 text-white" data-page="page-GIORNO2">GIORNO 2: SABATO 6</button>
+                <button onclick="showPage('page-GIORNO3')" class="nav-button px-3 py-0.5 text-white" data-page="page-GIORNO3">GIORNO 3: DOMENICA 7</button>
+                <button onclick="showPage('page-GIORNO4')" class="nav-button px-3 py-0.5 text-white" data-page="page-GIORNO4">GIORNO 4: LUNEDÌ 8</button>
+                <button onclick="showPage('page-CIBO')" class="nav-button px-3 py-0.5 text-white" data-page="page-CIBO">CIBO</button>
+                <button onclick="showPage('page-BUDGET')" class="nav-button px-3 py-0.5 text-white" data-page="page-BUDGET">BUDGET E STATISTICHE</button>
+            </div>
+        </div>
+    </nav>
+
+    <main class="max-w-6xl mx-auto p-4 sm:p-6 lg:p-8 pt-[88px] md:pt-24">
+
+        <section id="page-PANORAMICA" class="tab-content">
+            <h2 class="text-3xl font-bold mb-6 pb-2 border-b border-accent accent-color flex items-center">
+                <i data-lucide="scan" class="mr-2 text-2xl"></i> Panoramica Veloce: L'Essenza del Viaggio
+            </h2>
+            <div id="summary-container" class="space-y-6">
+                <p class="text-lg italic text-gray-700">Caricamento itinerario sintetico...</p>
+            </div>
+        </section>
+
+        <section id="page-GIORNO1" class="tab-content">
+            <h2 class="text-3xl font-bold mb-8 pb-2 border-b border-accent accent-color flex items-center">
+                <i data-lucide="calendar-check" class="mr-2 text-2xl"></i> Giorno 1: Venerdì 5 - Arrivo, Arte & Concerto Fissato (ITINERARIO EFFETTIVO E CRONOLOGICO)
+            </h2>
+            <p class="text-lg mb-6 bg-white p-4 rounded-lg shadow-md border-l-4 border-accent">
+                <span class="intro-accent">Aggiornamento:</span> Questo itinerario riflette l'esatta **ricostruzione cronologica** del tuo viaggio di arrivo (dalle 05:21 alle 22:09). La visita a **Hundertwasser** è stata la prima, il **Belvedere** ha avuto una visita molto lunga e la cena si è svolta al **Zum Kellergwölb** dopo un concerto.
+            </p>
+            <div id="timeline-GIORNO1" class="relative mt-4"></div>
+        </section>
+
+        <section id="page-GIORNO2" class="tab-content">
+            <h2 class="text-3xl font-bold mb-8 pb-2 border-b border-accent accent-color flex items-center">
+                <i data-lucide="calendar-check" class="mr-2 text-2xl"></i> Giorno 2: Sabato 6 - Impero, Mercati & Biblioteca (ITINERARIO EFFETTIVO E CRONOLOGICO)
+            </h2>
+            <p class="text-lg mb-6 bg-white p-4 rounded-lg shadow-md border-l-4 border-accent">
+                <span class="intro-accent">Aggiornamento:</span> Questa giornata è stata intensa (07:59 – 22:36). Ti sei concentrato su **Schönbrunn e la Gloriette (lunga visita)**, pranzo street food al **Naschmarkt** e un pomeriggio culturale con la **Biblioteca Nazionale (Prunksaal)**. La sera si è conclusa con cena al **Reinthaler's Beisl** e **Rathausplatz** illuminata.
+            </p>
+            <div id="timeline-GIORNO2" class="relative mt-4"></div>
+        </section>
+        
+        <section id="page-GIORNO3" class="tab-content">
+            <h2 class="text-3xl font-bold mb-8 pb-2 border-b border-accent accent-color flex items-center">
+                <i data-lucide="calendar-check" class="mr-2 text-2xl"></i> Giorno 3: Domenica 7 - Trekking, Pausa Medica, Concerto in Sala & Gulasch (ITINERARIO EFFETTIVO E CRONOLOGICO)
+            </h2>
+            <p class="text-lg mb-6 bg-white p-4 rounded-lg shadow-md border-l-4 border-accent">
+                <span class="intro-accent">Aggiornamento:</span> Mattinata record (8.1 km a piedi) sul Danubio. Ritorno per una **lunga pausa medica** (mal di stomaco). Pomeriggio con **Daemoniun e Blumenrad** al Prater e un'esperienza unica: **Concerto Natalizio Esclusivo** nella Sala Principale del Municipio. La cena è stata *fast gourmet* (Gulasch allo Schachtelwirt) seguita da **Kaiser's Kaiser'schmarrn**.
+            </p>
+            <div id="timeline-GIORNO3" class="relative mt-4"></div>
+        </section>
+
+        <section id="page-GIORNO4" class="tab-content">
+            <h2 class="text-3xl font-bold mb-8 pb-2 border-b border-accent accent-color flex items-center">
+                <i data-lucide="calendar-check" class="mr-2 text-2xl"></i> Giorno 4: Lunedì 8 - Colazione Gourmet, Augustinerkirche & Rientro (ITINERARIO EFFETTIVO E CRONOLOGICO)
+            </h2>
+            <p class="text-lg mb-6 bg-white p-4 rounded-lg shadow-md border-l-4 border-accent">
+                <span class="intro-accent">Intro:</span> Ultima mattinata dedicata all'eleganza: colazione alla **Kurkonditorei OBERLAA**, rapida visita alla **Peterskirche** e una lunga e prioritaria visita alla **Augustinerkirche** (Chiesa nuziale Asburgica). Il pomeriggio è stato interamente dedicato al lungo viaggio di ritorno. **(Il Wien Museum è stato sostituito da questa mattinata culturale)**.
+            </p>
+            <div id="timeline-GIORNO4" class="relative mt-4"></div>
+        </section>
+
+        <section id="page-CIBO" class="tab-content">
+            <h2 class="text-3xl font-bold mb-8 pb-2 border-b border-accent accent-color flex items-center">
+                <i data-lucide="utensils" class="mr-2 text-2xl"></i> Delizie Culinarie di Vienna
+            </h2>
+            <div id="food-showcases" class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <div id="showcase-piatti" class="food-showcase p-5 rounded-xl">
+                    <h3 class="text-2xl font-bold accent-color mb-4">🍽️ Piatti Tipici (Pranzi & Cene)</h3>
+                </div>
+                <div id="showcase-merende" class="food-showcase p-5 rounded-xl">
+                    <h3 class="text-2xl font-bold accent-color mb-4">🍰 Le Merende Reali (Dolci & Café)</h3>
+                </div>
+                <div id="showcase-drink" class="food-showcase p-5 rounded-xl">
+                    <h3 class="text-2xl font-bold accent-color mb-4">☕ Drink (Caldi & Mercatino)</h3>
+                </div>
+            </div>
+        </section>
+
+        <section id="page-BUDGET" class="tab-content">
+            <h2 class="text-3xl font-bold mb-8 pb-2 border-b border-accent accent-color flex items-center">
+                <i data-lucide="wallet" class="mr-2 text-2xl"></i> Analisi Budget e Statistiche
+            </h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="md:col-span-1 bg-white p-6 rounded-xl shadow-xl border-l-4 border-accent">
+                    <h3 class="text-xl font-bold accent-color mb-4">Riepilogo Totale</h3>
+                    <p class="text-4xl font-extrabold" id="total-budget-display">€ XXX.XX</p>
+                    <p class="text-sm mt-2 text-gray-600">Costo stimato per persona (esclusi voli).</p>
+                    <div id="kpi-summary" class="mt-6 space-y-3 text-sm">
+                    </div>
+                </div>
+
+                <div class="md:col-span-2 bg-white p-6 rounded-xl shadow-xl border-l-4 border-accent no-print">
+                    <h3 class="text-xl font-bold accent-color mb-4">Ripartizione Costi (Grafico)</h3>
+                    <div class="chart-container" style="height: 350px;">
+                        <canvas id="budgetChart"></canvas>
+                    </div>
+                    <p class="text-center text-sm mt-4 italic text-gray-500">I costi sono stimati e arrotondati.</p>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <script>
+        // ===========================================
+        // 1. DATI (Giorno 1-4: EFFETTIVO/CRONOLOGICO)
+        // ===========================================
+        
+        // Dati Itinerario
+        const rawItineraryData = [
+            // PARTE 1: PARTENZA DALL'ITALIA (Giorno 1 EFFETTIVO)
+            { giorno: "Giorno 1: Ven 5 - Arrivo, Arte & Concerto Fissato", ora: "05:21 – 07:39", attivita: "Bus Torino → Malpensa", luogo: "Torino → Malpensa Aeroporto", note: "Uscita di casa alle 05:21, Spostamento in auto e poi Bus (1h 47min, 143 km).", focus_raw: "Trasferimento iniziale. Viaggio lungo per l'opzione più economica. | Sveglia all'alba!" },
+            { giorno: "Giorno 1", ora: "07:39 – 09:08", attivita: "Aeroporto Malpensa (Controlli/Gate)", luogo: "MXP", note: "Tempo dedicato ai controlli di sicurezza e all'attesa al gate (circa 1 ora e mezza).", focus_raw: "Logistica Aeroportuale. Essere pronti per l'imbarco." },
+            { giorno: "Giorno 1", ora: "09:08 – 10:17", attivita: "Volo MXP → VIE (Durata effettiva 1h 09m)", luogo: "MXP / VIE", note: "", focus_raw: "Volo diretto Milano Malpensa → Vienna-Schwechat." },
+            
+            // PARTE 2: ARRIVO A VIENNA E QUARTIERE LANDSTRASSE (Giorno 1 EFFETTIVO)
+            { giorno: "Giorno 1", ora: "10:17 – 11:21", attivita: "Aeroporto Vienna (Sbarco/Treno)", luogo: "Flughafen Wien (VIE)", note: "Sbarco, ritiro bagagli e spostamento verso la stazione ferroviaria dell'aeroporto.", focus_raw: "Logistica Arrivo. Acquistare Vienna Pass/Biglietti Trasporto Pubblico." },
+            { giorno: "Giorno 1", ora: "11:21 – 11:59", attivita: "Treno/Metro/Piedi → Hundertwasser", luogo: "VIE → Landstraße → Kunst Haus Wien", note: "Trasferimento via Treno (S7/CAT) a Landstraße/Wien Mitte (11:21-11:50), più brevi spostamenti finali con metro e a piedi.", focus_raw: "Trasferimento rapido in città. Bagagli al seguito." },
+            
+            // FOCUS: ARCHITETTURA DI HUNDERTWASSER (Giorno 1 EFFETTIVO)
+            { giorno: "Giorno 1", ora: "11:59 – 13:00", attivita: "Kunst Haus Wien (Museo Hundertwasser)", luogo: "Kunst Haus Wien / Café Friedlich", note: "**Visita del museo (61 minuti).** Sosta per una Pausa Caffè Artistica al Café Friedlich all'interno del museo. **Correzione: non era un pranzo.**", focus_raw: "Recupero dell'arte ecologica di Hundertwasser. Focus Arte: Stravaganza e colore." },
+            { giorno: "Giorno 1", ora: "13:05 – 13:50", attivita: "Hundertwasser Village (Zona Commerciale)", luogo: "Hundertwasser Village (Kegelgasse 37/39)", note: "Esplorazione della zona commerciale unica di fronte alla casa. Tempo speso: 45 minuti.", focus_raw: "Focus Architettura: L'esterno colorato e le forme organiche." },
+            
+            // PARTE 3: POMERIGGIO IMPERIALE (Giorno 1 EFFETTIVO)
+            { giorno: "Giorno 1", ora: "13:50 – 15:35", attivita: "Spostamento & Lunga Passeggiata (Forse Pranzo Veloce)", luogo: "Landstraße → Schottenring → Castello del Belvedere", note: "Lungo tratto con cambi metro/piedi (1h 45m). Il tempo lungo suggerisce una passeggiata lenta o una sosta per un pranzo veloce non tracciato formalmente (es. Würstelstand).", focus_raw: "Passeggiata lenta in centro storico dirigendosi verso sud. Nessun pranzo formale registrato." },
+            { giorno: "Giorno 1", ora: "15:35 – 18:12", attivita: "Castello del Belvedere (Visita Approfondita)", luogo: "Schloss Belvedere (Österreichische Galerie)", note: "**Visita approfondita di 2 ore e 37 minuti.** Costo: 24€.", focus_raw: "Capolavoro barocco del Principe Eugenio. Focus Arte: Assolutamente da non perdere 'Il Bacio'." },
+            { giorno: "Giorno 1", ora: "18:12 – 18:37", attivita: "Karlskirche (Chiesa di San Carlo Borromeo)", luogo: "Karlskirche", note: "Breve spostamento e visita molto rapida di 6 minuti, probabilmente solo esterna o un'occhiata veloce. Tram da Belvedere (18:22-18:28).", focus_raw: "Focus Architettura Barocca: La facciata imponente. Tappa veloce per la luce serale." },
+            
+            // PARTE 4: SERA (MUSICA E CENA) (Giorno 1 EFFETTIVO)
+            { giorno: "Giorno 1", ora: "18:40 – 20:28", attivita: "Bösendorfer Salon (Concerto/Showroom)", luogo: "Bösendorfer Salon (Bösendorferstraße 12)", note: "**Concerto/Evento FISSATO!** Quasi 2 ore dedicate alla musica (1h 48m).", focus_raw: "Focus Cultura: Concerto di musica classica. Ambiente elegante." },
+            { giorno: "Giorno 1", ora: "20:48 – 21:47", attivita: "Cena al Zum Kellergwölb", luogo: "Zum Kellergwölb (Seilerstätte 13)", note: "**Cena effettiva (59 minuti)** in questo ristorante tradizionale con cucina austriaca (Beisl storico).", focus_raw: "Focus Culinario: Cena in Beisl storico, Schnitzel o Gulasch." },
+            { giorno: "Giorno 1", ora: "21:47 – 22:09", attivita: "Passeggiata Notturna & Arrivo alloggio", luogo: "1° Distretto → Vereinsgasse 3 (Leopoldstadt)", note: "Passeggiata notturna di rientro di 2,7 km.", focus_raw: "Fine della giornata intensa. Rientro alloggio." },
+            
+            // Dati Giorno 2 (EFFETTIVO E CRONOLOGICO)
+            { giorno: "Giorno 2: Sab 6 - Impero, Mercati & Biblioteca", ora: "07:59 – 08:28", attivita: "Uscita & Spesa Veloce", luogo: "Vereinsgasse → Lidl (Heinestraße) → Schwedenplatz", note: "Spesa per colazione/snack (8:03-8:12) e spostamento verso la metro. Inizio giornata: 07:59. Rientro: 22:36.", focus_raw: "Logistica Iniziale. Colazione low-cost." },
+            { giorno: "Giorno 2", ora: "08:28 – 08:54", attivita: "Metro & Avvicinamento Schönbrunn", luogo: "Schwedenplatz → Schönbrunn", note: "Viaggio in metropolitana U4 (6,5 km) verso la periferia imperiale.", focus_raw: "Trasferimento rapido. Sfruttare la prima ora di apertura." },
+            { giorno: "Giorno 2", ora: "08:54 – 10:05", attivita: "Palazzo di Schönbrunn (Visita Interni/Cortili)", luogo: "Schönbrunn Palace, 1130 Wien", note: "**Visita effettiva di 1 ora e 11 minuti.**", focus_raw: "Residenza estiva degli Asburgo. Focus Storico: Vita di Sissi e Francesco Giuseppe." },
+            { giorno: "Giorno 2", ora: "10:05 – 11:22", attivita: "Giardini & Gloriette Schönbrunn", luogo: "Schönbrunn Gardens / Gloriette", note: "**Sosta lunga (35 min) alla Gloriette** per il panorama. Passeggiata totale nei giardini: 1h 17m.", focus_raw: "Panorama sulla città. Focus Architettura: L'arco trionfale della Gloriette." },
+            { giorno: "Giorno 2", ora: "11:22 – 12:08", attivita: "Discesa & Spostamento Metro", luogo: "Schönbrunn Gardens → Kettenbrückengasse", note: "Passeggiata di 45 minuti verso la stazione metro, seguita da un breve viaggio U4 (12:08-12:14).", focus_raw: "Logistica trasferimento." },
+            { giorno: "Giorno 2", ora: "12:15 – 13:30", attivita: "Naschmarkt (Passeggiata)", luogo: "Naschmarkt, 1060 Wien", note: "Passeggiata di oltre un'ora tra le bancarelle del mercato storico.", focus_raw: "Il mercato più grande di Vienna. Atmosfera internazionale." },
+            { giorno: "Giorno 2", ora: "13:30 – 14:35", attivita: "Pranzo da U(H)RWURSCHT (Würstel)", luogo: "Minerlgasse 129 (Naschmarkt)", note: "**Pranzo effettivo di 1 ora e 5 minuti** in un chiosco/imbiss. Un classico Würstel viennese.", focus_raw: "Pranzo veloce e tipico street food low-cost." },
+            { giorno: "Giorno 2", ora: "14:35 – 16:20", attivita: "Grande Passeggiata (3,1 km) verso il Centro", luogo: "Naschmarkt → Hofburg/Biblioteca", note: "Passeggiata lenta e prolungata (1 ora e 45 minuti) per godersi l'architettura della città. **Attenzione: Visita Hofburg e Sissi Museum saltata.**", focus_raw: "Passeggiata architettonica. Direzione Hofburg." },
+            { giorno: "Giorno 2", ora: "16:20 – 17:40", attivita: "Biblioteca Nazionale (Prunksaal)", luogo: "Josefsplatz 1, Hofburg", note: "**Visita molto approfondita di 1 ora e 20 minuti.** Costo: 10€.", focus_raw: "La sala barocca più bella del mondo. Focus Cultura: Bibliotec
