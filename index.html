@@ -3,673 +3,175 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vienna Imperiale - Guida Interattiva Modulare</title>
-
+    <title>Disegnaviaggi - Croazia 2026</title>
+    
+    <!-- Tailwind CSS per il design -->
     <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Chart.js per i grafici -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- FontAwesome per le icone -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Leaflet CSS per la Mappa Interattiva -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
-
-    <script src="https://unpkg.com/lucide@latest"></script>
-
+    <!-- Configurazione Tailwind personalizzata -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        emerald: { 500: '#10b981', 600: '#059669', 900: '#064e3b' },
+                        adriatic: { 500: '#0ea5e9', 600: '#0284c7', 900: '#0c4a6e' },
+                        dark: '#0f172a'
+                    }
+                }
+            }
+        }
+    </script>
     <style>
-        /* DESIGN SYSTEM IMPERIALE */
-        :root {
-            --color-primary: #8C0000; /* Bordeaux Scuro (rich red) */
-            --color-secondary: #C8AA50; /* Oro Antico (muted gold) */
-            --color-background: #FAF8F4; /* Crema/Bianco Sporco */
-            --color-text: #2c2c2c;
-            --color-nav-bg: #4A4A4A; /* Grigio scuro per la navbar */
-        }
-
-        body {
-            font-family: 'Georgia', serif;
-            background-color: var(--color-background);
-            color: var(--color-text);
-        }
-
-        /* HEADER & NAV BAR */
-        .header-bg {
-            background-color: var(--color-primary);
-            color: white;
-            border-bottom: 6px solid var(--color-secondary);
-        }
-        .nav-bg {
-            background-color: var(--color-nav-bg); 
-        }
-        .nav-button {
-            transition: all 0.2s;
-            flex-shrink: 0; 
-        }
-        .nav-button:hover {
-            background-color: #6C0000;
-        }
-        .active-tab { 
-            background-color: var(--color-primary);
-            font-weight: bold;
-            border-bottom: 3px solid var(--color-secondary);
-        }
-        .intro-accent {
-            color: var(--color-secondary); 
-            font-weight: bold; 
-        }
-
-        /* VISUALIZZAZIONE TIMELINE */
-        .accent-color { color: var(--color-primary); }
-        .border-accent { border-color: var(--color-secondary); }
-        .timeline-item { border-left: 2px solid var(--color-secondary); }
-        .timeline-point {
-            background-color: var(--color-primary);
-            border: 4px solid var(--color-secondary);
-        }
-        .details-btn { background-color: var(--color-primary); }
-        .details-btn:hover { background-color: #6C0000; }
-
-        /* VETRINE CIBO */
-        .food-showcase {
-            background-color: white;
-            border-top: 5px solid var(--color-primary);
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-        }
-
-        /* SEZIONI PAGINA */
-        .tab-content {
-            display: none; 
-            min-height: 85vh; 
-        }
-        
-        /* OTTIMIZZAZIONE PER LA STAMPA (PDF) */
-        @media print {
-            body { background-color: white !important; color: black !important; font-size: 10pt; }
-            .fixed-element, .no-print { display: none !important; }
-            .header-bg {
-                background-color: white !important; color: black !important;
-                border-bottom: 1px solid black !important;
-                -webkit-print-color-adjust: exact;
-                print-color-adjust: exact;
-            }
-            .timeline-item { border-left: 1px dashed gray; }
-            .timeline-point { background-color: white !important; border-color: black !important; }
-            
-            .tab-content { display: block !important; } 
-            .hidden { display: block !important; } 
-            
-            #page-PANORAMICA, #page-GIORNO1, #page-GIORNO2, #page-GIORNO3, #page-GIORNO4, #page-CIBO, #page-BUDGET {
-                 page-break-after: always; 
-            }
-            #page-BUDGET { page-break-after: avoid; }
-        }
+        /* Classi per la navigazione dinamica tra le sezioni */
+        .page-section { display: none; opacity: 0; transition: opacity 0.4s ease; }
+        .page-section.active { display: block; opacity: 1; }
+        /* Classi per i contenuti a tendina dei Focus */
+        .focus-content { display: none; overflow: hidden; }
+        .focus-content.active { display: block; animation: slideDown 0.3s ease-out; }
+        @keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+        #map { height: 400px; width: 100%; z-index: 10; }
     </style>
 </head>
-<body>
-    <header class="header-bg shadow-lg fixed top-0 w-full z-50 h-12 md:h-14 fixed-element">
-        <div class="max-w-6xl mx-auto px-4 py-2 md:py-3">
-            <h1 class="text-lg md:text-xl font-extrabold tracking-wider text-center pt-0.5">GUIDA VIENNA: L'EFFICACIA IMPERIALE</h1>
+<body class="bg-slate-50 text-slate-800 font-sans antialiased">
+
+    <!-- NAVIGAZIONE TIMELINE (Fissa in alto) -->
+    <header class="bg-dark text-white sticky top-0 z-50 shadow-xl border-b-4 border-emerald-500">
+        <div class="max-w-7xl mx-auto px-4 py-3 flex flex-wrap justify-between items-center">
+            <div class="flex items-center space-x-3 cursor-pointer" onclick="showPage('home')">
+                <i class="fa-solid fa-compass text-3xl text-emerald-400"></i>
+                <span class="font-extrabold text-2xl tracking-wider bg-gradient-to-r from-emerald-400 to-adriatic-400 bg-clip-text text-transparent">Disegnaviaggi</span>
+            </div>
+            
+            <nav class="flex flex-wrap gap-2 mt-3 md:mt-0">
+                <button onclick="showPage('home')" class="nav-btn px-4 py-2 rounded-full text-xs font-bold bg-emerald-600 text-white hover:bg-emerald-500 transition shadow-lg"><i class="fa-solid fa-house"></i> Home</button>
+                <button onclick="showPage('day1')" class="nav-btn px-4 py-2 rounded-full text-xs font-bold bg-slate-800 text-slate-300 hover:bg-slate-700 hover:text-white transition">07 Ago</button>
+                <button onclick="showPage('day2')" class="nav-btn px-4 py-2 rounded-full text-xs font-bold bg-slate-800 text-slate-300 hover:bg-slate-700 hover:text-white transition">08 Ago</button>
+                <button onclick="showPage('day3')" class="nav-btn px-4 py-2 rounded-full text-xs font-bold bg-slate-800 text-slate-300 hover:bg-slate-700 hover:text-white transition">09 Ago</button>
+                <button onclick="showPage('day4')" class="nav-btn px-4 py-2 rounded-full text-xs font-bold bg-slate-800 text-slate-300 hover:bg-slate-700 hover:text-white transition">10 Ago</button>
+                <button onclick="showPage('day5')" class="nav-btn px-4 py-2 rounded-full text-xs font-bold bg-slate-800 text-slate-300 hover:bg-slate-700 hover:text-white transition">11 Ago</button>
+                <button onclick="showPage('day6')" class="nav-btn px-4 py-2 rounded-full text-xs font-bold bg-slate-800 text-slate-300 hover:bg-slate-700 hover:text-white transition">12 Ago</button>
+                <button onclick="showPage('day7')" class="nav-btn px-4 py-2 rounded-full text-xs font-bold bg-slate-800 text-slate-300 hover:bg-slate-700 hover:text-white transition">13 Ago</button>
+                <button onclick="showPage('stats')" class="nav-btn px-4 py-2 rounded-full text-xs font-bold bg-adriatic-600 text-white hover:bg-adriatic-500 transition shadow-lg"><i class="fa-solid fa-chart-pie mr-1"></i> Dashboard</button>
+            </nav>
         </div>
     </header>
 
-    <nav class="nav-bg fixed top-12 md:top-14 w-full z-40 shadow-xl h-10 fixed-element">
-        <div class="max-w-6xl mx-auto px-4">
-            <div class="flex overflow-x-auto whitespace-nowrap justify-start md:justify-center gap-1 text-sm md:text-base pt-1">
-                <button onclick="showPage('page-PANORAMICA')" class="nav-button px-3 py-0.5 text-white" data-page="page-PANORAMICA">PANORAMICA</button>
-                <button onclick="showPage('page-GIORNO1')" class="nav-button px-3 py-0.5 text-white" data-page="page-GIORNO1">GIORNO 1: VENERDÌ 5</button>
-                <button onclick="showPage('page-GIORNO2')" class="nav-button px-3 py-0.5 text-white" data-page="page-GIORNO2">GIORNO 2: SABATO 6</button>
-                <button onclick="showPage('page-GIORNO3')" class="nav-button px-3 py-0.5 text-white" data-page="page-GIORNO3">GIORNO 3: DOMENICA 7</button>
-                <button onclick="showPage('page-GIORNO4')" class="nav-button px-3 py-0.5 text-white" data-page="page-GIORNO4">GIORNO 4: LUNEDÌ 8</button>
-                <button onclick="showPage('page-CIBO')" class="nav-button px-3 py-0.5 text-white" data-page="page-CIBO">CIBO</button>
-                <button onclick="showPage('page-BUDGET')" class="nav-button px-3 py-0.5 text-white" data-page="page-BUDGET">BUDGET E STATISTICHE</button>
-            </div>
-        </div>
-    </nav>
+    <main class="max-w-6xl mx-auto px-4 py-8">
 
-    <main class="max-w-6xl mx-auto p-4 sm:p-6 lg:p-8 pt-[88px] md:pt-24">
-
-        <section id="page-PANORAMICA" class="tab-content">
-            <h2 class="text-3xl font-bold mb-6 pb-2 border-b border-accent accent-color flex items-center">
-                <i data-lucide="scan" class="mr-2 text-2xl"></i> Panoramica Veloce: L'Essenza del Viaggio
-            </h2>
-            <div id="summary-container" class="space-y-6">
-                <p class="text-lg italic text-gray-700">Caricamento itinerario sintetico...</p>
-            </div>
-        </section>
-
-        <section id="page-GIORNO1" class="tab-content">
-            <h2 class="text-3xl font-bold mb-8 pb-2 border-b border-accent accent-color flex items-center">
-                <i data-lucide="calendar-check" class="mr-2 text-2xl"></i> Giorno 1: Venerdì 5 - Arrivo, Arte & Concerto Fissato (ITINERARIO EFFETTIVO E CRONOLOGICO)
-            </h2>
-            <p class="text-lg mb-6 bg-white p-4 rounded-lg shadow-md border-l-4 border-accent">
-                <span class="intro-accent">Aggiornamento:</span> Questo itinerario riflette l'esatta **ricostruzione cronologica** del tuo viaggio di arrivo (dalle 05:21 alle 22:09). La visita a **Hundertwasser** è stata la prima, il **Belvedere** ha avuto una visita molto lunga e la cena si è svolta al **Zum Kellergwölb** dopo un concerto.
-            </p>
-            <div id="timeline-GIORNO1" class="relative mt-4"></div>
-        </section>
-
-        <section id="page-GIORNO2" class="tab-content">
-            <h2 class="text-3xl font-bold mb-8 pb-2 border-b border-accent accent-color flex items-center">
-                <i data-lucide="calendar-check" class="mr-2 text-2xl"></i> Giorno 2: Sabato 6 - Impero, Mercati & Biblioteca (ITINERARIO EFFETTIVO E CRONOLOGICO)
-            </h2>
-            <p class="text-lg mb-6 bg-white p-4 rounded-lg shadow-md border-l-4 border-accent">
-                <span class="intro-accent">Aggiornamento:</span> Questa giornata è stata intensa (07:59 – 22:36). Ti sei concentrato su **Schönbrunn e la Gloriette (lunga visita)**, pranzo street food al **Naschmarkt** e un pomeriggio culturale con la **Biblioteca Nazionale (Prunksaal)**. La sera si è conclusa con cena al **Reinthaler's Beisl** e **Rathausplatz** illuminata.
-            </p>
-            <div id="timeline-GIORNO2" class="relative mt-4"></div>
-        </section>
-        
-        <section id="page-GIORNO3" class="tab-content">
-            <h2 class="text-3xl font-bold mb-8 pb-2 border-b border-accent accent-color flex items-center">
-                <i data-lucide="calendar-check" class="mr-2 text-2xl"></i> Giorno 3: Domenica 7 - Trekking, Pausa Medica, Concerto in Sala & Gulasch (ITINERARIO EFFETTIVO E CRONOLOGICO)
-            </h2>
-            <p class="text-lg mb-6 bg-white p-4 rounded-lg shadow-md border-l-4 border-accent">
-                <span class="intro-accent">Aggiornamento:</span> Mattinata record (8.1 km a piedi) sul Danubio. Ritorno per una **lunga pausa medica** (mal di stomaco). Pomeriggio con **Daemoniun e Blumenrad** al Prater e un'esperienza unica: **Concerto Natalizio Esclusivo** nella Sala Principale del Municipio. La cena è stata *fast gourmet* (Gulasch allo Schachtelwirt) seguita da **Kaiser's Kaiser'schmarrn**.
-            </p>
-            <div id="timeline-GIORNO3" class="relative mt-4"></div>
-        </section>
-
-        <section id="page-GIORNO4" class="tab-content">
-            <h2 class="text-3xl font-bold mb-8 pb-2 border-b border-accent accent-color flex items-center">
-                <i data-lucide="calendar-check" class="mr-2 text-2xl"></i> Giorno 4: Lunedì 8 - Colazione Gourmet, Augustinerkirche & Rientro (ITINERARIO EFFETTIVO E CRONOLOGICO)
-            </h2>
-            <p class="text-lg mb-6 bg-white p-4 rounded-lg shadow-md border-l-4 border-accent">
-                <span class="intro-accent">Intro:</span> Ultima mattinata dedicata all'eleganza: colazione alla **Kurkonditorei OBERLAA**, rapida visita alla **Peterskirche** e una lunga e prioritaria visita alla **Augustinerkirche** (Chiesa nuziale Asburgica). Il pomeriggio è stato interamente dedicato al lungo viaggio di ritorno. **(Il Wien Museum è stato sostituito da questa mattinata culturale)**.
-            </p>
-            <div id="timeline-GIORNO4" class="relative mt-4"></div>
-        </section>
-
-        <section id="page-CIBO" class="tab-content">
-            <h2 class="text-3xl font-bold mb-8 pb-2 border-b border-accent accent-color flex items-center">
-                <i data-lucide="utensils" class="mr-2 text-2xl"></i> Delizie Culinarie di Vienna
-            </h2>
-            <div id="food-showcases" class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                <div id="showcase-piatti" class="food-showcase p-5 rounded-xl">
-                    <h3 class="text-2xl font-bold accent-color mb-4">🍽️ Piatti Tipici (Pranzi & Cene)</h3>
-                </div>
-                <div id="showcase-merende" class="food-showcase p-5 rounded-xl">
-                    <h3 class="text-2xl font-bold accent-color mb-4">🍰 Le Merende Reali (Dolci & Café)</h3>
-                </div>
-                <div id="showcase-drink" class="food-showcase p-5 rounded-xl">
-                    <h3 class="text-2xl font-bold accent-color mb-4">☕ Drink (Caldi & Mercatino)</h3>
+        <!-- ================= HOME / COPERTINA ================= -->
+        <section id="home" class="page-section active">
+            <div class="relative rounded-[2rem] overflow-hidden shadow-2xl bg-dark text-white mb-12 h-[500px] flex items-center justify-center">
+                <img src="https://images.unsplash.com/photo-1533105079780-92b9be482077?auto=format&fit=crop&w=1600&q=80" alt="Croazia" class="absolute inset-0 w-full h-full object-cover opacity-50">
+                <div class="relative z-10 text-center px-6 max-w-4xl">
+                    <span class="bg-emerald-500 text-white text-xs font-black uppercase tracking-widest px-5 py-2 rounded-full inline-block mb-6 shadow-lg">Piano di Viaggio Ufficiale[span_1](start_span)[span_1](end_span)</span>
+                    <h1 class="text-5xl md:text-7xl font-black mb-6 leading-tight drop-shadow-lg">Smeraldi d'Acqua <br>& L'Adriatico Segreto</h1>
+                    <p class="text-lg md:text-2xl text-slate-200 mb-10 font-medium drop-shadow-md">Dal 7 al 13 Agosto 2026. Da Zagabria all'Isola d'Oro di Krk.[span_2](start_span)[span_2](end_span)</p>
+                    <button onclick="showPage('day1')" class="bg-emerald-500 hover:bg-emerald-400 text-white font-bold px-10 py-4 rounded-full text-lg shadow-xl transition transform hover:scale-105">Inizia l'Esplorazione <i class="fa-solid fa-arrow-right ml-2"></i></button>
                 </div>
             </div>
         </section>
 
-        <section id="page-BUDGET" class="tab-content">
-            <h2 class="text-3xl font-bold mb-8 pb-2 border-b border-accent accent-color flex items-center">
-                <i data-lucide="wallet" class="mr-2 text-2xl"></i> Analisi Budget e Statistiche
-            </h2>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <div class="md:col-span-1 bg-white p-6 rounded-xl shadow-xl border-l-4 border-accent">
-                    <h3 class="text-xl font-bold accent-color mb-4">Riepilogo Totale</h3>
-                    <p class="text-4xl font-extrabold" id="total-budget-display">€ XXX.XX</p>
-                    <p class="text-sm mt-2 text-gray-600">Costo stimato per persona (esclusi voli).</p>
-                    <div id="kpi-summary" class="mt-6 space-y-3 text-sm">
+        <!-- ================= GIORNO 1 ================= -->
+        <section id="day1" class="page-section">
+            <div class="bg-white rounded-[2rem] p-8 shadow-xl mb-8 border border-slate-100">
+                <span class="bg-emerald-100 text-emerald-800 text-xs font-black uppercase px-4 py-1.5 rounded-full">Venerdì 7 Agosto 2026[span_3](start_span)[span_3](end_span)</span>
+                <h2 class="text-4xl font-black text-slate-900 mt-4 mb-2">L'Ingresso nel Reame delle Fiabe[span_4](start_span)[span_4](end_span)</h2>
+                <p class="text-slate-500 font-bold mb-8"><i class="fa-solid fa-route text-emerald-500 mr-2"></i> Bergamo ➔ Zagabria ➔ Rakovica (143 km totali)[span_5](start_span)[span_5](end_span)</p>
+
+                <div class="space-y-10 border-l-4 border-emerald-100 ml-3 pl-8 relative">
+                    <!-- Tappa -->
+                    <div class="relative">
+                        <div class="absolute -left-[2.85rem] top-1 bg-emerald-500 text-white rounded-full w-10 h-10 flex items-center justify-center shadow-md"><i class="fa-solid fa-plane"></i></div>
+                        <span class="text-sm font-bold text-emerald-600">14:00 - 15:10[span_6](start_span)[span_6](end_span)</span>
+                        <h3 class="text-2xl font-bold text-slate-800">Il Volo delle Aquile[span_7](start_span)[span_7](end_span)</h3>
+                        <p class="text-slate-600 mt-2">Volo da Bergamo Orio al Serio (BGY) a Zagabria (ZAG).[span_8](start_span)[span_8](end_span)</p>
                     </div>
-                </div>
 
-                <div class="md:col-span-2 bg-white p-6 rounded-xl shadow-xl border-l-4 border-accent no-print">
-                    <h3 class="text-xl font-bold accent-color mb-4">Ripartizione Costi (Grafico)</h3>
-                    <div class="chart-container" style="height: 350px;">
-                        <canvas id="budgetChart"></canvas>
-                    </div>
-                    <p class="text-center text-sm mt-4 italic text-gray-500">I costi sono stimati e arrotondati.</p>
-                </div>
-            </div>
-        </section>
+                    <!-- Tappa -->
+                    <div class="relative">
+                        <div class="absolute -left-[2.85rem] top-1 bg-emerald-500 text-white rounded-full w-10 h-10 flex items-center justify-center shadow-md"><i class="fa-solid fa-book-journal-whills"></i></div>
+                        <span class="text-sm font-bold text-emerald-600">16:30 - 18:30[span_9](start_span)[span_9](end_span)</span>
+                        <h3 class="text-2xl font-bold text-slate-800">Il Museo dei Racconti Dimenticati[span_10](start_span)[span_10](end_span)</h3>
+                        <p class="text-slate-600 mt-2">Tra sculture immersive e luci soffuse, incontrerete le creature del folklore croato: spiriti della foresta, fate dispettose e i giganti delle montagne di Lika.[span_11](start_span)[span_11](end_span)</p>
+                        
+                        <!-- BOTTONI INTERATTIVI -->
+                        <div class="flex flex-wrap gap-3 mt-4">
+                            <button onclick="toggleFocus('focus-1-storico')" class="px-4 py-2 bg-slate-100 hover:bg-emerald-500 hover:text-white rounded-full text-xs font-bold transition"><i class="fa-solid fa-landmark mr-1"></i> Focus Storico</button>
+                            <button onclick="toggleFocus('focus-1-letterario')" class="px-4 py-2 bg-slate-100 hover:bg-emerald-500 hover:text-white rounded-full text-xs font-bold transition"><i class="fa-solid fa-book-open mr-1"></i> Focus Letterario</button>
+                            <button onclick="toggleFocus('focus-1-cinema')" class="px-4 py-2 bg-slate-100 hover:bg-emerald-500 hover:text-white rounded-full text-xs font-bold transition"><i class="fa-solid fa-film mr-1"></i> Focus Cinematografico</button>
+                        </div>
 
-    </main>
-
-    <script>
-        // ===========================================
-        // 1. DATI (Giorno 1-4: EFFETTIVO/CRONOLOGICO)
-        // ===========================================
-        
-        // Dati Itinerario
-        const rawItineraryData = [
-            // PARTE 1: PARTENZA DALL'ITALIA (Giorno 1 EFFETTIVO)
-            { giorno: "Giorno 1: Ven 5 - Arrivo, Arte & Concerto Fissato", ora: "05:21 – 07:39", attivita: "Bus Torino → Malpensa", luogo: "Torino → Malpensa Aeroporto", note: "Uscita di casa alle 05:21, Spostamento in auto e poi Bus (1h 47min, 143 km).", focus_raw: "Trasferimento iniziale. Viaggio lungo per l'opzione più economica. | Sveglia all'alba!" },
-            { giorno: "Giorno 1", ora: "07:39 – 09:08", attivita: "Aeroporto Malpensa (Controlli/Gate)", luogo: "MXP", note: "Tempo dedicato ai controlli di sicurezza e all'attesa al gate (circa 1 ora e mezza).", focus_raw: "Logistica Aeroportuale. Essere pronti per l'imbarco." },
-            { giorno: "Giorno 1", ora: "09:08 – 10:17", attivita: "Volo MXP → VIE (Durata effettiva 1h 09m)", luogo: "MXP / VIE", note: "", focus_raw: "Volo diretto Milano Malpensa → Vienna-Schwechat." },
-            
-            // PARTE 2: ARRIVO A VIENNA E QUARTIERE LANDSTRASSE (Giorno 1 EFFETTIVO)
-            { giorno: "Giorno 1", ora: "10:17 – 11:21", attivita: "Aeroporto Vienna (Sbarco/Treno)", luogo: "Flughafen Wien (VIE)", note: "Sbarco, ritiro bagagli e spostamento verso la stazione ferroviaria dell'aeroporto.", focus_raw: "Logistica Arrivo. Acquistare Vienna Pass/Biglietti Trasporto Pubblico." },
-            { giorno: "Giorno 1", ora: "11:21 – 11:59", attivita: "Treno/Metro/Piedi → Hundertwasser", luogo: "VIE → Landstraße → Kunst Haus Wien", note: "Trasferimento via Treno (S7/CAT) a Landstraße/Wien Mitte (11:21-11:50), più brevi spostamenti finali con metro e a piedi.", focus_raw: "Trasferimento rapido in città. Bagagli al seguito." },
-            
-            // FOCUS: ARCHITETTURA DI HUNDERTWASSER (Giorno 1 EFFETTIVO)
-            { giorno: "Giorno 1", ora: "11:59 – 13:00", attivita: "Kunst Haus Wien (Museo Hundertwasser)", luogo: "Kunst Haus Wien / Café Friedlich", note: "**Visita del museo (61 minuti).** Sosta per una Pausa Caffè Artistica al Café Friedlich all'interno del museo. **Correzione: non era un pranzo.**", focus_raw: "Recupero dell'arte ecologica di Hundertwasser. Focus Arte: Stravaganza e colore." },
-            { giorno: "Giorno 1", ora: "13:05 – 13:50", attivita: "Hundertwasser Village (Zona Commerciale)", luogo: "Hundertwasser Village (Kegelgasse 37/39)", note: "Esplorazione della zona commerciale unica di fronte alla casa. Tempo speso: 45 minuti.", focus_raw: "Focus Architettura: L'esterno colorato e le forme organiche." },
-            
-            // PARTE 3: POMERIGGIO IMPERIALE (Giorno 1 EFFETTIVO)
-            { giorno: "Giorno 1", ora: "13:50 – 15:35", attivita: "Spostamento & Lunga Passeggiata (Forse Pranzo Veloce)", luogo: "Landstraße → Schottenring → Castello del Belvedere", note: "Lungo tratto con cambi metro/piedi (1h 45m). Il tempo lungo suggerisce una passeggiata lenta o una sosta per un pranzo veloce non tracciato formalmente (es. Würstelstand).", focus_raw: "Passeggiata lenta in centro storico dirigendosi verso sud. Nessun pranzo formale registrato." },
-            { giorno: "Giorno 1", ora: "15:35 – 18:12", attivita: "Castello del Belvedere (Visita Approfondita)", luogo: "Schloss Belvedere (Österreichische Galerie)", note: "**Visita approfondita di 2 ore e 37 minuti.** Costo: 24€.", focus_raw: "Capolavoro barocco del Principe Eugenio. Focus Arte: Assolutamente da non perdere 'Il Bacio'." },
-            { giorno: "Giorno 1", ora: "18:12 – 18:37", attivita: "Karlskirche (Chiesa di San Carlo Borromeo)", luogo: "Karlskirche", note: "Breve spostamento e visita molto rapida di 6 minuti, probabilmente solo esterna o un'occhiata veloce. Tram da Belvedere (18:22-18:28).", focus_raw: "Focus Architettura Barocca: La facciata imponente. Tappa veloce per la luce serale." },
-            
-            // PARTE 4: SERA (MUSICA E CENA) (Giorno 1 EFFETTIVO)
-            { giorno: "Giorno 1", ora: "18:40 – 20:28", attivita: "Bösendorfer Salon (Concerto/Showroom)", luogo: "Bösendorfer Salon (Bösendorferstraße 12)", note: "**Concerto/Evento FISSATO!** Quasi 2 ore dedicate alla musica (1h 48m).", focus_raw: "Focus Cultura: Concerto di musica classica. Ambiente elegante." },
-            { giorno: "Giorno 1", ora: "20:48 – 21:47", attivita: "Cena al Zum Kellergwölb", luogo: "Zum Kellergwölb (Seilerstätte 13)", note: "**Cena effettiva (59 minuti)** in questo ristorante tradizionale con cucina austriaca (Beisl storico).", focus_raw: "Focus Culinario: Cena in Beisl storico, Schnitzel o Gulasch." },
-            { giorno: "Giorno 1", ora: "21:47 – 22:09", attivita: "Passeggiata Notturna & Arrivo alloggio", luogo: "1° Distretto → Vereinsgasse 3 (Leopoldstadt)", note: "Passeggiata notturna di rientro di 2,7 km.", focus_raw: "Fine della giornata intensa. Rientro alloggio." },
-            
-            // Dati Giorno 2 (EFFETTIVO E CRONOLOGICO)
-            { giorno: "Giorno 2: Sab 6 - Impero, Mercati & Biblioteca", ora: "07:59 – 08:28", attivita: "Uscita & Spesa Veloce", luogo: "Vereinsgasse → Lidl (Heinestraße) → Schwedenplatz", note: "Spesa per colazione/snack (8:03-8:12) e spostamento verso la metro. Inizio giornata: 07:59. Rientro: 22:36.", focus_raw: "Logistica Iniziale. Colazione low-cost." },
-            { giorno: "Giorno 2", ora: "08:28 – 08:54", attivita: "Metro & Avvicinamento Schönbrunn", luogo: "Schwedenplatz → Schönbrunn", note: "Viaggio in metropolitana U4 (6,5 km) verso la periferia imperiale.", focus_raw: "Trasferimento rapido. Sfruttare la prima ora di apertura." },
-            { giorno: "Giorno 2", ora: "08:54 – 10:05", attivita: "Palazzo di Schönbrunn (Visita Interni/Cortili)", luogo: "Schönbrunn Palace, 1130 Wien", note: "**Visita effettiva di 1 ora e 11 minuti.**", focus_raw: "Residenza estiva degli Asburgo. Focus Storico: Vita di Sissi e Francesco Giuseppe." },
-            { giorno: "Giorno 2", ora: "10:05 – 11:22", attivita: "Giardini & Gloriette Schönbrunn", luogo: "Schönbrunn Gardens / Gloriette", note: "**Sosta lunga (35 min) alla Gloriette** per il panorama. Passeggiata totale nei giardini: 1h 17m.", focus_raw: "Panorama sulla città. Focus Architettura: L'arco trionfale della Gloriette." },
-            { giorno: "Giorno 2", ora: "11:22 – 12:08", attivita: "Discesa & Spostamento Metro", luogo: "Schönbrunn Gardens → Kettenbrückengasse", note: "Passeggiata di 45 minuti verso la stazione metro, seguita da un breve viaggio U4 (12:08-12:14).", focus_raw: "Logistica trasferimento." },
-            { giorno: "Giorno 2", ora: "12:15 – 13:30", attivita: "Naschmarkt (Passeggiata)", luogo: "Naschmarkt, 1060 Wien", note: "Passeggiata di oltre un'ora tra le bancarelle del mercato storico.", focus_raw: "Il mercato più grande di Vienna. Atmosfera internazionale." },
-            { giorno: "Giorno 2", ora: "13:30 – 14:35", attivita: "Pranzo da U(H)RWURSCHT (Würstel)", luogo: "Minerlgasse 129 (Naschmarkt)", note: "**Pranzo effettivo di 1 ora e 5 minuti** in un chiosco/imbiss. Un classico Würstel viennese.", focus_raw: "Pranzo veloce e tipico street food low-cost." },
-            { giorno: "Giorno 2", ora: "14:35 – 16:20", attivita: "Grande Passeggiata (3,1 km) verso il Centro", luogo: "Naschmarkt → Hofburg/Biblioteca", note: "Passeggiata lenta e prolungata (1 ora e 45 minuti) per godersi l'architettura della città. **Attenzione: Visita Hofburg e Sissi Museum saltata.**", focus_raw: "Passeggiata architettonica. Direzione Hofburg." },
-            { giorno: "Giorno 2", ora: "16:20 – 17:40", attivita: "Biblioteca Nazionale (Prunksaal)", luogo: "Josefsplatz 1, Hofburg", note: "**Visita molto approfondita di 1 ora e 20 minuti.** Costo: 10€.", focus_raw: "La sala barocca più bella del mondo. Focus Cultura: Biblioteche storiche." },
-            { giorno: "Giorno 2", ora: "17:40 – 18:55", attivita: "Passeggiata Lenta & Ferstel Passage", luogo: "Centro Storico (1° Distretto) / Ferstel Passage (18:40-18:55)", note: "Passeggiata di 1 ora in centro, inclusa l'elegante galleria commerciale storica.", focus_raw: "Focus Architettura: Gallerie e dettagli del centro storico." },
-            { giorno: "Giorno 2", ora: "19:15 – 20:35", attivita: "Cena al Reinthaler's Beisl", luogo: "Dorotheergasse, 1010 Wien", note: "**Cena effettiva di 1 ora e 20 minuti.** Tipica trattoria viennese. **Prenotazione consigliata in futuro.**", focus_raw: "Focus Culinario: Cena in Beisl autentico (Gulasch o Schnitzel)." },
-            { giorno: "Giorno 2", ora: "21:18 – 22:16", attivita: "Rathausplatz (Piazza del Municipio Illuminato)", luogo: "Rathausplatz, 1010 Wien", note: "Trascorso quasi **1 ora in piazza** (21:18-22:16). Probabilmente ammirando l'illuminazione o i mercatini.", focus_raw: "Focus Serale: Il Municipio illuminato e l'atmosfera notturna." },
-            { giorno: "Giorno 2", ora: "22:16 – 22:36", attivita: "Rientro all'Alloggio", luogo: "Rathausplatz → Vereinsgasse 2", note: "Ultimi spostamenti Metro e a piedi.", focus_raw: "Fine della giornata intensa. Rientro alloggio." },
-            
-            // Dati Giorno 3 (EFFETTIVO E CRONOLOGICO)
-            { giorno: "Giorno 3: Dom 7 - Trekking, Pausa Medica, Concerto in Sala & Gulasch", ora: "08:39 – 09:31", attivita: "Uscita, Camminata & Spesa Veloce (BILLA)", luogo: "Vereinsgasse → Wien Praterstern", note: "Sosta di 45 minuti a Praterstern, inclusa visita a BILLA.", focus_raw: "Logistica Iniziale. Preparazione per la lunga escursione. Spesa low-cost." },
-            { giorno: "Giorno 3", ora: "09:31 – 11:50", attivita: "Trekking Urbano (8.1 km) - Alte Donau / Transdanubia", luogo: "Kaisermühlen VIC → Stadlau / Alte Donau", note: "Lunga camminata esplorativa di 8.1 km totali.", focus_raw: "Focus Sportivo: Esplorazione delle rive del Vecchio Danubio. Giornata da record (13 km totali)." },
-            { giorno: "Giorno 3", ora: "11:50 – 15:19", attivita: "Rientro all'Alloggio e Lunga Pausa Medica/Pranzo", luogo: "Praterstern → Vereinsgasse 2", note: "**Pausa prolungata (3h 05m). Io ero rientrata per un mal di stomaco, mentre Paolo è andato a comprare medicine e il pranzo.**", focus_raw: "Riposo e ricarica. Logistica Medica e Pranzo gestito da Paolo." },
-            { giorno: "Giorno 3", ora: "15:19 – 16:44", attivita: "Prater (Daemoniun, Blumenrad & Atmosfera)", luogo: "Wurstelprater, 1020 Wien", note: "Visita di 1 ora al parco. Prima la casa del brivido **Daemoniun**, poi la Ruota dei Fiori (**Blumenrad**).", focus_raw: "Focus Divertimento: Il più antico parco divertimenti del mondo. Brivido inatteso e Ruota Panoramica minore." },
-            { giorno: "Giorno 3", ora: "16:51 – 19:07", attivita: "Concerto Natalizio Esclusivo nel Municipio", luogo: "**Sala Principale del Vienna City Hall (Rathaus)**", note: "Accesso straordinario per assistere a un **Concerto Natalizio** all'interno della sala principale. Soggiorno di 1 ora e 50 minuti.", focus_raw: "Focus Cultura & Serale: Esperienza interna esclusiva e musica classica natalizia nel cuore istituzionale di Vienna." },
-            { giorno: "Giorno 3", ora: "19:17 – 19:37", attivita: "Duomo di Santo Stefano (Stephansdom)", luogo: "Stephansplatz, 1010 Wien", note: "Breve visita di 7 minuti (19:30-19:37). Solo un'occhiata all'interno illuminato.", focus_raw: "Focus Architettura Gotica: Cuore di Vienna. Tappa Lampo." },
-            { giorno: "Giorno 3", ora: "19:50 – 20:10", attivita: "Chiesa dei Gesuiti (Universitätskirche)", luogo: "Dr. Ignaz Seipel-Platz 1, 1010 Wien", note: "Visita mirata di 20 minuti a questo gioiello barocco.", focus_raw: "Focus Architettura: Interni barocchi sontuosi, affreschi trompe-l'oeil." },
-            { giorno: "Giorno 3", ora: "20:25 – 21:05", attivita: "Cena al Schachtelwirt (Gulasch Fast Gourmet)", luogo: "Schachtelwirt (Judengasse 5, 1010 Wien)", note: "**Cena di 40 minuti, dove abbiamo mangiato il Gulasch.** Cucina austriaca di qualità in scatola (fast/takeaway).", focus_raw: "Focus Culinario: Gulasch di alta qualità, veloce e informale." },
-            { giorno: "Giorno 3", ora: "21:10 – 21:25", attivita: "Dolce: Kaiser's – Kaiser'schmarrn", luogo: "Kaiser's (vicino a Judengasse)", note: "Breve sosta di 15 minuti per il dessert: la tipica 'frittata dell'Imperatore'.", focus_raw: "Focus Culinario: Il dolce imperiale per eccellenza. Merenda/Cena dolce." },
-            { giorno: "Giorno 3", ora: "21:25 – 21:44", attivita: "Rientro all'Alloggio", luogo: "Centro → Vereinsgasse 2", note: "Passeggiata digestiva e rientro. Fine della giornata da 13 km.", focus_raw: "Fine della giornata intensa." },
-
-            // Dati Giorno 4 (EFFETTIVO E CRONOLOGICO)
-            { giorno: "Giorno 4: Lun 8 - Colazione Gourmet, Augustinerkirche & Rientro", ora: "08:50 – 09:19", attivita: "Uscita & Spostamento in Centro", luogo: "Vereinsgasse → Praterstern → Centro", note: "Ultimi spostamenti in metro verso il 1° distretto.", focus_raw: "Logistica iniziale dell'ultimo giorno." },
-            { giorno: "Giorno 4", ora: "09:22 – 10:32", attivita: "Colazione/Merenda da Kurkonditorei OBERLAA", luogo: "Kurkonditorei OBERLAA (Neuer Markt)", note: "**Sosta di 1 ora e 10 minuti** per colazione o merenda. Gustare i dolci viennesi in una prestigiosa pasticceria.", focus_raw: "Focus Culinario: Ultima colazione viennese. Pasticceria di alta qualità." },
-            { giorno: "Giorno 4", ora: "10:39 – 10:46", attivita: "Chiesa di San Pietro (Peterskirche)", luogo: "Peterskirche, 1010 Wien", note: "Visita veloce di 7 minuti a questa chiesa barocca del centro.", focus_raw: "Focus Architettura: Cupola barocca e interni riccamente decorati. Tappa lampo." },
-            { giorno: "Giorno 4", ora: "10:50 – 12:42", attivita: "Chiesa di Sant'Agostino (Augustinerkirche)", luogo: "Augustinerkirche (Josefsplatz 1, 1010 Wien)", note: "**Visita molto lunga di 1 ora e 52 minuti.** Chiesa nuziale degli Asburgo. Noto per la Herzlgruft.", focus_raw: "Focus Cultura & Storico: Priorità assoluta del Giorno 4. Cuore Asburgico." },
-            
-            // PARTE 2: IL LUNGO VIAGGIO DI RITORNO (Giorno 4 EFFETTIVO)
-            { giorno: "Giorno 4", ora: "12:42 – 14:17", attivita: "Lunga Camminata (3.8 km) verso la Stazione", luogo: "Centro → Stazione di Rennweg", note: "Camminata prolungata di 1 ora e 35 minuti, evitando mezzi pubblici per l'ultimo tratto in centro.", focus_raw: "Ultimo trekking urbano. Logistica Trasporto (Rennweg è su S7 per l'aeroporto)." },
-            { giorno: "Giorno 4", ora: "14:20 – 14:41", attivita: "Treno Stazione Rennweg → Aeroporto", luogo: "Rennweg → Flughafen Wien (VIE)", note: "Viaggio in treno di 21 minuti.", focus_raw: "Trasferimento rapido e puntuale." },
-            { giorno: "Giorno 4", ora: "14:42 – 16:44", attivita: "Aeroporto di Vienna-Schwechat", luogo: "VIE", note: "Tempo dedicato al check-in e ai controlli.", focus_raw: "Logistica Aeroportuale." },
-            { giorno: "Giorno 4", ora: "16:44 – 18:05", attivita: "Volo VIE → MXP", luogo: "VIE / MXP", note: "Volo di rientro verso l'Italia.", focus_raw: "Viaggio aereo." },
-            { giorno: "Giorno 4", ora: "18:05 – 18:27", attivita: "Sbarco a Malpensa", luogo: "MXP T1", note: "Ritiro bagagli e spostamento al terminal bus.", focus_raw: "Logistica Aeroportuale." },
-            { giorno: "Giorno 4", ora: "18:27 – 20:36", attivita: "Bus Malpensa → Torino", luogo: "MXP → Torino Porta Susa", note: "Viaggio in autobus di 2 ore e 9 minuti.", focus_raw: "Trasferimento finale in bus." },
-            { giorno: "Giorno 4", ora: "20:36 – 21:19", attivita: "Rientro a Casa", luogo: "Torino Porta Susa → Casa (Via Fossata, 11)", note: "Camminata e ultimo tratto in auto verso l'arrivo finale alle 21:19.", focus_raw: "Fine ufficiale del viaggio." }
-        ];
-
-        // Dati Cibo (AGGIORNATO CON OBERLAA)
-        const newFoodData = {
-            "Piatti tipici": [
-                { 
-                    titolo: "Cena al Schachtelwirt (Effettivo Giorno 3)", 
-                    descrizione: "Locale *fast-gourmet* che serve piatti austriaci tradizionali in comode scatole. **Avete mangiato il Gulasch**. Ottimo compromesso tra velocità e qualità. (Giudengasse 5).", 
-                    indirizzi: "Schachtelwirt (Judengasse 5, 1010 Wien). Costo: ≈ 15 - 20€.", 
-                    suggerito: "Giorno 3: 20:25 - Cena Veloce." 
-                },
-                { 
-                    titolo: "Pranzo da U(H)RWURSCHT (Effettivo Giorno 2)", 
-                    descrizione: "Tipico chiosco di Würstel (Imbiss) al Naschmarkt. L'opzione migliore per un pranzo veloce, caldo e low-cost. Qui hai consumato il tuo pranzo del Giorno 2.", 
-                    indirizzi: "U(H)RWURSCHT (Minerlgasse 129, Naschmarkt). Costo: ≈ 5-8€.", 
-                    suggerito: "Giorno 2: 13:30 - Pranzo Veloce." 
-                },
-                { 
-                    titolo: "Cena al Reinthaler's Beisl (Effettivo Giorno 2)", 
-                    descrizione: "Beisl autentico nel 1° distretto. Qui hai cenato il Giorno 2. Noto per la sua atmosfera casalinga e piatti tradizionali.", 
-                    indirizzi: "Reinthaler's Beisl (Dorotheergasse 2-4, 1010 Wien). Costo: ≈ 15 - 25€.", 
-                    suggerito: "Giorno 2: 19:15 - Cena Tradizionale (Esperienza effettiva)." 
-                },
-                { 
-                    titolo: "Cena al Zum Kellergwölb (Effettivo Giorno 1)", 
-                    descrizione: "Ristorante storico nel 1° distretto (Seilerstätte). Offre cucina tradizionale austriaca in un'atmosfera da cantina.", 
-                    indirizzi: "Zum Kellergwölb (Seilerstätte 13, 1010 Wien). Costo: ≈ 20-30€.", 
-                    suggerito: "Giorno 1: 20:48 - Cena Post-Concerto." 
-                },
-            ],
-            "Drink": [
-                { titolo: "Glühwein / Punsch", descrizione: "Vino caldo e speziato o punch. Indispensabile per affrontare i mercatini. Ideale per riscaldarsi.", indirizzi: "Mercatini di Natale (qualsiasi chiosco). Costo: ≈ 8-14€.", suggerito: "Giorno 3: 17:30 - Pausa Calda al Rathausplatz." }
-            ],
-            "Le merende reali": [
-                { 
-                    titolo: "Kurkonditorei OBERLAA (Effettivo Giorno 4)", 
-                    descrizione: "Una delle pasticcerie più rinomate di Vienna. **Hai consumato qui l'ultima colazione/merenda (1h 10m)**, scegliendo tra torte classiche, cioccolatini e pasticceria fresca.", 
-                    indirizzi: "Kurkonditorei OBERLAA (Neuer Markt, 1010 Wien). Costo: ≈ 10-20€.", 
-                    suggerito: "Giorno 4: 09:22 - Colazione/Merenda Finale." 
-                },
-                { 
-                    titolo: "Kaiser's – Kaiser'schmarrn (Effettivo Giorno 3)", 
-                    descrizione: "La 'Frittata dell'Imperatore'. Un dolce sofficissimo e spezzettato, servito con composta di prugne. Consumato qui come dessert serale.", 
-                    indirizzi: "Kaiser's – Kaiser'schmarrn (vicino a Judengasse). Costo: ≈ 10-15€.", 
-                    suggerito: "Giorno 3: 21:10 - Dessert Post-Cena." 
-                },
-                { 
-                    titolo: "Café Friedlich (Pausa Caffè Artistica - Giorno 1)", 
-                    descrizione: "Una pausa caffè/dolce all'interno del Kunst Haus Wien, il museo di Hundertwasser. Perfetto per godersi l'atmosfera artistica.", 
-                    indirizzi: "Café Friedlich, all'interno del Kunst Haus Wien, 1010 Wien. Costo: ≈ 5-10€ (caffè/dolce).", 
-                    suggerito: "Giorno 1: 12:00 - Pausa Calda (Esperienza effettiva)." 
-                },
-                { titolo: "Apfelstrudel & Sachertorte", descrizione: "I classici viennesi: lo Strudel di mele e l'iconica torta al cioccolato e albicocca. Perfetti per salutare Vienna.", indirizzi: "Konditorei di alta qualità (come Sacher o Demel).", suggerito: "Alternativa all'Oberlaa." },
-                { titolo: "Mozartkugel / Manner Wafers", descrizione: "Le famose palle di cioccolato al pistacchio e i wafer alla nocciola (Manner).", indirizzi: "Supermercati (Billa, Spar) o negozi Manner.", suggerito: "Giorno 4: Ultimi Acquisti." }
-            ]
-        };
-
-        // Dati Culturali (AGGIORNATO CON AUGUSTINERKIRCHE)
-        const culturalMap = {
-            "Hundertwasserhaus": { descrizione: "Non è solo un edificio, è un manifesto contro la 'dittatura della linea retta'! L'artista Friedensreich Hundertwasser, un ribelle del design, l'ha concepita come un'oasi ecologica e umana. La visita è stata ottimizzata con l'ingresso a KunstHausWien nel pomeriggio.", curiosita: "Il Diritto della Finestra: Hundertwasser credeva che ogni persona avesse il diritto di 'disegnare' l'area della parete attorno alla propria finestra, fin dove arrivava il suo braccio." },
-            "Castello del Belvedere": { descrizione: "Un capolavoro barocco commissionato dal Principe Eugenio di Savoia. La sua Galleria Superiore custodisce il tesoro dell'Art Nouveau austriaco, con l'oro e l'erotismo dei capolavori di Gustav Klimt.", curiosita: "Il Giardino Segreto del Barocco: I giardini a terrazze sono un perfetto esempio di design barocco che riflette l'ordine e la ragione dell'Illuminismo." },
-            "Duomo di Santo Stefano": { descrizione: "Conosciuta come Stephansdom, è il cuore spirituale e geografico di Vienna. Le guglie gotiche dominano lo skyline.", curiosita: "La Porta del Gigante: La porta principale prende il nome dal femore di un mammut (o di un gigante, secondo la leggenda) appeso lì per secoli." },
-            "Hofburg Palace": { descrizione: "Per oltre 600 anni, questo è stato il centro nevralgico dell'Impero Asburgico, la residenza invernale. Un complesso che abbraccia stili dall'architettura gotica al neoclassicismo.", curiosita: "Lo Stemma Nascosto di Sissi: Vicino agli appartamenti imperiali, ci sono dettagli nascosti che riflettono la personalità ribelle di Elisabetta (Sissi), che odiava l'etichetta di corte." },
-            "Rathausplatz": { descrizione: "La tradizione dei mercatini risale al Medioevo. Oggi è il più grande e spettacolare, con le luci che avvolgono il maestoso Municipio in un'atmosfera da fiaba. L'interno ospita spesso eventi culturali di alto livello, come i concerti natalizi.", curiosita: "Il Municipio Protettore: La facciata gotica del Municipio (Rathaus) fu progettata per sovrastare il potere imperiale di Hofburg." },
-            "Castello di Schönbrunn": { descrizione: "La residenza estiva degli Asburgo e il luogo preferito di Sissi. Un capolavoro barocco da esplorare dal Grand Tour agli estesi giardini.", curiosita: "Römische Ruine (Schönbrunn): Non sono affatto rovine romane autentiche! Furono costruite come un capriccio di Maria Teresa, un elemento scenografico romantico per il parco." },
-            "Biblioteca Nazionale Austriaca (Prunksaal)": { descrizione: "La 'Sala di Stato' della Biblioteca Nazionale Austriaca, considerata una delle biblioteche storiche più belle del mondo. Ospita oltre 200.000 volumi rilegati in pelle.", curiosita: "Le Statue: Le statue che adornano la sala celebrano l'autorità dell'Imperatore Carlo VI in quanto difensore della fede e sovrano illuminato." },
-            "Chiesa dei Gesuiti (Jesuitenkirche)": { descrizione: "Un gioiello del Barocco viennese, con una facciata relativamente austera che nasconde interni drammaticamente affrescati. I suoi pilastri in marmo artificiale e la cupola illusionistica sono mozzafiato.", curiosita: "Il Trompe-l'oeil della Cupola: L'affresco della cupola è un capolavoro di Andrea Pozzo, maestro dell'illusione barocca, che la rende apparentemente tridimensionale, un effetto che vale da solo la visita." },
-            "Chiesa di Sant'Agostino (Augustinerkirche)": { descrizione: "La Chiesa di Sant'Agostino, nota per essere la **Chiesa nuziale degli Asburgo** (qui Sissi e Franz si sposarono). Ospita la *Herzlgruft* (Cripta dei Cuori), dove sono conservati i cuori di 54 membri degli Asburgo in urne d'argento. **Hai speso quasi due ore qui (Giorno 4).**", curiosita: "La Cripta dei Cuori: La separazione del cuore dal corpo era una tradizione asburgica che simboleggiava la purezza dell'anima e la permanenza della dinastia." },
-            "Peterskirche": { descrizione: "La Chiesa di San Pietro. Esempio sublime del barocco viennese, con una facciata concava che si affaccia su una piccola piazza. Gli interni sono ricchi di ori e affreschi.", curiosita: "La Leggenda: Si dice che la chiesa originaria fosse stata fondata nientemeno che da Carlo Magno." },
-            "Wien Museum Karlsplatz": { descrizione: "Il Museo Storico di Vienna. **Nota: Questa visita, precedentemente in programma, è stata sostituita dalle chiese nel Giorno 4.**", curiosita: "Il Tetto Segreto: Il nuovo edificio del museo è stato progettato per integrare il vecchio. Una parte del tetto è spesso accessibile e offre un punto panoramico insolito sulla Karlsplatz." }
-        };
-
-        // Dati Budget (Mantenuti uguali)
-        const budgetData = [
-            { categoria: "Alloggio (3 notti)", costo: 243.00, icon: 'bed' },
-            { categoria: "Ingressi & Biglietti (Cultura)", costo: 132.00, icon: 'ticket' },
-            { categoria: "Trasporti (Pass 72h + Treno A/R)", costo: 93.40, icon: 'train' }, 
-            { categoria: "Cibo & Bevande (Stimato per 4 giorni)", costo: 320.00, icon: 'sandwich' }, 
-            { categoria: "Spese Varie & Souvenir", costo: 150.00, icon: 'shopping-bag' }
-        ];
-
-        let itineraryData = []; 
-
-        // ===========================================
-        // 2. LOGICA DI INIZIALIZZAZIONE E RENDERING
-        // ===========================================
-        
-        function getIconNameByFocus(focus) {
-            const activity = focus.toLowerCase();
-            if (activity.includes('volo') || activity.includes('transfer') || activity.includes('bus') || activity.includes('treno') || activity.includes('aeroporto')) return 'train';
-            if (activity.includes('pranzo') || activity.includes('cena') || activity.includes('colazione') || activity.includes('cibo') || activity.includes('würstel') || activity.includes('café') || activity.includes('sacher') || activity.includes('friedlich') || activity.includes('gulasch') || activity.includes('schachtelwirt') || activity.includes('kellergwölb') || activity.includes('kaiserschmarrn') || activity.includes('oberlaa')) return 'coffee';
-            if (activity.includes('spesa') || activity.includes('mercatino') || activity.includes('shopping') || activity.includes('souvenir') || activity.includes('billa')) return 'shopping-cart';
-            if (activity.includes('castello') || activity.includes('hofburg') || activity.includes('schönbrunn') || activity.includes('biblioteca') || activity.includes('tesoro')) return 'castle';
-            if (activity.includes('belvedere') || activity.includes('museum') || activity.includes('arte') || activity.includes('concerto') || activity.includes('showroom') || activity.includes('musica') || activity.includes('rathaus')) return 'brush';
-            if (activity.includes('hundertwasser') || activity.includes('architettonica') || activity.includes('karlskirche') || activity.includes('gesuiti') || activity.includes('chiesa') || activity.includes('peterskirche') || activity.includes('augustinerkirche')) return 'building-2';
-            if (activity.includes('prater') || activity.includes('divertimento') || activity.includes('daemoniun') || activity.includes('ruota')) return 'roller-coaster';
-            if (activity.includes('donauturm') || activity.includes('baia') || activity.includes('gloriette') || activity.includes('trekking') || activity.includes('sportivo')) return 'tower';
-            if (activity.includes('promemoria') || activity.includes('prenotazione') || activity.includes('cruciale') || activity.includes('medica') || activity.includes('riposo')) return 'bell';
-            
-            return 'circle-dot';
-        }
-
-        /**
-         * Funzione per creare il link di Google Maps
-         * @param {string} location La stringa del luogo da cercare su Google Maps.
-         * @returns {string} Il tag <a> HTML per il link.
-         */
-        function createMapsLink(location) {
-            const encodedLocation = encodeURIComponent(location.replace(/\s+/g, ' ').trim());
-            return `<a href="https://www.google.com/maps/search/?api=1&query=${encodedLocation}" target="_blank" class="text-blue-600 hover:text-blue-800 underline font-semibold">Ottieni indicazioni su Google Maps</a>`;
-        }
-
-        // Funzione per combinare i dati grezzi e arricchirli
-        function initializeData() {
-            itineraryData = rawItineraryData.map(item => {
-                const match = item.giorno.match(/Giorno (\d+)/);
-                const giornoNumber = match ? parseInt(match[1]) : 0;
-                
-                // Il focus prende l'icona
-                const focus = getIconNameByFocus(item.attivita + item.focus_raw + item.note);
-                
-                let culturalInfo = '';
-                
-                const culturalKeys = Object.keys(culturalMap);
-                for (const key of culturalKeys) {
-                    // Logica di match per le descrizioni culturali
-                    if (item.attivita.includes(key) || item.luogo.includes(key) || 
-                        (item.attivita.includes("Prunksaal") && key.includes("Biblioteca Nazionale")) ||
-                        (item.attivita.includes("Gloriette") && key.includes("Schönbrunn")) ||
-                        (item.attivita.includes("Kunst Haus Wien") && key.includes("Hundertwasserhaus")) || 
-                        (item.luogo.includes("Belvedere") && key.includes("Belvedere")) ||
-                        (item.attivita.includes("Chiesa dei Gesuiti") && key.includes("Chiesa dei Gesuiti")) ||
-                        (item.attivita.includes("Peterskirche") && key.includes("Peterskirche")) ||
-                        (item.attivita.includes("Augustinerkirche") && key.includes("Chiesa di Sant'Agostino")) ||
-                        (item.luogo.includes("Rathaus") && key.includes("Rathausplatz"))) {
-                        const cultData = culturalMap[key];
-                        culturalInfo += `<p class="mt-3 font-semibold text-gray-800 border-t pt-2 border-gray-100">Contesto Storico (${key.split(' (')[0].replace('Chiesa di Sant\'Agostino', 'Augustinerkirche')}):</p>`;
-                        culturalInfo += `<p class="text-gray-700">${cultData.descrizione}</p>`;
-                        culturalInfo += `<p class="italic text-gray-600 mt-1"><span class="accent-color">Curiosità:</span> ${cultData.curiosita}</p>`;
-                        break; 
-                    }
-                }
-
-                const mapsLink = createMapsLink(item.luogo);
-                const arrivalInfo = `
-                    <p class="mt-3 font-semibold text-gray-800 border-t pt-2 border-gray-100">Come arrivare:</p>
-                    <p class="text-gray-700">${mapsLink}</p>
-                `;
-
-                // Campo dettagli pulito
-                const combinedDettagli = `
-                    <p class="font-semibold text-gray-800"><span class="accent-color">Note Utili:</span> ${item.note || 'Nessuna nota aggiuntiva.'}</p>
-                    <p class="text-gray-700 mt-2"><span class="font-semibold">Contesto & Focus:</span> ${item.focus_raw}</p>
-                    ${culturalInfo}
-                    ${arrivalInfo}
-                `;
-
-                return {
-                    giorno: giornoNumber,
-                    ora: item.ora,
-                    attivita: item.attivita.replace(/\\rightarrow/g, '→'), 
-                    luogo: item.luogo.replace(/\\rightarrow/g, '→'),
-                    focus: focus,
-                    note: item.note,
-                    dettagli: combinedDettagli
-                };
-            });
-        }
-
-        window.toggleDetails = function(id) {
-            const element = document.getElementById(id);
-            const button = event.target;
-            
-            if (element.classList.contains('hidden')) {
-                element.classList.remove('hidden');
-                button.textContent = 'Nascondi Dettagli';
-            } else {
-                element.classList.add('hidden');
-                button.textContent = 'Mostra Dettagli';
-            }
-        };
-
-        const navButtons = document.querySelectorAll('.nav-button');
-        const pages = document.querySelectorAll('.tab-content');
-        
-        window.showPage = function(pageId) {
-            pages.forEach(page => { page.style.display = 'none'; });
-            const targetPage = document.getElementById(pageId);
-            if (targetPage) { targetPage.style.display = 'block'; }
-
-            navButtons.forEach(button => { button.classList.remove('active-tab'); });
-            const activeButton = document.querySelector(`button[data-page="${pageId}"]`);
-            if (activeButton) { activeButton.classList.add('active-tab'); }
-        }
-
-        function renderTimeline(day, containerId) {
-            const container = document.getElementById(containerId);
-            const dailyData = itineraryData.filter(item => item.giorno === day);
-            let htmlTimeline = '';
-
-            dailyData.forEach((item, index) => {
-                const iconName = item.focus; 
-                const uniqueId = `${containerId}-details-${index}`;
-                
-                let activityTitle = `<span class="font-extrabold">${item.attivita}</span>`;
-
-                htmlTimeline += `
-                    <div class="timeline-item relative py-4">
-                        <div class="timeline-point absolute -left-0.5 top-6 w-3 h-3 rounded-full z-10"></div>
-                        <div class="bg-white p-4 ml-4 rounded-lg shadow-md hover:shadow-xl transition duration-300 transform hover:scale-[1.01]">
-                            <div class="flex items-start mb-2 justify-between">
-                                <div class="flex items-center">
-                                    <i data-lucide="${iconName}" class="w-5 h-5 mr-3 accent-color shrink-0"></i>
-                                    <span class="font-bold text-lg">${activityTitle}</span>
-                                </div>
-                                 <span class="text-sm font-semibold text-gray-500">${item.ora}</span>
-                            </div>
-                            <p class="text-sm text-gray-700 mb-2 pl-8">📍 ${item.luogo.replace(/\\rightarrow/g, '→')}</p>
-                            
-                            <button 
-                                class="details-btn text-xs font-semibold text-white py-1 px-3 rounded-full mt-2 no-print"
-                                onclick="toggleDetails('${uniqueId}')"
-                            >
-                                Mostra Dettagli
-                            </button>
-                            <div id="${uniqueId}" class="hidden mt-3 pt-3 text-sm">
-                                ${item.dettagli}
-                            </div>
+                        <!-- CONTENUTI FOCUS (Lunghi circa 1000 caratteri) -->
+                        <div id="focus-1-storico" class="focus-content bg-slate-50 p-6 rounded-2xl mt-4 text-sm text-slate-700 leading-relaxed border border-slate-200 shadow-inner">
+                            <strong>L'Eredità Pagana nelle Terre Slave:</strong> La storia delle credenze popolari croate affonda le sue radici molto prima dell'arrivo del cristianesimo nei Balcani. Le antiche tribù slave che popolarono queste terre tra il VI e il VII secolo portarono con sé un pantheon ricco e intimamente connesso ai cicli della natura. Al vertice vi era Perun, il dio del tuono e del cielo, in eterna lotta con Veles, il dio degli inferi, della magia e dell'inganno, spesso associato all'acqua e ai serpenti. Questa dualità ha plasmato la psiche storica della regione. Quando il cattolicesimo iniziò a diffondersi, non cancellò queste credenze, ma si fuse con esse in un sincretismo affascinante. Le impenetrabili foreste della regione della Lika, in cui viaggerete, fungevano da barriera naturale contro la modernità, permettendo ai contadini di tramandare oralmente, attorno ai fuochi serali (le cosiddette "sijela"), i racconti di spiriti guardiani, streghe e creature silvane. Visitare questo museo significa esplorare il DNA culturale più profondo della Croazia, capendo come queste leggende abbiano aiutato intere generazioni a spiegare fenomeni naturali incomprensibili, sopravvivere a inverni spietati e mantenere un'identità culturale forte anche durante le dominazioni straniere (ottomana e asburgica).
+                        </div>
+                        <div id="focus-1-letterario" class="focus-content bg-slate-50 p-6 rounded-2xl mt-4 text-sm text-slate-700 leading-relaxed border border-slate-200 shadow-inner">
+                            <strong>Ivana Brlić-Mažuranić e la Poesia del Mito:</strong> Per comprendere appieno l'impatto letterario di queste figure, bisogna rivolgersi all'opera fondamentale della letteratura croata: "Priče iz davnine" (Racconti dell'antichità), scritto nel 1916 da Ivana Brlić-Mažuranić. Nominata più volte per il Premio Nobel per la Letteratura e spesso paragonata a J.R.R. Tolkien o Hans Christian Andersen, l'autrice riuscì a sistematizzare il folklore slavo frammentato trasformandolo in alta letteratura. Nei suoi testi, i boschi non sono semplici scenografie, ma entità vive e pulsanti. Le "Vile" (ninfe o fate slave) non sono creature puramente benevole come nella tradizione occidentale, ma esseri capricciosi, portatrici sia di doni immensi che di maledizioni fatali, incarnando la natura imprevedibile dei fiumi e delle tempeste balcaniche. I giganti della Lika, lenti ma inarrestabili, diventano la personificazione stessa delle montagne carsiche. La lettura delle sue fiabe svela una prosa ricca di arcaismi e un ritmo ipnotico che ricalca l'antica narrazione orale. L'esperienza nel museo vi farà sentire esattamente come i protagonisti dei suoi libri: viandanti smarriti ma meravigliati di fronte a un mondo dove il velo tra la realtà e la magia è sottilissimo.
+                        </div>
+                        <div id="focus-1-cinema" class="focus-content bg-slate-50 p-6 rounded-2xl mt-4 text-sm text-slate-700 leading-relaxed border border-slate-200 shadow-inner">
+                            <strong>Estetica Folk-Horror e Dark Fantasy:</strong> Visivamente, l'esposizione del museo rimanda immediatamente alle correnti più raffinate del dark fantasy cinematografico. Pensate alle atmosfere nebbiose, cupe ma cariche di meraviglia de "Il Labirinto del Fauno" di Guillermo del Toro. Le sculture immersive e l'uso sapiente del chiaroscuro ricordano le tecniche di stop-motion dello Studio Laika (come in "Kubo e la spada magica" o "Coraline"), dove il confine tra fiaba infantile e orrore ancestrale si assottiglia. Il cinema slavo ed est-europeo ha spesso attinto a questo immaginario: film come il ceco "Valerie e la settimana delle meraviglie" (1970) o le recenti opere folk-horror alla "The Witch" o "Midsommar" (che seppur nordiche, condividono il senso di isolamento e misticismo pagano). La luce soffusa del museo, le ombre proiettate dalle corna dei giganti e gli sguardi vitrei degli spiriti dei boschi sono orchestrati con una vera e propria regia della luce, trasformando l'osservatore da semplice turista a protagonista attivo di un thriller psicologico ed esoterico, dove la creatura nascosta nel buio rappresenta in realtà i timori ancestrali dell'essere umano.
                         </div>
                     </div>
-                `;
-            });
 
-            container.innerHTML = htmlTimeline;
-        }
-
-        function renderSummary() {
-            const summaryContainer = document.getElementById('summary-container');
-            let htmlSummary = '';
-            let lastDay = 0;
-
-            itineraryData.forEach(item => {
-                if (item.giorno !== lastDay) {
-                    htmlSummary += `
-                        <h3 class="text-xl font-bold mt-6 pb-1 border-b-2 border-gray-300 accent-color">
-                            Giorno ${item.giorno} (Effettivo)
-                        </h3>
-                        <ul class="list-disc list-inside space-y-1 ml-4">
-                    `;
-                    lastDay = item.giorno;
-                }
-                
-                htmlSummary += `
-                    <li class="text-gray-700">
-                        <span class="font-semibold">${item.ora}:</span> ${item.attivita} (<span class="italic">${item.luogo.replace(/\\rightarrow/g, '→')}</span>)
-                    </li>
-                `;
-
-                if (itineraryData.length === itineraryData.indexOf(item) + 1 || itineraryData[itineraryData.indexOf(item) + 1].giorno !== lastDay) {
-                    htmlSummary += `</ul>`;
-                }
-            });
-
-            summaryContainer.innerHTML = htmlSummary;
-        }
-
-        function renderFoodShowcases() {
-            const containerMap = {
-                "Piatti tipici": "showcase-piatti",
-                "Le merende reali": "showcase-merende",
-                "Drink": "showcase-drink"
-            };
-
-            for (const category in newFoodData) {
-                const id = containerMap[category];
-                const container = document.getElementById(id);
-                let htmlContent = '';
-
-                if (container) {
-                    let existingTitle = container.querySelector('h3').outerHTML;
-                    container.innerHTML = existingTitle; 
-                }
-
-                newFoodData[category].forEach(item => {
-                    htmlContent += `
-                        <div class="bg-gray-50 p-3 rounded-lg mt-3 border border-gray-200">
-                            <h4 class="font-bold text-lg">${item.titolo}</h4>
-                            <p class="text-sm text-gray-700 mt-1">${item.descrizione}</p>
-                            <p class="text-xs text-gray-500 mt-2 italic border-t pt-2">
-                                📍 Dove: ${item.indirizzi}
-                                <br>
-                                🗓️ Suggerimento: ${item.suggerito}
-                            </p>
+                    <!-- Tappa Cibo -->
+                    <div class="relative">
+                        <div class="absolute -left-[2.85rem] top-1 bg-adriatic-500 text-white rounded-full w-10 h-10 flex items-center justify-center shadow-md"><i class="fa-solid fa-utensils"></i></div>
+                        <span class="text-sm font-bold text-adriatic-600">20:30 - 21:30[span_12](start_span)[span_12](end_span)</span>
+                        <h3 class="text-2xl font-bold text-slate-800">Sosta Culinaria da "La Štruk[span_13](start_span)"[span_13](end_span)</h3>
+                        <p class="text-slate-600 mt-2">Sedetevi nel piccolo cortile interno di questo tempio della tradizione per degustare lo štrukli.[span_14](start_span)[span_14](end_span)</p>
+                        
+                        <button onclick="toggleFocus('focus-1-food')" class="mt-4 px-4 py-2 bg-amber-100 hover:bg-amber-500 hover:text-white text-amber-900 rounded-full text-xs font-bold transition shadow"><i class="fa-solid fa-fire-burner mr-1"></i> Cosa mangiare qui</button>
+                        <div id="focus-1-food" class="focus-content bg-amber-50 p-6 rounded-2xl mt-4 text-sm text-amber-900 leading-relaxed border border-amber-200">
+                            <strong>Il Zagorski Štrukli:</strong> Questo non è un semplice piatto, ma un bene culturale immateriale protetto della Croazia. Si tratta di una pasta sfoglia tirata a mano talmente sottile da essere quasi trasparente. Viene farcita con formaggio fresco vaccino (skuta), uova e panna acida, poi arrotolata, tagliata con il bordo di un piatto per sigillarne i bordi e infine cotta al forno direttamente in caratteristiche ciotole di terracotta, in cui viene servita ancora ribollente. Da "La Štruk" la raccomandazione è di ordinarne due varianti da condividere: una classica salata (magari arricchita con tartufo istriano) e una versione dolce, in cui il formaggio sposa il miele, le noci o una generosa spolverata di zucchero caramellato in superficie. L'esterno croccante contrasta con il cuore cremoso ed estremamente confortante.
                         </div>
-                    `;
-                });
-                if (container) {
-                     container.innerHTML += htmlContent;
-                }
-            }
-        }
-
-        function renderBudgetAndStats() {
-            const costs = budgetData.map(item => item.costo);
-            const totalCost = costs.reduce((sum, cost) => sum + cost, 0);
-            
-            document.getElementById('total-budget-display').textContent = `€ ${totalCost.toFixed(2)}`;
-            const kpiContainer = document.getElementById('kpi-summary');
-            let htmlKpi = '';
-            
-            budgetData.forEach(item => {
-                 htmlKpi += `
-                    <div class="flex items-center">
-                        <i data-lucide="${item.icon}" class="w-4 h-4 mr-2 text-gray-700"></i>
-                        <span class="font-semibold">${item.categoria}:</span>
-                        <span class="ml-auto font-bold">${item.costo.toFixed(2)} €</span>
                     </div>
-                `;
-            });
-            kpiContainer.innerHTML = htmlKpi;
-            
-            if (window.matchMedia('print').matches) return;
+                </div>
 
-            const categories = budgetData.map(item => item.categoria.split('(')[0].trim());
-            const imperialColors = ['#8C0000', '#C8AA50', '#A52A2A', '#D4AF37', '#B22222'];
-            
-            const ctx = document.getElementById('budgetChart').getContext('2d');
-            
-            if (window.budgetChartInstance) {
-                window.budgetChartInstance.destroy();
-            }
+                <!-- Box Piano B -->
+                <div class="mt-10 bg-slate-800 text-white rounded-2xl p-6 flex items-start space-x-4 shadow-lg border-l-8 border-adriatic-500">
+                    <i class="fa-solid fa-cloud-bolt text-3xl text-adriatic-400 mt-1"></i>
+                    <div>
+                        <h4 class="font-black text-lg">Piano B & Alternativa Meteo[span_15](start_span)[span_15](end_span)</h4>
+                        <p class="text-sm text-slate-300 mt-2">In caso di forte pioggia a Zagabria, sostituite l'anello a piedi con una pausa prolungata nei passaggi coperti del centro (come la Galleria Oktogon) o visitate il Tunnel Grič sottostante la città.[span_16](start_span)[span_16](end_span)</p>
+                    </div>
+                </div>
 
-            window.budgetChartInstance = new Chart(ctx, {
-                type: 'pie',
-                data: {
-                    labels: categories,
-                    datasets: [{
-                        data: costs,
-                        backgroundColor: imperialColors,
-                        borderColor: 'white',
-                        borderWidth: 2,
-                        hoverOffset: 8
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: { position: 'right' },
-                        title: {
-                            display: true,
-                            text: `Costo Totale Stimato: € ${totalCost.toFixed(2)}`,
-                            font: { size: 16, family: 'Georgia, serif' },
-                            color: getComputedStyle(document.documentElement).getPropertyValue('--color-primary')
-                        },
-                        tooltip: {
-                            callbacks: {
-                                label: function(context) {
-                                    let label = context.label || '';
-                                    if (label) { label += ': '; }
-                                    label += new Intl.NumberFormat('it-IT', { style: 'currency', currency: 'EUR' }).format(context.raw);
-                                    return label;
-                                }
-                            }
-                        }
-                    }
-                }
-            });
-        }
+                <!-- Modulo Note Personali Dinamiche -->
+                <div class="mt-8 bg-emerald-50 rounded-2xl p-6 border border-emerald-200">
+                    <h4 class="font-bold text-emerald-900 mb-3"><i class="fa-solid fa-pen-nib mr-2"></i>Diario di Viaggio (Giorno 1)</h4>
+                    <textarea id="note-day1" rows="3" class="w-full rounded-xl border border-emerald-300 p-4 text-sm focus:ring-2 focus:ring-emerald-500 outline-none" placeholder="Appunta qui i tuoi ricordi..."></textarea>
+                    <button onclick="saveNote('day1')" class="mt-3 bg-emerald-600 text-white px-5 py-2 rounded-full text-xs font-bold hover:bg-emerald-700 transition">Salva Note</button>
+                </div>
+            </div>
+        </section>
 
-        document.addEventListener('DOMContentLoaded', () => {
-            initializeData();
-            renderSummary();
-            renderTimeline(1, 'timeline-GIORNO1');
-            renderTimeline(2, 'timeline-GIORNO2');
-            renderTimeline(3, 'timeline-GIORNO3');
-            renderTimeline(4, 'timeline-GIORNO4');
-            renderFoodShowcases();
-            renderBudgetAndStats();
-            
-            lucide.createIcons(); 
-            
-            // Imposta il Giorno 4 come pagina iniziale, dato che è l'ultimo aggiornamento
-            showPage('page-GIORNO4'); 
-        });
-    </script>
-</body>
-</html>
+        <!-- ================= GIORNO 2 ================= -->
+        <section id="day2" class="page-section">
+            <div class="bg-white rounded-[2rem] p-8 shadow-xl mb-8 border border-slate-100">
+                <span class="bg-emerald-100 text-emerald-800 text-xs font-black uppercase px-4 py-1.5 rounded-full">Sabato 8 Agosto 2026[span_17](start_span)[span_17](end_span)</span>
+                <h2 class="text-4xl font-black text-slate-900 mt-4 mb-2">Smeraldi d'Acqua e Mulini al Tramonto[span_18](start_span)[span_18](end_span)</h2>
+                <p class="text-slate-500 font-bold mb-8"><i class="fa-solid fa-route text-emerald-500 mr-2"></i> Rakovica ➔ Plitvice ➔ Majerovo Vrilo ➔ Rastoke (110 km totali)[span_19](start_span)[span_19](end_span)</p>
+
+                <div class="space-y-10 border-l-4 border-emerald-100 ml-3 pl-8 relative">
+                    <div class="relative">
+                        <div class="absolute -left-[2.85rem] top-1 bg-emerald-500 text-white rounded-full w-10 h-10 flex items-center justify-center shadow-md"><i class="fa-solid fa-water"></i></div>
+                        <span class="text-sm font-bold text-emerald-600">07:00 - 13:00[span_20](start_span)[span_20](end_span)</span>
+                        <h3 class="text-2xl font-bold text-slate-800">L'Incanto Primordiale dei Laghi di Plitvice (Percorso C o H)[span_21](start_span)[span_21](end_span)</h3>
+                        <p class="text-slate-600 mt-2">Camminerete a fior d'acqua su passerelle di legno sospese, mentre una leggera nebbia mattutina sale dalle acque turchesi e cristalline.[span_22](start_span)[span_22](end_span) Sarete circondati solo dal canto degli uccelli e dal rombo costante delle cascate che uniscono i 16 laghi.[span_23](start_span)[span_23](end_span)</p>
+                    </div>
+
+                    <div class="relative">
+                        <div class="absolute -left-[2.85rem] top-1 bg-emerald-500 text-white rounded-full w-10 h-10 flex items-center justify-center shadow-md"><i class="fa-solid fa-house-flood-water"></i></div>
+                        <span class="text-sm font-bold text-emerald-600">16:00 - 19:30[span_24](start_span)[span_24](end_span)</span>
+                        <h3 class="text-2xl font-bold text-slate-800">Il Borgo delle Cascate: Rastoke (Slunj)[span_25](start_span)[span_25](end_span)</h3
