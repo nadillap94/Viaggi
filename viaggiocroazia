@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Disegnaviaggi - Croazia 2026</title>
+    
+    <!-- Tailwind CSS per il design -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Chart.js per i grafici -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- FontAwesome per le icone -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Leaflet CSS per la Mappa Interattiva -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+    <!-- Configurazione Tailwind personalizzata -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        emerald: { 500: '#10b981', 600: '#059669', 900: '#064e3b' },
+                        adriatic: { 500: '#0ea5e9', 600: '#0284c7', 900: '#0c4a6e' },
+                        dark: '#0f172a'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Classi per la navigazione dinamica tra le sezioni */
+        .page-section { display: none; opacity: 0; transition: opacity 0.4s ease; }
+        .page-section.active { display: block; opacity: 1; }
+        /* Classi per i contenuti a tendina dei Focus */
+        .focus-content { display: none; overflow: hidden; }
+        .focus-content.active { display: block; animation: slideDown 0.3s ease-out; }
+        @keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+        #map { height: 400px; width: 100%; z-index: 10; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans antialiased">
+
+    <!-- NAVIGAZIONE TIMELINE (Fissa in alto) -->
+    <header class="bg-dark text-white sticky top-0 z-50 shadow-xl border-b-4 border-emerald-500">
+        <div class="max-w-7xl mx-auto px-4 py-3 flex flex-wrap justify-between items-center">
+            <div class="flex items-center space-x-3 cursor-pointer" onclick="showPage('home')">
+                <i class="fa-solid fa-compass text-3xl text-emerald-400"></i>
+                <span class="font-extrabold text-2xl tracking-wider bg-gradient-to-r from-emerald-400 to-adriatic-400 bg-clip-text text-transparent">Disegnaviaggi</span>
+            </div>
+            
+            <nav class="flex flex-wrap gap-2 mt-3 md:mt-0">
+                <button onclick="showPage('home')" class="nav-btn px-4 py-2 rounded-full text-xs font-bold bg-emerald-600 text-white hover:bg-emerald-500 transition shadow-lg"><i class="fa-solid fa-house"></i> Home</button>
+                <button onclick="showPage('day1')" class="nav-btn px-4 py-2 rounded-full text-xs font-bold bg-slate-800 text-slate-300 hover:bg-slate-700 hover:text-white transition">07 Ago</button>
+                <button onclick="showPage('day2')" class="nav-btn px-4 py-2 rounded-full text-xs font-bold bg-slate-800 text-slate-300 hover:bg-slate-700 hover:text-white transition">08 Ago</button>
+                <button onclick="showPage('day3')" class="nav-btn px-4 py-2 rounded-full text-xs font-bold bg-slate-800 text-slate-300 hover:bg-slate-700 hover:text-white transition">09 Ago</button>
+                <button onclick="showPage('day4')" class="nav-btn px-4 py-2 rounded-full text-xs font-bold bg-slate-800 text-slate-300 hover:bg-slate-700 hover:text-white transition">10 Ago</button>
+                <button onclick="showPage('day5')" class="nav-btn px-4 py-2 rounded-full text-xs font-bold bg-slate-800 text-slate-300 hover:bg-slate-700 hover:text-white transition">11 Ago</button>
+                <button onclick="showPage('day6')" class="nav-btn px-4 py-2 rounded-full text-xs font-bold bg-slate-800 text-slate-300 hover:bg-slate-700 hover:text-white transition">12 Ago</button>
+                <button onclick="showPage('day7')" class="nav-btn px-4 py-2 rounded-full text-xs font-bold bg-slate-800 text-slate-300 hover:bg-slate-700 hover:text-white transition">13 Ago</button>
+                <button onclick="showPage('stats')" class="nav-btn px-4 py-2 rounded-full text-xs font-bold bg-adriatic-600 text-white hover:bg-adriatic-500 transition shadow-lg"><i class="fa-solid fa-chart-pie mr-1"></i> Dashboard</button>
+            </nav>
+        </div>
+    </header>
+
+    <main class="max-w-6xl mx-auto px-4 py-8">
+
+        <!-- ================= HOME / COPERTINA ================= -->
+        <section id="home" class="page-section active">
+            <div class="relative rounded-[2rem] overflow-hidden shadow-2xl bg-dark text-white mb-12 h-[500px] flex items-center justify-center">
+                <img src="https://images.unsplash.com/photo-1533105079780-92b9be482077?auto=format&fit=crop&w=1600&q=80" alt="Croazia" class="absolute inset-0 w-full h-full object-cover opacity-50">
+                <div class="relative z-10 text-center px-6 max-w-4xl">
+                    <span class="bg-emerald-500 text-white text-xs font-black uppercase tracking-widest px-5 py-2 rounded-full inline-block mb-6 shadow-lg">Piano di Viaggio Ufficiale[span_1](start_span)[span_1](end_span)</span>
+                    <h1 class="text-5xl md:text-7xl font-black mb-6 leading-tight drop-shadow-lg">Smeraldi d'Acqua <br>& L'Adriatico Segreto</h1>
+                    <p class="text-lg md:text-2xl text-slate-200 mb-10 font-medium drop-shadow-md">Dal 7 al 13 Agosto 2026. Da Zagabria all'Isola d'Oro di Krk.[span_2](start_span)[span_2](end_span)</p>
+                    <button onclick="showPage('day1')" class="bg-emerald-500 hover:bg-emerald-400 text-white font-bold px-10 py-4 rounded-full text-lg shadow-xl transition transform hover:scale-105">Inizia l'Esplorazione <i class="fa-solid fa-arrow-right ml-2"></i></button>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= GIORNO 1 ================= -->
+        <section id="day1" class="page-section">
+            <div class="bg-white rounded-[2rem] p-8 shadow-xl mb-8 border border-slate-100">
+                <span class="bg-emerald-100 text-emerald-800 text-xs font-black uppercase px-4 py-1.5 rounded-full">Venerdì 7 Agosto 2026[span_3](start_span)[span_3](end_span)</span>
+                <h2 class="text-4xl font-black text-slate-900 mt-4 mb-2">L'Ingresso nel Reame delle Fiabe[span_4](start_span)[span_4](end_span)</h2>
+                <p class="text-slate-500 font-bold mb-8"><i class="fa-solid fa-route text-emerald-500 mr-2"></i> Bergamo ➔ Zagabria ➔ Rakovica (143 km totali)[span_5](start_span)[span_5](end_span)</p>
+
+                <div class="space-y-10 border-l-4 border-emerald-100 ml-3 pl-8 relative">
+                    <!-- Tappa -->
+                    <div class="relative">
+                        <div class="absolute -left-[2.85rem] top-1 bg-emerald-500 text-white rounded-full w-10 h-10 flex items-center justify-center shadow-md"><i class="fa-solid fa-plane"></i></div>
+                        <span class="text-sm font-bold text-emerald-600">14:00 - 15:10[span_6](start_span)[span_6](end_span)</span>
+                        <h3 class="text-2xl font-bold text-slate-800">Il Volo delle Aquile[span_7](start_span)[span_7](end_span)</h3>
+                        <p class="text-slate-600 mt-2">Volo da Bergamo Orio al Serio (BGY) a Zagabria (ZAG).[span_8](start_span)[span_8](end_span)</p>
+                    </div>
+
+                    <!-- Tappa -->
+                    <div class="relative">
+                        <div class="absolute -left-[2.85rem] top-1 bg-emerald-500 text-white rounded-full w-10 h-10 flex items-center justify-center shadow-md"><i class="fa-solid fa-book-journal-whills"></i></div>
+                        <span class="text-sm font-bold text-emerald-600">16:30 - 18:30[span_9](start_span)[span_9](end_span)</span>
+                        <h3 class="text-2xl font-bold text-slate-800">Il Museo dei Racconti Dimenticati[span_10](start_span)[span_10](end_span)</h3>
+                        <p class="text-slate-600 mt-2">Tra sculture immersive e luci soffuse, incontrerete le creature del folklore croato: spiriti della foresta, fate dispettose e i giganti delle montagne di Lika.[span_11](start_span)[span_11](end_span)</p>
+                        
+                        <!-- BOTTONI INTERATTIVI -->
+                        <div class="flex flex-wrap gap-3 mt-4">
+                            <button onclick="toggleFocus('focus-1-storico')" class="px-4 py-2 bg-slate-100 hover:bg-emerald-500 hover:text-white rounded-full text-xs font-bold transition"><i class="fa-solid fa-landmark mr-1"></i> Focus Storico</button>
+                            <button onclick="toggleFocus('focus-1-letterario')" class="px-4 py-2 bg-slate-100 hover:bg-emerald-500 hover:text-white rounded-full text-xs font-bold transition"><i class="fa-solid fa-book-open mr-1"></i> Focus Letterario</button>
+                            <button onclick="toggleFocus('focus-1-cinema')" class="px-4 py-2 bg-slate-100 hover:bg-emerald-500 hover:text-white rounded-full text-xs font-bold transition"><i class="fa-solid fa-film mr-1"></i> Focus Cinematografico</button>
+                        </div>
+
+                        <!-- CONTENUTI FOCUS (Lunghi circa 1000 caratteri) -->
+                        <div id="focus-1-storico" class="focus-content bg-slate-50 p-6 rounded-2xl mt-4 text-sm text-slate-700 leading-relaxed border border-slate-200 shadow-inner">
+                            <strong>L'Eredità Pagana nelle Terre Slave:</strong> La storia delle credenze popolari croate affonda le sue radici molto prima dell'arrivo del cristianesimo nei Balcani. Le antiche tribù slave che popolarono queste terre tra il VI e il VII secolo portarono con sé un pantheon ricco e intimamente connesso ai cicli della natura. Al vertice vi era Perun, il dio del tuono e del cielo, in eterna lotta con Veles, il dio degli inferi, della magia e dell'inganno, spesso associato all'acqua e ai serpenti. Questa dualità ha plasmato la psiche storica della regione. Quando il cattolicesimo iniziò a diffondersi, non cancellò queste credenze, ma si fuse con esse in un sincretismo affascinante. Le impenetrabili foreste della regione della Lika, in cui viaggerete, fungevano da barriera naturale contro la modernità, permettendo ai contadini di tramandare oralmente, attorno ai fuochi serali (le cosiddette "sijela"), i racconti di spiriti guardiani, streghe e creature silvane. Visitare questo museo significa esplorare il DNA culturale più profondo della Croazia, capendo come queste leggende abbiano aiutato intere generazioni a spiegare fenomeni naturali incomprensibili, sopravvivere a inverni spietati e mantenere un'identità culturale forte anche durante le dominazioni straniere (ottomana e asburgica).
+                        </div>
+                        <div id="focus-1-letterario" class="focus-content bg-slate-50 p-6 rounded-2xl mt-4 text-sm text-slate-700 leading-relaxed border border-slate-200 shadow-inner">
+                            <strong>Ivana Brlić-Mažuranić e la Poesia del Mito:</strong> Per comprendere appieno l'impatto letterario di queste figure, bisogna rivolgersi all'opera fondamentale della letteratura croata: "Priče iz davnine" (Racconti dell'antichità), scritto nel 1916 da Ivana Brlić-Mažuranić. Nominata più volte per il Premio Nobel per la Letteratura e spesso paragonata a J.R.R. Tolkien o Hans Christian Andersen, l'autrice riuscì a sistematizzare il folklore slavo frammentato trasformandolo in alta letteratura. Nei suoi testi, i boschi non sono semplici scenografie, ma entità vive e pulsanti. Le "Vile" (ninfe o fate slave) non sono creature puramente benevole come nella tradizione occidentale, ma esseri capricciosi, portatrici sia di doni immensi che di maledizioni fatali, incarnando la natura imprevedibile dei fiumi e delle tempeste balcaniche. I giganti della Lika, lenti ma inarrestabili, diventano la personificazione stessa delle montagne carsiche. La lettura delle sue fiabe svela una prosa ricca di arcaismi e un ritmo ipnotico che ricalca l'antica narrazione orale. L'esperienza nel museo vi farà sentire esattamente come i protagonisti dei suoi libri: viandanti smarriti ma meravigliati di fronte a un mondo dove il velo tra la realtà e la magia è sottilissimo.
+                        </div>
+                        <div id="focus-1-cinema" class="focus-content bg-slate-50 p-6 rounded-2xl mt-4 text-sm text-slate-700 leading-relaxed border border-slate-200 shadow-inner">
+                            <strong>Estetica Folk-Horror e Dark Fantasy:</strong> Visivamente, l'esposizione del museo rimanda immediatamente alle correnti più raffinate del dark fantasy cinematografico. Pensate alle atmosfere nebbiose, cupe ma cariche di meraviglia de "Il Labirinto del Fauno" di Guillermo del Toro. Le sculture immersive e l'uso sapiente del chiaroscuro ricordano le tecniche di stop-motion dello Studio Laika (come in "Kubo e la spada magica" o "Coraline"), dove il confine tra fiaba infantile e orrore ancestrale si assottiglia. Il cinema slavo ed est-europeo ha spesso attinto a questo immaginario: film come il ceco "Valerie e la settimana delle meraviglie" (1970) o le recenti opere folk-horror alla "The Witch" o "Midsommar" (che seppur nordiche, condividono il senso di isolamento e misticismo pagano). La luce soffusa del museo, le ombre proiettate dalle corna dei giganti e gli sguardi vitrei degli spiriti dei boschi sono orchestrati con una vera e propria regia della luce, trasformando l'osservatore da semplice turista a protagonista attivo di un thriller psicologico ed esoterico, dove la creatura nascosta nel buio rappresenta in realtà i timori ancestrali dell'essere umano.
+                        </div>
+                    </div>
+
+                    <!-- Tappa Cibo -->
+                    <div class="relative">
+                        <div class="absolute -left-[2.85rem] top-1 bg-adriatic-500 text-white rounded-full w-10 h-10 flex items-center justify-center shadow-md"><i class="fa-solid fa-utensils"></i></div>
+                        <span class="text-sm font-bold text-adriatic-600">20:30 - 21:30[span_12](start_span)[span_12](end_span)</span>
+                        <h3 class="text-2xl font-bold text-slate-800">Sosta Culinaria da "La Štruk[span_13](start_span)"[span_13](end_span)</h3>
+                        <p class="text-slate-600 mt-2">Sedetevi nel piccolo cortile interno di questo tempio della tradizione per degustare lo štrukli.[span_14](start_span)[span_14](end_span)</p>
+                        
+                        <button onclick="toggleFocus('focus-1-food')" class="mt-4 px-4 py-2 bg-amber-100 hover:bg-amber-500 hover:text-white text-amber-900 rounded-full text-xs font-bold transition shadow"><i class="fa-solid fa-fire-burner mr-1"></i> Cosa mangiare qui</button>
+                        <div id="focus-1-food" class="focus-content bg-amber-50 p-6 rounded-2xl mt-4 text-sm text-amber-900 leading-relaxed border border-amber-200">
+                            <strong>Il Zagorski Štrukli:</strong> Questo non è un semplice piatto, ma un bene culturale immateriale protetto della Croazia. Si tratta di una pasta sfoglia tirata a mano talmente sottile da essere quasi trasparente. Viene farcita con formaggio fresco vaccino (skuta), uova e panna acida, poi arrotolata, tagliata con il bordo di un piatto per sigillarne i bordi e infine cotta al forno direttamente in caratteristiche ciotole di terracotta, in cui viene servita ancora ribollente. Da "La Štruk" la raccomandazione è di ordinarne due varianti da condividere: una classica salata (magari arricchita con tartufo istriano) e una versione dolce, in cui il formaggio sposa il miele, le noci o una generosa spolverata di zucchero caramellato in superficie. L'esterno croccante contrasta con il cuore cremoso ed estremamente confortante.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Box Piano B -->
+                <div class="mt-10 bg-slate-800 text-white rounded-2xl p-6 flex items-start space-x-4 shadow-lg border-l-8 border-adriatic-500">
+                    <i class="fa-solid fa-cloud-bolt text-3xl text-adriatic-400 mt-1"></i>
+                    <div>
+                        <h4 class="font-black text-lg">Piano B & Alternativa Meteo[span_15](start_span)[span_15](end_span)</h4>
+                        <p class="text-sm text-slate-300 mt-2">In caso di forte pioggia a Zagabria, sostituite l'anello a piedi con una pausa prolungata nei passaggi coperti del centro (come la Galleria Oktogon) o visitate il Tunnel Grič sottostante la città.[span_16](start_span)[span_16](end_span)</p>
+                    </div>
+                </div>
+
+                <!-- Modulo Note Personali Dinamiche -->
+                <div class="mt-8 bg-emerald-50 rounded-2xl p-6 border border-emerald-200">
+                    <h4 class="font-bold text-emerald-900 mb-3"><i class="fa-solid fa-pen-nib mr-2"></i>Diario di Viaggio (Giorno 1)</h4>
+                    <textarea id="note-day1" rows="3" class="w-full rounded-xl border border-emerald-300 p-4 text-sm focus:ring-2 focus:ring-emerald-500 outline-none" placeholder="Appunta qui i tuoi ricordi..."></textarea>
+                    <button onclick="saveNote('day1')" class="mt-3 bg-emerald-600 text-white px-5 py-2 rounded-full text-xs font-bold hover:bg-emerald-700 transition">Salva Note</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= GIORNO 2 ================= -->
+        <section id="day2" class="page-section">
+            <div class="bg-white rounded-[2rem] p-8 shadow-xl mb-8 border border-slate-100">
+                <span class="bg-emerald-100 text-emerald-800 text-xs font-black uppercase px-4 py-1.5 rounded-full">Sabato 8 Agosto 2026[span_17](start_span)[span_17](end_span)</span>
+                <h2 class="text-4xl font-black text-slate-900 mt-4 mb-2">Smeraldi d'Acqua e Mulini al Tramonto[span_18](start_span)[span_18](end_span)</h2>
+                <p class="text-slate-500 font-bold mb-8"><i class="fa-solid fa-route text-emerald-500 mr-2"></i> Rakovica ➔ Plitvice ➔ Majerovo Vrilo ➔ Rastoke (110 km totali)[span_19](start_span)[span_19](end_span)</p>
+
+                <div class="space-y-10 border-l-4 border-emerald-100 ml-3 pl-8 relative">
+                    <div class="relative">
+                        <div class="absolute -left-[2.85rem] top-1 bg-emerald-500 text-white rounded-full w-10 h-10 flex items-center justify-center shadow-md"><i class="fa-solid fa-water"></i></div>
+                        <span class="text-sm font-bold text-emerald-600">07:00 - 13:00[span_20](start_span)[span_20](end_span)</span>
+                        <h3 class="text-2xl font-bold text-slate-800">L'Incanto Primordiale dei Laghi di Plitvice (Percorso C o H)[span_21](start_span)[span_21](end_span)</h3>
+                        <p class="text-slate-600 mt-2">Camminerete a fior d'acqua su passerelle di legno sospese, mentre una leggera nebbia mattutina sale dalle acque turchesi e cristalline.[span_22](start_span)[span_22](end_span) Sarete circondati solo dal canto degli uccelli e dal rombo costante delle cascate che uniscono i 16 laghi.[span_23](start_span)[span_23](end_span)</p>
+                    </div>
+
+                    <div class="relative">
+                        <div class="absolute -left-[2.85rem] top-1 bg-emerald-500 text-white rounded-full w-10 h-10 flex items-center justify-center shadow-md"><i class="fa-solid fa-house-flood-water"></i></div>
+                        <span class="text-sm font-bold text-emerald-600">16:00 - 19:30[span_24](start_span)[span_24](end_span)</span>
+                        <h3 class="text-2xl font-bold text-slate-800">Il Borgo delle Cascate: Rastoke (Slunj)[span_25](start_span)[span_25](end_span)</h3
