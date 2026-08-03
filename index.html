@@ -74,15 +74,15 @@
 <nav class="fixed top-0 left-0 right-0 z-50 bg-lavagna-900/95 backdrop-blur text-white shadow-xl no-print">
   <div class="max-w-6xl mx-auto flex items-center gap-3 px-4 py-3 overflow-x-auto nav-scroll">
     <span class="font-display font-bold text-smeraldo-300 text-lg pr-2 whitespace-nowrap"><i class="fa-solid fa-water"></i> Croazia</span>
-    <button onclick="goToPage('home')" data-page="home" class="nav-btn whitespace-nowrap px-4 py-1.5 rounded-2xl text-sm font-medium transition">Home</button>
-    <button onclick="goToPage('day1')" data-page="day1" class="nav-btn whitespace-nowrap px-4 py-1.5 rounded-2xl text-sm font-medium transition">Giorno 1</button>
-    <button onclick="goToPage('day2')" data-page="day2" class="nav-btn whitespace-nowrap px-4 py-1.5 rounded-2xl text-sm font-medium transition">Giorno 2</button>
-    <button onclick="goToPage('day3')" data-page="day3" class="nav-btn whitespace-nowrap px-4 py-1.5 rounded-2xl text-sm font-medium transition">Giorno 3</button>
-    <button onclick="goToPage('day4')" data-page="day4" class="nav-btn whitespace-nowrap px-4 py-1.5 rounded-2xl text-sm font-medium transition">Giorno 4</button>
-    <button onclick="goToPage('day5')" data-page="day5" class="nav-btn whitespace-nowrap px-4 py-1.5 rounded-2xl text-sm font-medium transition">Giorno 5</button>
-    <button onclick="goToPage('day6')" data-page="day6" class="nav-btn whitespace-nowrap px-4 py-1.5 rounded-2xl text-sm font-medium transition">Giorno 6</button>
-    <button onclick="goToPage('day7')" data-page="day7" class="nav-btn whitespace-nowrap px-4 py-1.5 rounded-2xl text-sm font-medium transition">Giorno 7</button>
-    <button onclick="goToPage('stats')" data-page="stats" class="nav-btn whitespace-nowrap px-4 py-1.5 rounded-2xl text-sm font-medium transition"><i class="fa-solid fa-chart-pie"></i> Statistiche & Mappa</button>
+    <button onclick="goToPage('home')" data-page="home" class="nav-pill whitespace-nowrap px-4 py-1.5 rounded-2xl text-sm font-medium transition">Home</button>
+    <button onclick="goToPage('day1')" data-page="day1" class="nav-pill whitespace-nowrap px-4 py-1.5 rounded-2xl text-sm font-medium transition">Giorno 1</button>
+    <button onclick="goToPage('day2')" data-page="day2" class="nav-pill whitespace-nowrap px-4 py-1.5 rounded-2xl text-sm font-medium transition">Giorno 2</button>
+    <button onclick="goToPage('day3')" data-page="day3" class="nav-pill whitespace-nowrap px-4 py-1.5 rounded-2xl text-sm font-medium transition">Giorno 3</button>
+    <button onclick="goToPage('day4')" data-page="day4" class="nav-pill whitespace-nowrap px-4 py-1.5 rounded-2xl text-sm font-medium transition">Giorno 4</button>
+    <button onclick="goToPage('day5')" data-page="day5" class="nav-pill whitespace-nowrap px-4 py-1.5 rounded-2xl text-sm font-medium transition">Giorno 5</button>
+    <button onclick="goToPage('day6')" data-page="day6" class="nav-pill whitespace-nowrap px-4 py-1.5 rounded-2xl text-sm font-medium transition">Giorno 6</button>
+    <button onclick="goToPage('day7')" data-page="day7" class="nav-pill whitespace-nowrap px-4 py-1.5 rounded-2xl text-sm font-medium transition">Giorno 7</button>
+    <button onclick="goToPage('stats')" data-page="stats" class="nav-pill whitespace-nowrap px-4 py-1.5 rounded-2xl text-sm font-medium transition"><i class="fa-solid fa-chart-pie"></i> Statistiche & Mappa</button>
   </div>
 </nav>
 
@@ -163,10 +163,6 @@
 <script>
 /* =========================================================================
    DATI DEL VIAGGIO
-   Tutta l'informazione del piano è strutturata qui come dati JS.
-   Ogni giorno contiene: header, tappe (stops) con eventuale approfondimento
-   (storico / letterario / cinematografico) o info gastronomiche, box "Piano B"
-   e voci di budget.
    ========================================================================= */
 const tripData = [
 {
@@ -360,8 +356,6 @@ const tripData = [
 
 /* =========================================================================
    RENDER DELLE PAGINE GIORNO
-   Costruisce dinamicamente l'HTML di ogni giornata a partire da tripData,
-   evitando di scrivere migliaia di righe di markup ripetuto a mano.
    ========================================================================= */
 function iconFor(type){
   return type==='food' ? 'fa-bowl-food' : type==='transfer' ? 'fa-car-side' : 'fa-map-pin';
@@ -445,110 +439,146 @@ function renderDay(day){
   </section>`;
 }
 
-document.getElementById('days-container').innerHTML = tripData.map(renderDay).join('');
+try {
+  document.getElementById('days-container').innerHTML = tripData.map(renderDay).join('');
+} catch (e) {
+  console.error("Errore nel rendering dei giorni:", e);
+}
 
 /* =========================================================================
    NAVIGAZIONE SPA (multi-pagina istantanea)
    ========================================================================= */
 function goToPage(id){
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
-  document.querySelectorAll('.nav-btn').forEach(b => {
-    b.classList.remove('bg-smeraldo-500','text-white');
-    b.classList.add('text-slate-300');
-  });
-  const activeBtn = document.querySelector(`.nav-btn[data-page="${id}"]`);
-  if(activeBtn){ activeBtn.classList.add('bg-smeraldo-500','text-white'); activeBtn.classList.remove('text-slate-300'); activeBtn.scrollIntoView({inline:'center', behavior:'smooth'}); }
-  window.scrollTo({top:0, behavior:'smooth'});
-  if(id === 'stats'){ setTimeout(initMap, 100); }
+  try {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    
+    // Aggiorniamo solo i pulsanti identificati con .nav-pill (la navbar)
+    document.querySelectorAll('.nav-pill').forEach(b => {
+      b.classList.remove('bg-smeraldo-500','text-white');
+      b.classList.add('text-slate-300');
+    });
+    
+    const activeBtn = document.querySelector(`.nav-pill[data-page="${id}"]`);
+    if(activeBtn) {
+      activeBtn.classList.add('bg-smeraldo-500','text-white'); 
+      activeBtn.classList.remove('text-slate-300'); 
+      activeBtn.scrollIntoView({inline:'center', behavior:'smooth'}); 
+    }
+    
+    window.scrollTo({top:0, behavior:'smooth'});
+    if(id === 'stats'){ setTimeout(initMap, 100); }
+  } catch (e) {
+    console.error("Errore durante la navigazione:", e);
+  }
 }
 
 /* Espande/collassa i pannelli di approfondimento (Focus Storico/Letterario/Cinematografico/Cosa mangiare) */
 function toggleFocus(id){
-  document.getElementById(id).classList.toggle('open');
+  try {
+    document.getElementById(id).classList.toggle('open');
+  } catch (e) {
+    console.error("Errore nell'apertura del pannello:", e);
+  }
 }
 
 /* =========================================================================
    NOTE PERSONALI CON LOCALSTORAGE
    ========================================================================= */
 function saveNote(dayId){
-  const val = document.getElementById(`notes-${dayId}`).value;
-  localStorage.setItem(`croazia-note-${dayId}`, val);
+  try {
+    const val = document.getElementById(`notes-${dayId}`).value;
+    localStorage.setItem(`croazia-note-${dayId}`, val);
+  } catch (e) {
+    console.error("Errore nel salvataggio della nota:", e);
+  }
 }
 function loadNotes(){
-  tripData.forEach(d => {
-    const saved = localStorage.getItem(`croazia-note-${d.id}`);
-    const el = document.getElementById(`notes-${d.id}`);
-    if(saved && el) el.value = saved;
-  });
+  try {
+    tripData.forEach(d => {
+      const saved = localStorage.getItem(`croazia-note-${d.id}`);
+      const el = document.getElementById(`notes-${d.id}`);
+      if(saved && el) el.value = saved;
+    });
+  } catch (e) {
+    console.error("Errore nel caricamento delle note:", e);
+  }
 }
-loadNotes();
 
-/* Stile iniziale bottone Home attivo */
-goToPage('home');
+// Chiamo le funzioni inziali in modo sicuro
+try { loadNotes(); } catch (e) {}
+try { goToPage('home'); } catch (e) {}
 
 /* =========================================================================
    GRAFICI CHART.JS
    ========================================================================= */
-new Chart(document.getElementById('budgetChart'), {
-  type: 'doughnut',
-  data: {
-    labels: ['Cibo & Ristoranti', 'Trasporti & Parcheggi', 'Ingressi & Attrazioni', 'Escursioni', 'Extra'],
-    datasets: [{
-      data: [292, 54.5, 36, 65, 10],
-      backgroundColor: ['#10b981','#0ea5e9','#065f46','#0369a1','#f59e0b'],
-      borderWidth: 2, borderColor: '#fff'
-    }]
-  },
-  options: { plugins: { legend: { position: 'bottom', labels:{ boxWidth:12, font:{size:11} } } } }
-});
+try {
+  new Chart(document.getElementById('budgetChart'), {
+    type: 'doughnut',
+    data: {
+      labels: ['Cibo & Ristoranti', 'Trasporti & Parcheggi', 'Ingressi & Attrazioni', 'Escursioni', 'Extra'],
+      datasets: [{
+        data: [292, 54.5, 36, 65, 10],
+        backgroundColor: ['#10b981','#0ea5e9','#065f46','#0369a1','#f59e0b'],
+        borderWidth: 2, borderColor: '#fff'
+      }]
+    },
+    options: { plugins: { legend: { position: 'bottom', labels:{ boxWidth:12, font:{size:11} } } } }
+  });
 
-new Chart(document.getElementById('kmChart'), {
-  type: 'bar',
-  data: {
-    labels: tripData.map(d => 'G' + d.num),
-    datasets: [{
-      label: 'Km percorsi',
-      data: tripData.map(d => d.km),
-      backgroundColor: '#0ea5e9',
-      borderRadius: 10
-    }]
-  },
-  options: { plugins:{ legend:{ display:false } }, scales:{ y:{ beginAtZero:true } } }
-});
+  new Chart(document.getElementById('kmChart'), {
+    type: 'bar',
+    data: {
+      labels: tripData.map(d => 'G' + d.num),
+      datasets: [{
+        label: 'Km percorsi',
+        data: tripData.map(d => d.km),
+        backgroundColor: '#0ea5e9',
+        borderRadius: 10
+      }]
+    },
+    options: { plugins:{ legend:{ display:false } }, scales:{ y:{ beginAtZero:true } } }
+  });
+} catch (e) {
+  console.error("Errore nell'inizializzazione dei grafici:", e);
+}
 
 /* =========================================================================
    MAPPA LEAFLET
    ========================================================================= */
 let mapInitialized = false;
 function initMap(){
-  if(mapInitialized) return;
-  mapInitialized = true;
-  const map = L.map('map').setView([45.15, 15.3], 8);
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution: '&copy; OpenStreetMap contributors'
-  }).addTo(map);
+  try {
+    if(mapInitialized) return;
+    mapInitialized = true;
+    const map = L.map('map').setView([45.15, 15.3], 8);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; OpenStreetMap contributors'
+    }).addTo(map);
 
-  const stops = [
-    {name:'Zagabria', coords:[45.8150, 15.9819], desc:'Giorno 1 & 7 — Città Alta, Dolac'},
-    {name:'Rakovica', coords:[44.9531, 15.6981], desc:'Giorno 1–2 — Guest House Adrijana'},
-    {name:'Plitvice', coords:[44.8654, 15.5820], desc:'Giorno 2 — Parco Nazionale, 16 laghi'},
-    {name:'Željava', coords:[44.7961, 15.7539], desc:'Giorno 3 — Base aerea Guerra Fredda'},
-    {name:'Dramalj', coords:[45.2867, 14.6928], desc:'Giorno 3–7 — Base sul mare, Quarnaro'},
-    {name:'Isola di Krk', coords:[45.0247, 14.5764], desc:'Giorno 4–5 — Castello, Vrbnik, Punat, Baška'}
-  ];
+    const stops = [
+      {name:'Zagabria', coords:[45.8150, 15.9819], desc:'Giorno 1 & 7 — Città Alta, Dolac'},
+      {name:'Rakovica', coords:[44.9531, 15.6981], desc:'Giorno 1–2 — Guest House Adrijana'},
+      {name:'Plitvice', coords:[44.8654, 15.5820], desc:'Giorno 2 — Parco Nazionale, 16 laghi'},
+      {name:'Željava', coords:[44.7961, 15.7539], desc:'Giorno 3 — Base aerea Guerra Fredda'},
+      {name:'Dramalj', coords:[45.2867, 14.6928], desc:'Giorno 3–7 — Base sul mare, Quarnaro'},
+      {name:'Isola di Krk', coords:[45.0247, 14.5764], desc:'Giorno 4–5 — Castello, Vrbnik, Punat, Baška'}
+    ];
 
-  const icon = L.divIcon({
-    html:'<div style="background:linear-gradient(135deg,#10b981,#0ea5e9);width:16px;height:16px;border-radius:50%;border:3px solid white;box-shadow:0 2px 6px rgba(0,0,0,.3)"></div>',
-    className:'', iconSize:[16,16]
-  });
+    const icon = L.divIcon({
+      html:'<div style="background:linear-gradient(135deg,#10b981,#0ea5e9);width:16px;height:16px;border-radius:50%;border:3px solid white;box-shadow:0 2px 6px rgba(0,0,0,.3)"></div>',
+      className:'', iconSize:[16,16]
+    });
 
-  const latlngs = [];
-  stops.forEach(s => {
-    L.marker(s.coords, {icon}).addTo(map).bindPopup(`<b>${s.name}</b><br>${s.desc}`);
-    latlngs.push(s.coords);
-  });
-  L.polyline(latlngs, {color:'#0ea5e9', weight:3, dashArray:'6,8', opacity:.7}).addTo(map);
+    const latlngs = [];
+    stops.forEach(s => {
+      L.marker(s.coords, {icon}).addTo(map).bindPopup(`<b>${s.name}</b><br>${s.desc}`);
+      latlngs.push(s.coords);
+    });
+    L.polyline(latlngs, {color:'#0ea5e9', weight:3, dashArray:'6,8', opacity:.7}).addTo(map);
+  } catch (e) {
+    console.error("Errore nell'inizializzazione della mappa Leaflet:", e);
+  }
 }
 </script>
 </body>
