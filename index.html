@@ -61,9 +61,6 @@
 
   #map { height: 420px; border-radius: 1.5rem; z-index:0; }
 
-  .nav-btn { cursor:pointer; }
-  .focus-toggle, .food-toggle { cursor:pointer; }
-
   @media print {
     nav, .no-print { display:none !important; }
     .page { display:block !important; }
@@ -77,15 +74,15 @@
 <nav class="fixed top-0 left-0 right-0 z-50 bg-lavagna-900/95 backdrop-blur text-white shadow-xl no-print">
   <div class="max-w-6xl mx-auto flex items-center gap-3 px-4 py-3 overflow-x-auto nav-scroll">
     <span class="font-display font-bold text-smeraldo-300 text-lg pr-2 whitespace-nowrap"><i class="fa-solid fa-water"></i> Croazia</span>
-    <button data-page="home" class="nav-btn whitespace-nowrap px-4 py-1.5 rounded-2xl text-sm font-medium transition">Home</button>
-    <button data-page="day1" class="nav-btn whitespace-nowrap px-4 py-1.5 rounded-2xl text-sm font-medium transition">Giorno 1</button>
-    <button data-page="day2" class="nav-btn whitespace-nowrap px-4 py-1.5 rounded-2xl text-sm font-medium transition">Giorno 2</button>
-    <button data-page="day3" class="nav-btn whitespace-nowrap px-4 py-1.5 rounded-2xl text-sm font-medium transition">Giorno 3</button>
-    <button data-page="day4" class="nav-btn whitespace-nowrap px-4 py-1.5 rounded-2xl text-sm font-medium transition">Giorno 4</button>
-    <button data-page="day5" class="nav-btn whitespace-nowrap px-4 py-1.5 rounded-2xl text-sm font-medium transition">Giorno 5</button>
-    <button data-page="day6" class="nav-btn whitespace-nowrap px-4 py-1.5 rounded-2xl text-sm font-medium transition">Giorno 6</button>
-    <button data-page="day7" class="nav-btn whitespace-nowrap px-4 py-1.5 rounded-2xl text-sm font-medium transition">Giorno 7</button>
-    <button data-page="stats" class="nav-btn whitespace-nowrap px-4 py-1.5 rounded-2xl text-sm font-medium transition"><i class="fa-solid fa-chart-pie"></i> Statistiche & Mappa</button>
+    <button onclick="goToPage('home')" data-page="home" class="nav-btn whitespace-nowrap px-4 py-1.5 rounded-2xl text-sm font-medium transition">Home</button>
+    <button onclick="goToPage('day1')" data-page="day1" class="nav-btn whitespace-nowrap px-4 py-1.5 rounded-2xl text-sm font-medium transition">Giorno 1</button>
+    <button onclick="goToPage('day2')" data-page="day2" class="nav-btn whitespace-nowrap px-4 py-1.5 rounded-2xl text-sm font-medium transition">Giorno 2</button>
+    <button onclick="goToPage('day3')" data-page="day3" class="nav-btn whitespace-nowrap px-4 py-1.5 rounded-2xl text-sm font-medium transition">Giorno 3</button>
+    <button onclick="goToPage('day4')" data-page="day4" class="nav-btn whitespace-nowrap px-4 py-1.5 rounded-2xl text-sm font-medium transition">Giorno 4</button>
+    <button onclick="goToPage('day5')" data-page="day5" class="nav-btn whitespace-nowrap px-4 py-1.5 rounded-2xl text-sm font-medium transition">Giorno 5</button>
+    <button onclick="goToPage('day6')" data-page="day6" class="nav-btn whitespace-nowrap px-4 py-1.5 rounded-2xl text-sm font-medium transition">Giorno 6</button>
+    <button onclick="goToPage('day7')" data-page="day7" class="nav-btn whitespace-nowrap px-4 py-1.5 rounded-2xl text-sm font-medium transition">Giorno 7</button>
+    <button onclick="goToPage('stats')" data-page="stats" class="nav-btn whitespace-nowrap px-4 py-1.5 rounded-2xl text-sm font-medium transition"><i class="fa-solid fa-chart-pie"></i> Statistiche & Mappa</button>
   </div>
 </nav>
 
@@ -97,7 +94,7 @@
       <p class="uppercase tracking-[0.3em] text-smeraldo-300 text-sm mb-4"><i class="fa-solid fa-compass"></i> 7 Agosto — 13 Agosto 2026</p>
       <h1 class="font-display text-5xl md:text-7xl font-extrabold mb-6 leading-tight">Smeraldo & <span class="text-adriatico-300">Adriatico</span></h1>
       <p class="text-lg md:text-xl text-slate-200 font-light mb-10">Un viaggio tra le cascate di Plitvice, i borghi fiabeschi della Lika, le rovine della Guerra Fredda e le acque cristalline dell'isola di Krk.</p>
-      <button data-page="day1" class="nav-btn bg-smeraldo-500 hover:bg-smeraldo-400 transition rounded-full px-8 py-3 font-semibold shadow-lg shadow-smeraldo-900/40">
+      <button onclick="goToPage('day1')" class="bg-smeraldo-500 hover:bg-smeraldo-400 transition rounded-full px-8 py-3 font-semibold shadow-lg shadow-smeraldo-900/40">
         Inizia il viaggio <i class="fa-solid fa-arrow-right ml-2"></i>
       </button>
 
@@ -167,36 +164,392 @@
 /* =========================================================================
    DATI DEL VIAGGIO
    Tutta l'informazione del piano è strutturata qui come dati JS.
-   NOTA TECNICA: tutti i testi lunghi usano template literal (backtick `...`)
-   invece di apici singoli, per evitare che gli apostrofi dell'italiano
-   ("l'isola", "dell'entroterra", "un'antica"...) rompano la sintassi.
+   Ogni giorno contiene: header, tappe (stops) con eventuale approfondimento
+   (storico / letterario / cinematografico) o info gastronomiche, box "Piano B"
+   e voci di budget.
    ========================================================================= */
 const tripData = [
 {
-  id:'day1', num:1, date:`Venerdì 7 Agosto 2026`, title:`L'Ingresso nel Reame delle Fiabe`,
-  focus:`Volo su Zagabria, leggende slave nel cuore della città, atmosfera mistica in Città Alta, cena con štrukli e primo viaggio notturno verso la Lika.`,
-  route:`Bergamo (BGY) ➔ Zagabria (ZAG) ➔ Zagabria Centro ➔ Rakovica`, km:143,
+  id:'day1', num:1, date:'Venerdì 7 Agosto 2026', title:'L\'Ingresso nel Reame delle Fiabe',
+  focus:'Volo su Zagabria, leggende slave nel cuore della città, atmosfera mistica in Città Alta, cena con štrukli e primo viaggio notturno verso la Lika.',
+  route:'Bergamo (BGY) ➔ Zagabria (ZAG) ➔ Zagabria Centro ➔ Rakovica', km:143,
   img:'https://images.unsplash.com/photo-1555990538-c48dcbb1e6dc?q=80&w=1200',
   stops:[
-    {time:'14:00–15:10', title:`Il Volo delle Aquile`, type:'transfer', desc:`Volo da Bergamo Orio al Serio (BGY) a Zagabria (ZAG).`},
-    {time:'15:10–16:00', title:`Presa del Mezzo & Logistica`, type:'transfer', desc:`Ritiro auto a noleggio Avis in aeroporto; trasferimento al Parcheggio Paromlin (18 km, 25 min), la scelta più comoda vicino al centro pedonale.`},
-    {time:'16:30–18:30', title:`Museo dei Racconti Dimenticati`, type:'sight',
-      desc:`Muzej zaboravljenih priča: un viaggio sensoriale tra sculture immersive e luci soffuse nel folklore croato.`,
-      historical:`Il concetto di "museo dei racconti dimenticati" nasce dal desiderio di preservare un patrimonio orale che per secoli è stato tramandato di villaggio in villaggio nell'entroterra dinarico, prima che l'urbanizzazione del Novecento ne disperdesse i custodi. In Croazia, come in gran parte dei Balcani, il folklore non era semplice intrattenimento: le storie di spiriti dei boschi, di fate dispettose e di giganti montani servivano a spiegare fenomeni naturali, a scoraggiare comportamenti pericolosi (allontanarsi di notte, avvicinarsi a corsi d'acqua in piena) e a rafforzare l'identità delle piccole comunità rurali della Lika, regione storicamente povera e isolata. Molte di queste leggende affondano le radici nel sincretismo tra credenze slave precristiane e la successiva cristianizzazione, che non cancellò le figure mitologiche ma le trasformò in demoni o anime dannate. Il museo raccoglie testimonianze raccolte da etnografi locali tra Ottocento e Novecento, un lavoro di documentazione paragonabile a quello dei fratelli Grimm in Germania, ma rimasto per lungo tempo confinato agli studi accademici regionali prima di trovare una forma museale accessibile al grande pubblico internazionale.`,
-      literary:`La letteratura croata moderna deve molto a questo sostrato leggendario: autori come Ivana Brlić-Mažuranić, spesso definita la "Andersen croata", attinsero direttamente al folklore della Lika e delle regioni montane per le proprie fiabe, pubblicate nella celebre raccolta "Priče iz davnine" (Racconti di un tempo lontano, 1916). In quelle pagine compaiono le stesse creature — Regoč il gigante di pietra, il piccolo Palunko, gli spiriti delle acque — che il museo mette in scena attraverso installazioni multisensoriali. Il valore letterario di questi racconti risiede nella loro funzione morale: non semplici avventure fantastiche, ma parabole su coraggio, giustizia e rispetto per la natura, in un'epoca in cui la sopravvivenza dipendeva dall'equilibrio con un ambiente montano ostile. Visitare il museo prima di addentrarsi nei boschi della Lika, che percorrerete più avanti nel viaggio verso Rakovica, permette di leggere il paesaggio successivo con occhi diversi, quasi cercando tra gli alberi le sagome delle creature appena incontrate.`,
-      cinema:`Il tema del folklore slavo oscuro ha ispirato un filone cinematografico e televisivo cresciuto molto negli ultimi anni, dal successo internazionale di produzioni che mescolano horror e mitologia dell'Europa dell'Est. Registi balcanici hanno più volte attinto a questo immaginario per costruire atmosfere gotiche alternative rispetto ai classici horror occidentali, sfruttando ambientazioni di foreste fitte, villaggi isolati e architetture in pietra molto simili a quelle che si incontrano nell'entroterra croato. Il museo stesso, con la sua scenografia fatta di luci soffuse, sculture e suoni ambientali, è concepito quasi come un set cinematografico permanente, pensato per immergere il visitatore in una narrazione visiva prima ancora che testuale. Camminare tra le sue sale ricorda l'esperienza di un film in soggettiva, dove ogni sala è un'inquadratura e il pubblico diventa protagonista della storia, anticipando visivamente le atmosfere quasi fiabesche che ritroverete la sera stessa passeggiando tra le vie acciottolate e poco illuminate di Gornji Grad.`
+    {time:'14:00–15:10', title:'Il Volo delle Aquile', type:'transfer', desc:'Volo da Bergamo Orio al Serio (BGY) a Zagabria (ZAG).'},
+    {time:'15:10–16:00', title:'Presa del Mezzo & Logistica', type:'transfer', desc:'Ritiro auto a noleggio Avis in aeroporto; trasferimento al Parcheggio Paromlin (18 km, 25 min), la scelta più comoda vicino al centro pedonale.'},
+    {time:'16:30–18:30', title:'Museo dei Racconti Dimenticati', type:'sight',
+      desc:'Muzej zaboravljenih priča: un viaggio sensoriale tra sculture immersive e luci soffuse nel folklore croato.',
+      historical:'Il concetto di "museo dei racconti dimenticati" nasce dal desiderio di preservare un patrimonio orale che per secoli è stato tramandato di villaggio in villaggio nell\'entroterra dinarico, prima che l\'urbanizzazione del Novecento ne disperdesse i custodi. In Croazia, come in gran parte dei Balcani, il folklore non era semplice intrattenimento: le storie di spiriti dei boschi, di fate dispettose e di giganti montani servivano a spiegare fenomeni naturali, a scoraggiare comportamenti pericolosi (allontanarsi di notte, avvicinarsi a corsi d\'acqua in piena) e a rafforzare l\'identità delle piccole comunità rurali della Lika, regione storicamente povera e isolata. Molte di queste leggende affondano le radici nel sincretismo tra credenze slave precristiane e la successiva cristianizzazione, che non cancellò le figure mitologiche ma le trasformò in demoni o anime dannate. Il museo raccoglie testimonianze raccolte da etnografi locali tra Ottocento e Novecento, un lavoro di documentazione paragonabile a quello dei fratelli Grimm in Germania, ma rimasto per lungo tempo confinato agli studi accademici regionali prima di trovare una forma museale accessibile al grande pubblico internazionale.',
+      literary:'La letteratura croata moderna deve molto a questo sostrato leggendario: autori come Ivana Brlić-Mažuranić, spesso definita la "Andersen croata", attinsero direttamente al folklore della Lika e delle regioni montane per le proprie fiabe, pubblicate nella celebre raccolta "Priče iz davnine" (Racconti di un tempo lontano, 1916). In quelle pagine compaiono le stesse creature — Regoč il gigante di pietra, il piccolo Palunko, gli spiriti delle acque — che il museo mette in scena attraverso installazioni multisensoriali. Il valore letterario di questi racconti risiede nella loro funzione morale: non semplici avventure fantastiche, ma parabole su coraggio, giustizia e rispetto per la natura, in un\'epoca in cui la sopravvivenza dipendeva dall\'equilibrio con un ambiente montano ostile. Visitare il museo prima di addentrarsi nei boschi della Lika, che percorrerete più avanti nel viaggio verso Rakovica, permette di leggere il paesaggio successivo con occhi diversi, quasi cercando tra gli alberi le sagome delle creature appena incontrate.',
+      cinema:'Il tema del folklore slavo oscuro ha ispirato un filone cinematografico e televisivo cresciuto molto negli ultimi anni, dal successo internazionale di produzioni che mescolano horror e mitologia dell\'Europa dell\'Est. Registi balcanici hanno più volte attinto a questo immaginario per costruire atmosfere gotiche alternative rispetto ai classici horror occidentali, sfruttando ambientazioni di foreste fitte, villaggi isolati e architetture in pietra molto simili a quelle che si incontrano nell\'entroterra croato. Il museo stesso, con la sua scenografia fatta di luci soffuse, sculture e suoni ambientali, è concepito quasi come un set cinematografico permanente, pensato per immergere il visitatore in una narrazione visiva prima ancora che testuale. Camminare tra le sue sale ricorda l\'esperienza di un film in soggettiva, dove ogni sala è un\'inquadratura e il pubblico diventa protagonista della storia, anticipando visivamente le atmosfere quasi fiabesche che ritroverete la sera stessa passeggiando tra le vie acciottolate e poco illuminate di Gornji Grad.'
     },
-    {time:'18:30–20:30', title:`Anello Magico in Città Alta (Gornji Grad)`, type:'sight',
-      desc:`Torre Lotrščak, Porta di Pietra, Chiesa di San Marco e Via Tkalčićeva.`,
-      historical:`Gornji Grad, la Città Alta di Zagabria, conserva l'impianto medievale delle due città gemelle Kaptol e Gradec, rivali per secoli e unificate solo nel 1850. La Torre Lotrščak, costruita nel XIII secolo come parte delle fortificazioni difensive, ospita dal 1877 il celebre cannone di mezzogiorno, tradizione nata originariamente per regolare gli orologi cittadini e mai interrotta da allora. Poco distante, la Porta di Pietra (Kamenita vrata) è l'unico dei cinque accessi medievali alla città sopravvissuto integro: nel grande incendio del 1731, che devastò gran parte del quartiere, un dipinto ligneo della Vergine custodito nella nicchia della porta rimase miracolosamente intatto tra le fiamme, episodio che trasformò il luogo in un santuario di devozione popolare tuttora attivo, visitabile tra il tremolio delle candele votive. La Chiesa di San Marco, con il suo celebre tetto a stemmi (quello del Regno di Croazia, Slavonia e Dalmazia da un lato, quello di Zagabria dall'altro), risale in parte al Trecento ed è tra i simboli architettonici più riconoscibili dei Balcani.`,
-      literary:`Le stradine di Gornji Grad sono state teatro e ispirazione per generazioni di scrittori zagabresi, che qui ambientarono romanzi e racconti di formazione cittadina tra fine Ottocento e inizio Novecento, epoca in cui la città viveva una fioritura culturale mitteleuropea paragonabile a Vienna o Praga in scala ridotta. La vicinanza tra la sacralità della Porta di Pietra e la mondanità della vivace Via Tkalčićeva, un tempo corso di un torrente e oggi cuore della vita notturna cittadina, ha alimentato una letteratura fatta di contrasti: il sacro e il profano, il silenzio delle chiese e il chiacchiericcio dei caffè. Anche la tradizione fiabesca incontrata poco prima al Museo dei Racconti Dimenticati trova qui una sponda urbana, perché molte leggende collocano proprio sotto le mura di Gradec l'ingresso a passaggi sotterranei abitati da spiriti, di cui il vicino Tunnel Grič, che visiterete l'ultimo giorno, è l'eco storica più concreta e tangibile.`,
-      cinema:`Il profilo scenografico di Gornji Grad, con i tetti spioventi, le guglie e il celebre tetto a mosaico di San Marco, ha reso il quartiere una location ricorrente per produzioni cinematografiche e televisive europee in cerca di un'ambientazione "mitteleuropea d'epoca" più accessibile e meno turistica di Praga o Vienna. Le sue vie strette, la luce calda del tramonto che filtra tra i palazzi barocchi e l'atmosfera quasi teatrale della piazza di San Marco hanno attirato scouting location per film storici e serie in costume, sfruttando anche la rara concentrazione di stili architettonici — gotico, barocco, secessionista — in uno spazio compatto. Passeggiare qui al crepuscolo, con il cannone della Lotrščak che ha appena scandito un'ora simbolica della giornata, restituisce la sensazione di muoversi dentro un set cinematografico vivo, popolato non da comparse ma da abitanti reali che da secoli intrecciano la propria quotidianità con la scenografia storica della città.`
+    {time:'18:30–20:30', title:'Anello Magico in Città Alta (Gornji Grad)', type:'sight',
+      desc:'Torre Lotrščak, Porta di Pietra, Chiesa di San Marco e Via Tkalčićeva.',
+      historical:'Gornji Grad, la Città Alta di Zagabria, conserva l\'impianto medievale delle due città gemelle Kaptol e Gradec, rivali per secoli e unificate solo nel 1850. La Torre Lotrščak, costruita nel XIII secolo come parte delle fortificazioni difensive, ospita dal 1877 il celebre cannone di mezzogiorno, tradizione nata originariamente per regolare gli orologi cittadini e mai interrotta da allora. Poco distante, la Porta di Pietra (Kamenita vrata) è l\'unico dei cinque accessi medievali alla città sopravvissuto integro: nel grande incendio del 1731, che devastò gran parte del quartiere, un dipinto ligneo della Vergine custodito nella nicchia della porta rimase miracolosamente intatto tra le fiamme, episodio che trasformò il luogo in un santuario di devozione popolare tuttora attivo, visitabile tra il tremolio delle candele votive. La Chiesa di San Marco, con il suo celebre tetto a stemmi (quello del Regno di Croazia, Slavonia e Dalmazia da un lato, quello di Zagabria dall\'altro), risale in parte al Trecento ed è tra i simboli architettonici più riconoscibili dei Balcani.',
+      literary:'Le stradine di Gornji Grad sono state teatro e ispirazione per generazioni di scrittori zagabresi, che qui ambientarono romanzi e racconti di formazione cittadina tra fine Ottocento e inizio Novecento, epoca in cui la città viveva una fioritura culturale mitteleuropea paragonabile a Vienna o Praga in scala ridotta. La vicinanza tra la sacralità della Porta di Pietra e la mondanità della vivace Via Tkalčićeva, un tempo corso di un torrente e oggi cuore della vita notturna cittadina, ha alimentato una letteratura fatta di contrasti: il sacro e il profano, il silenzio delle chiese e il chiacchiericcio dei caffè. Anche la tradizione fiabesca incontrata poco prima al Museo dei Racconti Dimenticati trova qui una sponda urbana, perché molte leggende collocano proprio sotto le mura di Gradec l\'ingresso a passaggi sotterranei abitati da spiriti, di cui il vicino Tunnel Grič, che visiterete l\'ultimo giorno, è l\'eco storica più concreta e tangibile.',
+      cinema:'Il profilo scenografico di Gornji Grad, con i tetti spioventi, le guglie e il celebre tetto a mosaico di San Marco, ha reso il quartiere una location ricorrente per produzioni cinematografiche e televisive europee in cerca di un\'ambientazione "mitteleuropea d\'epoca" più accessibile e meno turistica di Praga o Vienna. Le sue vie strette, la luce calda del tramonto che filtra tra i palazzi barocchi e l\'atmosfera quasi teatrale della piazza di San Marco hanno attirato scouting location per film storici e serie in costume, sfruttando anche la rara concentrazione di stili architettonici — gotico, barocco, secessionista — in uno spazio compatto. Passeggiare qui al crepuscolo, con il cannone della Lotrščak che ha appena scandito un\'ora simbolica della giornata, restituisce la sensazione di muoversi dentro un set cinematografico vivo, popolato non da comparse ma da abitanti reali che da secoli intrecciano la propria quotidianità con la scenografia storica della città.'
     },
-    {time:'20:30–21:30', title:`Sosta Culinaria da "La Štruk"`, type:'food',
-      desc:`Cortile interno, tempio della tradizione degli štrukli.`,
-      food:`Lo štrukli è il piatto simbolo della cucina zagorje-zagabrese: sfoglia sottile tirata a mano, farcita con formaggio fresco di fattoria (spesso simile a una ricotta acida), e cotta al forno fino a dorarsi in superficie mantenendo il cuore filante. Da "La Štruk" potete provarlo sia in versione salata, accompagnata da panna acida, sia in versione dolce con zucchero e cannella, tipica delle occasioni festive. Da abbinare, un bicchiere di Graševina, vino bianco autoctono continentale fresco e leggermente acidulo, perfetto contrappunto alla cremosità del piatto.`},
-    {time:'21:30–23:00', title:`In Marcia verso il Cuore Verde`, type:'transfer', desc:`Guida da Zagabria a Rakovica (125 km, ~1h45) lungo la statale D1, tra boschi silenziosi e villaggi illuminati dalle stelle. Check-in Guest House Adrijana entro le 23:00.`}
+    {time:'20:30–21:30', title:'Sosta Culinaria da "La Štruk"', type:'food',
+      desc:'Cortile interno, tempio della tradizione degli štrukli.',
+      food:'Lo štrukli è il piatto simbolo della cucina zagorje-zagabrese: sfoglia sottile tirata a mano, farcita con formaggio fresco di fattoria (spesso simile a una ricotta acida), e cotta al forno fino a dorarsi in superficie mantenendo il cuore filante. Da "La Štruk" potete provarlo sia in versione salata, accompagnata da panna acida, sia in versione dolce con zucchero e cannella, tipica delle occasioni festive. Da abbinare, un bicchiere di Graševina, vino bianco autoctono continentale fresco e leggermente acidulo, perfetto contrappunto alla cremosità del piatto.'},
+    {time:'21:30–23:00', title:'In Marcia verso il Cuore Verde', type:'transfer', desc:'Guida da Zagabria a Rakovica (125 km, ~1h45) lungo la statale D1, tra boschi silenziosi e villaggi illuminati dalle stelle. Check-in Guest House Adrijana entro le 23:00.'}
   ],
-  planB:`In caso di forte pioggia a Zagabria, sostituite l'anello a piedi con una pausa prolungata nei passaggi coperti del centro (Galleria Oktogon) o visitate il Tunnel Grič sottostante la città.`,
+  planB:'In caso di forte pioggia a Zagabria, sostituite l\'anello a piedi con una pausa prolungata nei passaggi coperti del centro (Galleria Oktogon) o visitate il Tunnel Grič sottostante la città.',
   budget:[
-    {voce:'Parcheggio', desc:`Paromlin (giornaliero Zona IV.2
+    {voce:'Parcheggio', desc:'Paromlin (giornaliero Zona IV.2)', costo:'€ 4,00'},
+    {voce:'Ingressi', desc:'Museum of Lost Tales (€12 a persona)', costo:'€ 24,00'},
+    {voce:'Cena', desc:'Cena tipica da "La Štruk"', costo:'€ 25–30'},
+    {voce:'Carburante', desc:'Tratta Zagabria ➔ Rakovica', costo:'~€ 20,00'}
+  ]
+},
+{
+  id:'day2', num:2, date:'Sabato 8 Agosto 2026', title:'Smeraldi d\'Acqua e Mulini al Tramonto',
+  focus:'Alba ai Laghi di Plitvice in solitudine, pranzo al sacco a Majerovo Vrilo, fascino rurale a Rastoke.',
+  route:'Rakovica ➔ Plitvice Ingresso 2 ➔ Majerovo Vrilo ➔ Rastoke (Slunj) ➔ Rakovica', km:110,
+  img:'https://images.unsplash.com/photo-1621789098261-ce1d69f6ba0d?q=80&w=1200',
+  stops:[
+    {time:'06:30–07:00', title:'Verso il Santuario dell\'Acqua', type:'transfer', desc:'Breve guida da Rakovica all\'Ingresso 2 del Parco Nazionale dei Laghi di Plitvice (15 km, 15 min).'},
+    {time:'07:00–13:00', title:'L\'Incanto Primordiale dei Laghi di Plitvice', type:'sight',
+      desc:'Percorso C o H tra passerelle sospese, nebbia mattutina e 16 laghi collegati da cascate su barriere di tufo, fino alla Veliki Slap (78 m).',
+      historical:'Il Parco Nazionale dei Laghi di Plitvice, istituito nel 1949 come primo parco nazionale della Croazia, deve la sua straordinaria fisionomia a un processo geologico che dura da millenni: l\'incontro tra acque ricche di calcio e carbonato e la vegetazione sommersa genera depositi di tufo (travertino) che crescono in continuazione, modificando barriere e cascate anno dopo anno, tanto che le mappe del parco vengono periodicamente aggiornate. Riconosciuto Patrimonio dell\'Umanità UNESCO nel 1979, tra i primi siti naturali al mondo a ricevere tale status, il parco fu anche teatro di un episodio cruciale nella storia recente: il 31 marzo 1991, prima dello scoppio della guerra d\'indipendenza croata, vi si verificò uno scontro armato noto come "l\'incidente del Sangue di Pasqua", spesso citato come una delle prime vittime del conflitto jugoslavo. Oggi il parco è tornato a essere simbolo di pace naturale, visitato ogni anno da milioni di persone attratte dalla trasparenza quasi irreale delle sue acque turchesi.',
+      literary:'I laghi di Plitvice hanno alimentato un immaginario letterario legato all\'idea di "paradiso terrestre" incontaminato, presente nella tradizione orale della Lika ben prima della fondazione del parco: leggende locali narrano di una regina delle fate che, in tempo di siccità, avrebbe fatto sgorgare le sorgenti che alimentano il sistema di laghi per salvare il proprio popolo, mito che spiega anche il toponimo di alcune cascate minori. Scrittori di viaggio ottocenteschi, tra cui naturalisti austro-ungarici in visita alle terre della Corona, descrissero i laghi con toni quasi mistici, contribuendo a costruirne la fama europea ben prima dell\'arrivo del turismo di massa. La struttura stessa del parco, un susseguirsi di quadri naturali sempre diversi collegati da un unico percorso narrativo a piedi, richiama la struttura di un racconto per tappe, dove ogni cascata è un capitolo e la Veliki Slap, la Grande Cascata finale, ne rappresenta il culmine drammatico.',
+      cinema:'Grazie alla loro bellezza scenografica praticamente priva di elementi moderni visibili, i Laghi di Plitvice sono stati più volte utilizzati come ambientazione per produzioni internazionali di genere fantasy e d\'avventura, in cerca di paesaggi "primordiali" capaci di evocare mondi immaginari senza ricorrere interamente alla computer grafica. La combinazione di acque cristalline, foreste fitte e cascate a più livelli offre naturalmente le inquadrature ampie e verticali che il linguaggio cinematografico associa a luoghi incontaminati o extraterrestri. Anche documentari naturalistici di produzione europea hanno scelto il parco per raccontare i processi di formazione del travertino attraverso riprese time-lapse, rendendo Plitvice un soggetto ricorrente non solo per il turismo ma anche per la divulgazione scientifica internazionale, un doppio binario — spettacolo visivo e valore ecologico — che continua a caratterizzarne oggi la fama globale.'
+    },
+    {time:'13:30–15:30', title:'Il Respiro della Terra a Majerovo Vrilo', type:'sight', desc:'Sorgente del fiume Gacka ai piedi dei monti: antichi mulini in pietra e legno ancora attivi. Sosta ideale per un picnic nella valle.'},
+    {time:'16:00–19:30', title:'Il Borgo delle Cascate: Rastoke', type:'sight',
+      desc:'La "Piccola Plitvice": case in pietra e legno che sembrano fluttuare dove il fiume Slunjčica incontra il Korana.',
+      historical:'Rastoke nacque come insediamento di mugnai probabilmente già dal XVII secolo, sviluppandosi attorno al punto esatto in cui il fiume Slunjčica, prima di gettarsi nel Korana, si frantuma in decine di rami e cascatelle create anch\'esse, come a Plitvice, da depositi di tufo calcareo. Gli abitanti sfruttarono per generazioni la forza motrice dell\'acqua per far funzionare mulini da grano e segherie, costruendo le tipiche case in pietra con il piano terra semi-immerso nell\'acqua corrente, una soluzione architettonica tanto pratica quanto scenografica. Il villaggio subì gravi danni durante la guerra d\'indipendenza croata negli anni Novanta, quando l\'area di Slunj si trovò sulla linea del fronte; la successiva opera di restauro, portata avanti con fondi statali e internazionali, ha permesso di preservare l\'aspetto storico dei mulini, oggi in parte trasformati in piccoli musei etnografici che raccontano la vita quotidiana della comunità dei mugnai.',
+      literary:null, cinema:null
+    },
+    {time:'19:30–21:00', title:'Cena a Rastoke & Logistica', type:'food', desc:'Cena informale in una konoba sul fiume; tappa al supermercato per la spesa dell\'indomani. Pernottamento a Rakovica.',
+      food:'A Rastoke è d\'obbligo assaggiare la trota grigliata pescata nei corsi d\'acqua locali, cotta semplicemente con olio ed erbe aromatiche per esaltarne la freschezza. Ottimo l\'abbinamento con lo Škripavac, un formaggio tipico della Lika dalla consistenza soda e "scricchiolante" al morso (da cui il nome), spesso servito grigliato con un filo di miele o marmellata di frutti di bosco come antipasto o secondo piatto leggero.'}
+  ],
+  planB:'In caso di maltempo, riducete il percorso ai Laghi Inferiori (più riparati) e anticipate la sosta a Rastoke, dove i portici delle case-mulino offrono riparo naturale.',
+  budget:[
+    {voce:'Ingressi', desc:'Parco Nazionale dei Laghi di Plitvice', costo:'Già acquistati online'},
+    {voce:'Cibo/Spesa', desc:'Picnic Majerovo Vrilo', costo:'~€ 12,00'},
+    {voce:'Cena', desc:'Cena tipica a Rastoke (trota locale)', costo:'~€ 35–40'}
+  ]
+},
+{
+  id:'day3', num:3, date:'Domenica 9 Agosto 2026', title:'Misteri Sotterranei e il Primo Abbraccio del Mare',
+  focus:'Urbex nella base aerea della Guerra Fredda a Željava, panorami sul Quarnaro e arrivo sulla Riviera di Dramalj.',
+  route:'Rakovica ➔ Željava ➔ Oči Vinodola ➔ Dramalj', km:160,
+  img:'https://images.unsplash.com/photo-1508672019048-805c876b67e2?q=80&w=1200',
+  stops:[
+    {time:'08:30–09:00', title:'Checkout e Partenza', type:'transfer', desc:'Guida da Rakovica al confine bosniaco (20 km, 20 min).'},
+    {time:'09:00–11:30', title:'Base Aerea di Željava', type:'sight',
+      desc:'Installazione militare sotterranea "Objekt 505", ai piedi del monte Plješevica. Rimanere sui percorsi asfaltati indicati.',
+      historical:'Costruita in gran segreto tra gli anni Sessanta e Settanta all\'interno della montagna Plješevica, al confine tra Croazia e Bosnia-Erzegovina, la base di Željava (nome in codice Objekt 505) fu una delle installazioni militari sotterranee più grandi e costose mai realizzate in Europa durante la Guerra Fredda. Progettata per resistere a un attacco nucleare diretto grazie a porte blindate spesse diversi metri e chilometri di gallerie scavate nella roccia, poteva ospitare fino a 58 caccia della Jugoslavia socialista, con piste di decollo mimetizzate e depositi di carburante interrati. Nel maggio 1992, durante la disgregazione della Jugoslavia, l\'esercito jugoslavo in ritirata fece brillare gran parte delle strutture per impedirne l\'uso al nemico, in quella che è considerata una delle più grandi esplosioni non nucleari della storia europea del dopoguerra. Oggi la base, semiabbandonata e in parte ancora segnalata per la presenza di residuati bellici, è diventata meta di appassionati di urbex e storia militare da tutta Europa.',
+      literary:null,
+      cinema:'Le gallerie sventrate e la pista invasa dalla vegetazione, con la carcassa di un Douglas C-47 "Dakota" abbandonata sull\'asfalto, restituiscono un\'estetica post-apocalittica che ha attirato negli ultimi anni fotografi e troupe di documentari internazionali specializzati in luoghi abbandonati (il cosiddetto genere "ruin porn"). L\'atmosfera claustrofobica delle gallerie, unita alla scala monumentale delle strutture in cemento armato, richiama scenografie tipiche del cinema distopico e di guerra, tanto che il sito compare regolarmente in reportage e video-documentari dedicati ai relitti della Guerra Fredda nei Balcani, spesso paragonati per suggestione visiva ai bunker sovietici dismessi dell\'Europa orientale.'
+    },
+    {time:'11:30–13:30', title:'Dal Cuore della Terra verso la Costa', type:'transfer', desc:'Trasferimento verso le colline del Vinodol e la costa del Quarnaro (120 km, ~1h50).'},
+    {time:'13:30–15:00', title:'Gli Occhi del Vinodol (Oči Vinodola)', type:'sight', desc:'Punti panoramici sulla vecchia strada dell\'entroterra: vista sulla costa, sull\'isola di Krk e sul Golfo del Quarnaro. Sosta per il picnic con brezza marina.'},
+    {time:'15:30–16:30', title:'Arrivo sul Mare', type:'transfer', desc:'Check-in nell\'appartamento a Dramalj (Prilaz braće Košuljandić 20).'},
+    {time:'16:30–20:00', title:'Il Primo Tuffo & Sunset Walk', type:'sight', desc:'A piedi verso le baie di ghiaia di Dramalj per il primo bagno nel Quarnaro; passeggiata costiera tra i pini fino a Crikvenica. Pernottamento a Dramalj.'}
+  ],
+  planB:'Se il vento (Bora) rende difficile la sosta panoramica agli Occhi del Vinodol, sostituitela con la visita al piccolo castello di Grižane, sempre nell\'entroterra del Vinodol.',
+  budget:[
+    {voce:'Ingressi', desc:'Base Aerea di Željava (sito libero)', costo:'€ 0,00'},
+    {voce:'Cibo/Spesa', desc:'Pranzo al sacco e spesa per la casa', costo:'~€ 20,00'},
+    {voce:'Cena', desc:'Trattoria vista mare a Dramalj', costo:'~€ 35,00'}
+  ]
+},
+{
+  id:'day4', num:4, date:'Lunedì 10 Agosto 2026', title:'L\'Anima Antica di Krk',
+  focus:'Storia medievale nel Castello Frangipani, caletta caraibica a Oprna, la via più stretta del mondo a Vrbnik e vino Žlahtina.',
+  route:'Dramalj ➔ Krk Città ➔ Stara Baška ➔ Vrbnik ➔ Dramalj', km:80,
+  img:'https://images.unsplash.com/photo-1601581875309-fafbf2d3ed3a?q=80&w=1200',
+  stops:[
+    {time:'08:00–08:40', title:'Ingresso sull\'Isola d\'Oro', type:'transfer', desc:'Attraversamento dell\'imponente Ponte di Krk (Krčki most) verso la città di Krk (35 km, 35 min).'},
+    {time:'09:00–11:30', title:'Krk Città & Castello Frangipani', type:'sight',
+      desc:'Centro storico in pietra levigata fino al Frankopanski Kaštel, con vista sulla baia dalle mura fortificate.',
+      historical:'Il Castello Frangipani di Krk fu eretto tra il XII e il XIV secolo dalla potente famiglia nobile croata dei Frankopan (italianizzata in Frangipani), che per secoli controllò l\'isola e ampie porzioni del litorale croato settentrionale a guardia delle rotte marittime dell\'alto Adriatico. I Frankopan furono tra le casate più influenti dei Balcani medievali, capaci di rivaleggiare con la Repubblica di Venezia per il controllo commerciale della regione, e la loro storia si intreccia strettamente con quella della vicina Vrbnik e di gran parte del Quarnaro. Le mura del castello, rinforzate nei secoli con torrioni difensivi, custodiscono ancora oggi tracce delle diverse fasi costruttive, dalle originarie strutture romaniche agli adeguamenti rinascimentali resi necessari dall\'evoluzione delle tecniche d\'assedio, mentre il vicino duomo conserva elementi romanici risalenti addirittura al periodo altomedievale, testimonianza della lunga storia di Krk come sede vescovile.',
+      literary:'La dinastia dei Frankopan produsse anche figure di rilievo letterario e culturale: tra i suoi membri più celebri si annovera Fran Krsto Frankopan, poeta e cospiratore del Seicento, la cui vicenda — coinvolto in una congiura antiasburgica che gli costò la vita nel 1671 — è entrata nella memoria storica croata come simbolo di resistenza aristocratica all\'autorità centrale. La cronaca familiare dei Frankopan, con le sue alleanze, tradimenti e imprese militari lungo la costa adriatica, ha ispirato nel tempo opere storiografiche e narrative che raccontano l\'isola di Krk non come periferia ma come crocevia strategico tra mondo slavo, veneziano e asburgico, un\'identità multipla che si riflette ancora oggi nell\'architettura ibrida del centro storico, dove elementi gotico-veneziani convivono con la pietra spoglia tipica dell\'entroterra.',
+      cinema:null
+    },
+    {time:'12:00–16:30', title:'Bagni Selvaggi a Spiaggia Oprna', type:'sight', desc:'Sentiero ripido tra elicriso e salvia selvatica fino alla ghiaia dorata di Oprna, tra scogliere quasi lunari (Stara Baška).'},
+    {time:'17:00–20:00', title:'Vrbnik: La Rocca a Picco sul Mare', type:'sight',
+      desc:'Borgo su una scogliera a 50 metri sul mare; qui si trova via Klančić, tra le strade più strette al mondo (43 cm).',
+      historical:'Vrbnik, arroccata su una falesia a picco sul Quarnaro, fu per secoli parte del feudo dei Frankopan e conserva un impianto urbanistico medievale rimasto quasi intatto, con vicoli così stretti da essere pensati per la difesa più che per la comodità di passaggio. La celebre via Klančić, larga appena 43 centimetri nel punto più angusto, è generalmente considerata tra le strade pedonali più strette al mondo, una caratteristica nata da esigenze difensive e dalla necessità di sfruttare ogni metro quadrato disponibile sulla sommità scoscesa dello sperone roccioso. Il borgo è storicamente legato anche alla tradizione del glagolitico, l\'antico alfabeto slavo ecclesiastico: nella regione del Quarnaro e in particolare a Vrbnik si conservano alcune delle più importanti testimonianze scritte in questo alfabeto, usato nella liturgia locale fino in epoca relativamente recente, un unicum che rende l\'area un importante centro di studi filologici slavi.',
+      literary:null, cinema:null
+    },
+    {time:'20:00', title:'Degustazione & Cena a Vrbnik', type:'food', desc:'Konoba sul ciglio della falesia. Pernottamento a Dramalj.',
+      food:'La Žlahtina è un vino bianco autoctono prodotto esclusivamente sugli altipiani calcarei attorno a Vrbnik: fresco, secco e delicatamente profumato, con note floreali e minerali dovute al terreno carsico. È tradizione abbinarlo a taglieri di prosciutto dalmata (pršut) stagionato all\'aria di bora e a formaggi di pecora locali, un connubio che racchiude l\'essenza gastronomica del Quarnaro tra terra e mare.'}
+  ],
+  planB:'In caso di forte vento sul sentiero per Oprna (percorso esposto), sostituite la spiaggia con una nuotata più protetta nella baia di Vela Draga, in programma comunque più avanti nel viaggio.',
+  budget:[
+    {voce:'Ingressi', desc:'Castello Frangipani (€6 a persona)', costo:'€ 12,00'},
+    {voce:'Parcheggi', desc:'Parcheggi spiagge/borghi di Krk', costo:'~€ 10,00'},
+    {voce:'Aperitivo', desc:'Calice di Žlahtina e tagliere a Vrbnik', costo:'~€ 15,00'},
+    {voce:'Cena', desc:'Cena in konoba tipica a Vrbnik', costo:'~€ 40,00'}
+  ]
+},
+{
+  id:'day5', num:5, date:'Martedì 11 Agosto 2026', title:'Segreti del Mare: Mini-Crociera e Calette FKK',
+  focus:'Baie inaccessibili dell\'isola di Plavnik, nuotate nella Grotta Azzurra e pomeriggio FKK a Baška.',
+  route:'Dramalj ➔ Punat (porto) ➔ Baška ➔ Dramalj', km:80,
+  img:'https://images.unsplash.com/photo-1580237072617-771c3ecc4a24?q=80&w=1200',
+  stops:[
+    {time:'08:30–09:00', title:'Imbarco Imminente', type:'transfer', desc:'Da Dramalj al porto turistico di Punat (40 km, 40 min).'},
+    {time:'09:30–14:00', title:'In Navigazione tra le Isole Nascoste', type:'sight',
+      desc:'Barca verso l\'isola disabitata di Plavnik, tuffi nella Grotta Azzurra (Plava Špilja) e sosta bagno a Fox Bay.',
+      historical:'Plavnik è un\'isola disabitata di fronte a Krk, utilizzata storicamente come pascolo stagionale per pecore e capre da parte delle comunità costiere vicine, secondo un modello di sfruttamento del territorio tipico delle isole minori del Quarnaro fin dall\'epoca romana. L\'assenza di insediamenti stabili ha permesso alla costa di rimanere pressoché intatta, favorendo oggi la nidificazione di specie protette come il grifone eurasiatico, uccello rapace un tempo assai più diffuso lungo l\'Adriatico orientale e oggi oggetto di programmi di conservazione attivi soprattutto sull\'isola di Cres, non lontana da qui. La Grotta Azzurra locale, pur meno celebre della omonima grotta di Capri, condivide lo stesso fenomeno fisico: la luce solare che filtra da un\'apertura sommersa si rifrange sul fondale chiaro, colorando l\'acqua di un azzurro elettrico particolarmente intenso nelle ore centrali della giornata.',
+      literary:'Le coste disabitate del Quarnaro, tra cui Plavnik, sono legate a un immaginario marinaro fatto di racconti di pescatori su isole "che spariscono nella nebbia" e su grotte considerate rifugio di creature mitologiche legate al mare, echi di una tradizione narrativa costiera parallela a quella terrestre incontrata nei giorni precedenti a Zagabria e in Lika. La navigazione lenta lungo coste incontaminate, priva di riferimenti urbani, restituisce un\'esperienza simile a quella descritta nei resoconti di viaggio ottocenteschi lungo l\'Adriatico orientale, quando l\'arcipelago del Quarnaro era ancora percepito come una frontiera selvaggia ai margini dell\'Impero asburgico, ben distante dal fasto delle città costiere maggiori come Fiume o Trieste.',
+      cinema:null
+    },
+    {time:'14:30–18:30', title:'Baška & Bunculuka', type:'sight', desc:'Pomeriggio di relax nella baia naturista FKK di Bunculuka o nelle cale scoscese circostanti, dove i pini arrivano a sfiorare l\'acqua.'},
+    {time:'19:00–21:00', title:'Cena sul Molo & Rientro', type:'food', desc:'Cena informale sulla passeggiata di Baška prima di rientrare a Dramalj.',
+      food:'Sul molo di Baška è d\'obbligo un piatto di calamari grigliati, semplicemente conditi con olio, aglio e prezzemolo, oppure una frittura di paranza mista con il pescato del giorno: piccoli pesci di scoglio, calamaretti e gamberetti, serviti croccanti con una spruzzata di limone.'}
+  ],
+  planB:'Verificate sempre la mattina presto le condizioni del vento (Bora) prima di imbarcarvi: in caso di mare mosso, la mini-crociera può essere sostituita con una giornata balneare nelle cale accessibili via terra intorno a Baška.',
+  budget:[
+    {voce:'Escursione', desc:'Mini-crociera in barca da Punat (~€30-35 p.p.)', costo:'€ 60–70'},
+    {voce:'Parcheggi', desc:'Parcheggio porto Punat / Baška', costo:'~€ 8,00'},
+    {voce:'Pasti', desc:'Pranzo/cena informale sul mare', costo:'~€ 35,00'}
+  ]
+},
+{
+  id:'day6', num:6, date:'Mercoledì 12 Agosto 2026', title:'La Magia della Riviera e i Sentieri Nascosti',
+  focus:'Snorkeling nella baia di Vela Draga, passeggiata a Crikvenica e tramonto al Faro Škuljica.',
+  route:'Dramalj ➔ Vela Draga ➔ Crikvenica ➔ Faro Škuljica ➔ Dramalj', km:60,
+  img:'https://images.unsplash.com/photo-1544551763-46a013bb70d5?q=80&w=1200',
+  stops:[
+    {time:'08:30–12:30', title:'Il Paradiso Segreto di Vela Draga', type:'sight', desc:'Insenatura tranquilla e protetta, ideale per lo snorkeling: fondali rocciosi ricchi di vita marina.'},
+    {time:'13:00–15:30', title:'Passeggiata & Pranzo a Crikvenica', type:'sight', desc:'Lungomare, negozietti artigianali per gli ultimi souvenir e pausa caffè sotto le verande dei locali storici.'},
+    {time:'16:00–19:30', title:'Faro Škuljica', type:'sight',
+      desc:'Escursione a piedi verso l\'estremità meridionale dell\'isola per uno dei tramonti più emozionanti del viaggio.',
+      historical:'I fari lungo la costa del Quarnaro, tra cui quello di Škuljica, appartengono a una rete di segnalazione marittima sviluppata soprattutto durante l\'epoca asburgica, quando l\'Adriatico orientale rappresentava una rotta commerciale strategica per l\'Impero austro-ungarico e il suo principale sbocco portuale, Fiume (oggi Rijeka). Molti di questi fari, spesso isolati e raggiungibili solo a piedi o via mare, erano affidati a famiglie di guardiani che vi risiedevano stabilmente, in una vita di isolamento scandita dal ritmo delle luci notturne e delle condizioni meteomarine, un mestiere praticamente scomparso con l\'automazione dei sistemi di segnalazione nella seconda metà del Novecento.',
+      literary:null, cinema:null
+    }
+  ],
+  planB:'Se il mare è mosso a Vela Draga, spostate lo snorkeling in una cala più riparata vicino a Dramalj e anticipate la passeggiata a Crikvenica.',
+  budget:[
+    {voce:'Pasti', desc:'Pranzo e cena informale sul mare', costo:'~€ 45,00'},
+    {voce:'Extra', desc:'Gelati, caffè e piccoli souvenir', costo:'~€ 10,00'}
+  ]
+},
+{
+  id:'day7', num:7, date:'Giovedì 13 Agosto 2026', title:'Saluto al Mare e I Tesori di Zagabria',
+  focus:'Ultimo caffè vista mare, i colori del mercato di Dolac, la cattedrale, i passaggi segreti e il volo di rientro.',
+  route:'Dramalj ➔ Zagabria Paromlin ➔ Aeroporto ZAG', km:180,
+  img:'https://images.unsplash.com/photo-1560343090-f0409e92791a?q=80&w=1200',
+  stops:[
+    {time:'07:00–08:30', title:'Ultimo Sguardo all\'Adriatico', type:'sight', desc:'Colazione sul balcone o al bar sul molo di Dramalj prima del check-out entro le 09:00.'},
+    {time:'08:30–10:15', title:'Risalita verso la Capitale', type:'transfer', desc:'Guida da Dramalj a Zagabria (160 km, ~1h45 via A6/A1). Parcheggio a Paromlin.'},
+    {time:'10:15–12:30', title:'Mercato di Dolac & Passaggi Segreti', type:'sight',
+      desc:'Ombrelloni rossi, cattedrale restaurata, Galleria Oktogon e Tunnel Grič.',
+      historical:'Il Mercato di Dolac, inaugurato nel 1930 sopra un\'antica area di scambio tra Gradec e Kaptol, è soprannominato "la pancia di Zagabria" per il suo ruolo di cuore pulsante dell\'approvvigionamento cittadino fin dal Medioevo, quando lo spazio tra le due città gemelle fungeva già da terreno neutro per il commercio. I caratteristici ombrelloni rossi (šestine), dal nome del vicino villaggio agricolo di provenienza di molte bancarelle, sono diventati un\'icona visiva della città. Poco distante, la Cattedrale di Zagabria, riaperta dopo un lungo restauro reso ancora più urgente dal terremoto del 2020, conserva elementi gotici insieme a più recenti interventi neogotici ottocenteschi. Il Tunnel Grič, scavato come rifugio antiaereo durante la Seconda Guerra Mondiale sotto la collina di Gradec, offre oggi un percorso pedonale che attraversa fisicamente la storia militare del Novecento croato, chiudendo idealmente il cerchio aperto una settimana prima al Museo dei Racconti Dimenticati e proseguito tra le rovine di Željava.',
+      literary:'Dolac è stato più volte scenario letterario per descrivere la vita quotidiana zagabrese, un contrappunto popolare e vivace rispetto alla solennità di Gornji Grad visitata il primo giorno: il mercato compare in memorie e romanzi cittadini come luogo dove si intrecciano dialetti, storie di famiglie contadine dell\'entroterra e le prime luci dell\'alba scandite dall\'arrivo dei produttori. Chiudere il viaggio qui, tra lavanda, frutta fresca e formaggi di montagna, permette di ritrovare gli stessi sapori rurali della Lika e del Quarnaro incontrati nei giorni precedenti, questa volta condensati nel cuore della capitale.',
+      cinema:null
+    },
+    {time:'12:30–13:15', title:'Riconsegna del Mezzo', type:'transfer', desc:'Da Paromlin all\'Aeroporto di Zagabria (18 km, 20 min). Riconsegna auto Avis e check-in bagagli.'},
+    {time:'15:25', title:'Decollo', type:'transfer', desc:'Volo Zagabria (ZAG) 15:25 ➔ Bergamo Orio al Serio (BGY).'},
+    {time:'—', title:'Snack al Mercato di Dolac', type:'food', desc:'Ultimo assaggio prima della partenza.',
+      food:'Un ultimo giro tra le bancarelle di Dolac regala l\'occasione per assaggiare formaggi di montagna stagionati, frutta secca e miele di lavanda dell\'entroterra, ottimi anche come souvenir gastronomico da portare a casa insieme a un ultimo caffè turco sorseggiato guardando i venditori smontare i banchi.'}
+  ],
+  planB:'Se il volo di rientro fosse nel pomeriggio inoltrato e restasse tempo, sostituite parte della visita al mercato con il Cimitero Monumentale di Mirogoj, autentica galleria d\'arte a cielo aperto tra cupole e portici ricoperti d\'edera.',
+  budget:[
+    {voce:'Parcheggio', desc:'Paromlin (sosta mattutina breve)', costo:'€ 4,00'},
+    {voce:'Pedaggi', desc:'Autostrada A6/A1 Dramalj ➔ Zagabria', costo:'~€ 8,50'},
+    {voce:'Pranzo', desc:'Snack al Mercato di Dolac / Aeroporto', costo:'~€ 15,00'}
+  ]
+}
+];
+
+/* =========================================================================
+   RENDER DELLE PAGINE GIORNO
+   Costruisce dinamicamente l'HTML di ogni giornata a partire da tripData,
+   evitando di scrivere migliaia di righe di markup ripetuto a mano.
+   ========================================================================= */
+function iconFor(type){
+  return type==='food' ? 'fa-bowl-food' : type==='transfer' ? 'fa-car-side' : 'fa-map-pin';
+}
+
+function renderDay(day){
+  const stopsHtml = day.stops.map((s, i) => {
+    const uid = `${day.id}-stop-${i}`;
+    let buttons = '';
+    if(s.type === 'sight' && (s.historical || s.literary || s.cinema)){
+      buttons = `<div class="flex flex-wrap gap-2 mt-3">
+        ${s.historical ? `<button onclick="toggleFocus('${uid}-hist')" class="text-xs font-semibold bg-smeraldo-50 text-smeraldo-700 hover:bg-smeraldo-100 border border-smeraldo-200 rounded-full px-3 py-1.5 transition"><i class="fa-solid fa-landmark"></i> Focus Storico</button>` : ''}
+        ${s.literary ? `<button onclick="toggleFocus('${uid}-lit')" class="text-xs font-semibold bg-adriatico-50 text-adriatico-700 hover:bg-adriatico-100 border border-adriatico-200 rounded-full px-3 py-1.5 transition"><i class="fa-solid fa-book"></i> Focus Letterario</button>` : ''}
+        ${s.cinema ? `<button onclick="toggleFocus('${uid}-cin')" class="text-xs font-semibold bg-lavagna-800 text-white hover:bg-lavagna-900 rounded-full px-3 py-1.5 transition"><i class="fa-solid fa-film"></i> Focus Cinematografico</button>` : ''}
+      </div>
+      ${s.historical ? `<div id="${uid}-hist" class="focus-panel bg-smeraldo-50/70 rounded-2xl mt-2 p-0 text-sm leading-relaxed text-slate-700"><div class="p-4">${s.historical}</div></div>` : ''}
+      ${s.literary ? `<div id="${uid}-lit" class="focus-panel bg-adriatico-50/70 rounded-2xl mt-2 p-0 text-sm leading-relaxed text-slate-700"><div class="p-4">${s.literary}</div></div>` : ''}
+      ${s.cinema ? `<div id="${uid}-cin" class="focus-panel bg-slate-100 rounded-2xl mt-2 p-0 text-sm leading-relaxed text-slate-700"><div class="p-4">${s.cinema}</div></div>` : ''}`;
+    }
+    if(s.type === 'food' && s.food){
+      buttons = `<div class="flex flex-wrap gap-2 mt-3">
+        <button onclick="toggleFocus('${uid}-food')" class="text-xs font-semibold bg-amber-50 text-amber-700 hover:bg-amber-100 border border-amber-200 rounded-full px-3 py-1.5 transition"><i class="fa-solid fa-bowl-food"></i> Cosa mangiare qui</button>
+      </div>
+      <div id="${uid}-food" class="focus-panel bg-amber-50/70 rounded-2xl mt-2 p-0 text-sm leading-relaxed text-slate-700"><div class="p-4">${s.food}</div></div>`;
+    }
+    return `
+      <li class="relative pl-2 pb-8 last:pb-0">
+        <div class="timeline-dot relative"></div>
+        <div class="timeline-line"></div>
+        <span class="text-xs font-bold uppercase tracking-wide ${s.type==='food'?'text-amber-600':'text-smeraldo-600'}">${s.time}</span>
+        <h4 class="font-semibold text-lavagna-900 mt-0.5"><i class="fa-solid ${iconFor(s.type)} text-xs mr-1 opacity-60"></i>${s.title}</h4>
+        <p class="text-sm text-slate-600 mt-1">${s.desc}</p>
+        ${buttons}
+      </li>`;
+  }).join('');
+
+  const budgetHtml = day.budget.map(b => `
+    <tr class="border-b border-slate-100">
+      <td class="py-2 pr-3 font-medium text-slate-700">${b.voce}</td>
+      <td class="py-2 pr-3 text-slate-500">${b.desc}</td>
+      <td class="py-2 text-right font-semibold text-smeraldo-700">${b.costo}</td>
+    </tr>`).join('');
+
+  return `
+  <section id="${day.id}" class="page pt-24 pb-20 px-6 max-w-4xl mx-auto">
+    <div class="rounded-3xl overflow-hidden shadow-xl mb-8 relative h-56 md:h-72">
+      <img src="${day.img}" class="w-full h-full object-cover" alt="${day.title}">
+      <div class="absolute inset-0 bg-gradient-to-t from-lavagna-950/90 via-lavagna-900/30 to-transparent flex flex-col justify-end p-6">
+        <span class="text-smeraldo-300 text-sm font-semibold uppercase tracking-wide">Giorno ${day.num} · ${day.date}</span>
+        <h2 class="font-display text-3xl md:text-4xl font-bold text-white mt-1">${day.title}</h2>
+      </div>
+    </div>
+
+    <div class="bg-white rounded-3xl shadow p-6 mb-8">
+      <p class="text-slate-600 mb-3"><i class="fa-solid fa-star text-smeraldo-500 mr-1"></i> ${day.focus}</p>
+      <p class="text-sm text-slate-500"><i class="fa-solid fa-route text-adriatico-500 mr-1"></i> ${day.route} <span class="ml-2 inline-block bg-adriatico-50 text-adriatico-700 text-xs font-semibold px-2 py-1 rounded-full">${day.km} km</span></p>
+    </div>
+
+    <div class="bg-white rounded-3xl shadow p-6 md:p-8 mb-8">
+      <h3 class="font-display text-xl font-bold mb-6 text-lavagna-900"><i class="fa-solid fa-timeline text-smeraldo-500 mr-1"></i> Il Viaggio Narrato</h3>
+      <ul class="ml-6 border-l-0">${stopsHtml}</ul>
+    </div>
+
+    <div class="bg-adriatico-50 border border-adriatico-200 rounded-3xl p-6 mb-8">
+      <h3 class="font-semibold text-adriatico-800 mb-2"><i class="fa-solid fa-cloud-showers-heavy"></i> Piano B & Alternativa Meteo</h3>
+      <p class="text-sm text-adriatico-900">${day.planB}</p>
+    </div>
+
+    <div class="bg-white rounded-3xl shadow p-6 mb-8">
+      <h3 class="font-semibold text-lavagna-900 mb-4"><i class="fa-solid fa-euro-sign text-smeraldo-600"></i> Financial Tracker (per la coppia)</h3>
+      <table class="w-full text-sm"><tbody>${budgetHtml}</tbody></table>
+    </div>
+
+    <div class="bg-lavagna-900 text-white rounded-3xl p-6">
+      <h3 class="font-semibold mb-3"><i class="fa-solid fa-note-sticky text-smeraldo-300"></i> Note personali — Giorno ${day.num}</h3>
+      <textarea id="notes-${day.id}" rows="3" placeholder="Scrivi qui i tuoi appunti, prenotazioni o promemoria per questa giornata... (salvataggio automatico)"
+        class="w-full rounded-2xl bg-white/10 border border-white/20 p-3 text-sm placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-smeraldo-400"
+        oninput="saveNote('${day.id}')"></textarea>
+      <p class="text-xs text-slate-400 mt-2"><i class="fa-solid fa-check"></i> Salvato automaticamente nel browser</p>
+    </div>
+  </section>`;
+}
+
+document.getElementById('days-container').innerHTML = tripData.map(renderDay).join('');
+
+/* =========================================================================
+   NAVIGAZIONE SPA (multi-pagina istantanea)
+   ========================================================================= */
+function goToPage(id){
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  document.querySelectorAll('.nav-btn').forEach(b => {
+    b.classList.remove('bg-smeraldo-500','text-white');
+    b.classList.add('text-slate-300');
+  });
+  const activeBtn = document.querySelector(`.nav-btn[data-page="${id}"]`);
+  if(activeBtn){ activeBtn.classList.add('bg-smeraldo-500','text-white'); activeBtn.classList.remove('text-slate-300'); activeBtn.scrollIntoView({inline:'center', behavior:'smooth'}); }
+  window.scrollTo({top:0, behavior:'smooth'});
+  if(id === 'stats'){ setTimeout(initMap, 100); }
+}
+
+/* Espande/collassa i pannelli di approfondimento (Focus Storico/Letterario/Cinematografico/Cosa mangiare) */
+function toggleFocus(id){
+  document.getElementById(id).classList.toggle('open');
+}
+
+/* =========================================================================
+   NOTE PERSONALI CON LOCALSTORAGE
+   ========================================================================= */
+function saveNote(dayId){
+  const val = document.getElementById(`notes-${dayId}`).value;
+  localStorage.setItem(`croazia-note-${dayId}`, val);
+}
+function loadNotes(){
+  tripData.forEach(d => {
+    const saved = localStorage.getItem(`croazia-note-${d.id}`);
+    const el = document.getElementById(`notes-${d.id}`);
+    if(saved && el) el.value = saved;
+  });
+}
+loadNotes();
+
+/* Stile iniziale bottone Home attivo */
+goToPage('home');
+
+/* =========================================================================
+   GRAFICI CHART.JS
+   ========================================================================= */
+new Chart(document.getElementById('budgetChart'), {
+  type: 'doughnut',
+  data: {
+    labels: ['Cibo & Ristoranti', 'Trasporti & Parcheggi', 'Ingressi & Attrazioni', 'Escursioni', 'Extra'],
+    datasets: [{
+      data: [292, 54.5, 36, 65, 10],
+      backgroundColor: ['#10b981','#0ea5e9','#065f46','#0369a1','#f59e0b'],
+      borderWidth: 2, borderColor: '#fff'
+    }]
+  },
+  options: { plugins: { legend: { position: 'bottom', labels:{ boxWidth:12, font:{size:11} } } } }
+});
+
+new Chart(document.getElementById('kmChart'), {
+  type: 'bar',
+  data: {
+    labels: tripData.map(d => 'G' + d.num),
+    datasets: [{
+      label: 'Km percorsi',
+      data: tripData.map(d => d.km),
+      backgroundColor: '#0ea5e9',
+      borderRadius: 10
+    }]
+  },
+  options: { plugins:{ legend:{ display:false } }, scales:{ y:{ beginAtZero:true } } }
+});
+
+/* =========================================================================
+   MAPPA LEAFLET
+   ========================================================================= */
+let mapInitialized = false;
+function initMap(){
+  if(mapInitialized) return;
+  mapInitialized = true;
+  const map = L.map('map').setView([45.15, 15.3], 8);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; OpenStreetMap contributors'
+  }).addTo(map);
+
+  const stops = [
+    {name:'Zagabria', coords:[45.8150, 15.9819], desc:'Giorno 1 & 7 — Città Alta, Dolac'},
+    {name:'Rakovica', coords:[44.9531, 15.6981], desc:'Giorno 1–2 — Guest House Adrijana'},
+    {name:'Plitvice', coords:[44.8654, 15.5820], desc:'Giorno 2 — Parco Nazionale, 16 laghi'},
+    {name:'Željava', coords:[44.7961, 15.7539], desc:'Giorno 3 — Base aerea Guerra Fredda'},
+    {name:'Dramalj', coords:[45.2867, 14.6928], desc:'Giorno 3–7 — Base sul mare, Quarnaro'},
+    {name:'Isola di Krk', coords:[45.0247, 14.5764], desc:'Giorno 4–5 — Castello, Vrbnik, Punat, Baška'}
+  ];
+
+  const icon = L.divIcon({
+    html:'<div style="background:linear-gradient(135deg,#10b981,#0ea5e9);width:16px;height:16px;border-radius:50%;border:3px solid white;box-shadow:0 2px 6px rgba(0,0,0,.3)"></div>',
+    className:'', iconSize:[16,16]
+  });
+
+  const latlngs = [];
+  stops.forEach(s => {
+    L.marker(s.coords, {icon}).addTo(map).bindPopup(`<b>${s.name}</b><br>${s.desc}`);
+    latlngs.push(s.coords);
+  });
+  L.polyline(latlngs, {color:'#0ea5e9', weight:3, dashArray:'6,8', opacity:.7}).addTo(map);
+}
+</script>
+</body>
+</html>
