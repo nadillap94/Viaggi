@@ -1,1 +1,1394 @@
+<!DOCTYPE html>
+<html lang="it" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TRANSCANADIENNE GLACIALE | Master Expedition 2026-2027</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        arctic: {
+                            950: '#060a12',
+                            900: '#0B132B',
+                            800: '#1C2541',
+                            700: '#3A506B',
+                            500: '#5BC0BE',
+                            400: '#6FFFE9',
+                            100: '#E0FBFC'
+                        },
+                        ice: {
+                            border: '#38bdf8',
+                            glow: 'rgba(56, 189, 248, 0.25)',
+                            frost: '#f0f9ff'
+                        },
+                        flame: {
+                            500: '#f97316',
+                            600: '#ea580c'
+                        }
+                    },
+                    fontFamily: {
+                        mono: ['JetBrains Mono', 'Fira Code', 'monospace'],
+                        sans: ['Inter', 'system-ui', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Font Awesome per Icone -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Leaflet CSS per Mappe -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
+    <style>
+        /* Regole stile spigoloso glaciale */
+        * {
+            border-radius: 0px !important;
+        }
+        .clip-corner {
+            clip-path: polygon(0 0, calc(100% - 15px) 0, 100% 15px, 100% 100%, 0 100%);
+        }
+        .clip-badge {
+            clip-path: polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%);
+        }
+        .ice-card {
+            background: rgba(11, 19, 43, 0.85);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(91, 192, 190, 0.35);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
+        }
+        .ice-card:hover {
+            border-color: #6FFFE9;
+            box-shadow: 0 0 20px rgba(111, 255, 233, 0.2);
+        }
+        .focus-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s cubic-bezier(0, 1, 0, 1), padding 0.3s ease;
+        }
+        .focus-content.open {
+            max-height: 2000px;
+            transition: max-height 0.6s ease-in-out, padding 0.3s ease;
+        }
+        /* Stile Custom per Marker Mappa */
+        .custom-marker {
+            background: #0B132B;
+            border: 2px solid #6FFFE9;
+            color: #6FFFE9;
+            font-weight: 900;
+            font-family: monospace;
+            text-align: center;
+            line-height: 24px;
+            font-size: 11px;
+            box-shadow: 0 0 10px rgba(111,255,233,0.6);
+        }
+    </style>
+</head>
+<body class="bg-arctic-950 text-slate-200 font-sans antialiased selection:bg-arctic-500 selection:text-arctic-950">
+
+    <!-- BARRA DI NAVIGAZIONE MULTIPAGE (FISSA & SPIGOLOSA) -->
+    <header class="fixed top-0 left-0 w-full z-50 bg-arctic-950/95 border-b border-arctic-700 backdrop-blur-md">
+        <div class="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
+            <div class="flex items-center space-x-3 cursor-pointer" onclick="switchPage('page-preview')">
+                <div class="w-8 h-8 bg-arctic-500 flex items-center justify-center text-arctic-950 font-black text-lg">
+                    <i class="fa-solid fa-snowflake"></i>
+                </div>
+                <div>
+                    <span class="font-mono text-sm tracking-widest text-arctic-400 block leading-none uppercase">EXPEDITION // CA-26</span>
+                    <span class="font-bold text-xs tracking-wider text-slate-400">TRANSCANADIENNE</span>
+                </div>
+            </div>
+
+            <!-- Pulsanti Pagine -->
+            <nav class="flex space-x-1 sm:space-x-2 font-mono text-xs uppercase tracking-wider">
+                <button onclick="switchPage('page-preview')" id="btn-page-preview" class="nav-btn px-3 py-2 border border-arctic-500 bg-arctic-800 text-arctic-400 font-bold flex items-center space-x-2 transition">
+                    <i class="fa-solid fa-map-location-dot"></i>
+                    <span class="hidden md:inline">01. ANTEPRIMA & MAPPA</span>
+                    <span class="md:hidden">MAPPA</span>
+                </button>
+                <button onclick="switchPage('page-itinerary')" id="btn-page-itinerary" class="nav-btn px-3 py-2 border border-arctic-700 bg-arctic-950 hover:border-arctic-500 text-slate-300 font-bold flex items-center space-x-2 transition">
+                    <i class="fa-solid fa-calendar-days"></i>
+                    <span class="hidden md:inline">02. ROADBOOK GIORNI</span>
+                    <span class="md:hidden">ROADBOOK</span>
+                </button>
+                <button onclick="switchPage('page-trackers')" id="btn-page-trackers" class="nav-btn px-3 py-2 border border-arctic-700 bg-arctic-950 hover:border-arctic-500 text-slate-300 font-bold flex items-center space-x-2 transition">
+                    <i class="fa-solid fa-chart-pie"></i>
+                    <span class="hidden md:inline">03. TRACKERS & ANALISI</span>
+                    <span class="md:hidden">METRICHE</span>
+                </button>
+                <button onclick="switchPage('page-gantt')" id="btn-page-gantt" class="nav-btn px-3 py-2 border border-arctic-700 bg-arctic-950 hover:border-arctic-500 text-slate-300 font-bold flex items-center space-x-2 transition">
+                    <i class="fa-solid fa-list-check"></i>
+                    <span class="hidden md:inline">04. GANTT & TASK</span>
+                    <span class="md:hidden">TASK</span>
+                </button>
+            </nav>
+        </div>
+    </header>
+
+    <main class="pt-16 min-h-screen">
+
+        <!-- ================================================================= -->
+        <!-- PAGINA 1: ANTEPRIMA, COPERTINA, SNAPSHOT & MAPPA GPS VETTORIALE   -->
+        <!-- ================================================================= -->
+        <section id="page-preview" class="page-view block">
+            <!-- Hero / Copertina Polare -->
+            <div class="relative bg-cover bg-center border-b border-arctic-700" style="background-image: linear-gradient(to bottom, rgba(6,10,18,0.7), rgba(6,10,18,0.95)), url('https://images.unsplash.com/photo-1517824806704-9040b037703b?q=80&w=1920&auto=format&fit=crop');">
+                <div class="max-w-7xl mx-auto px-4 py-24 sm:py-32">
+                    <div class="border-l-4 border-arctic-400 pl-6 max-w-3xl">
+                        <span class="font-mono text-arctic-400 text-sm tracking-widest uppercase bg-arctic-900/80 px-3 py-1 inline-block border border-arctic-700 mb-4">
+                            MASTER EXPEDITION // 28 DICEMBRE 2026 – 08 GENNAIO 2027
+                        </span>
+                        <h1 class="text-4xl sm:text-6xl font-black text-white tracking-tight uppercase mb-4 leading-none">
+                            Transcanadienne <span class="text-transparent bg-clip-text bg-gradient-to-r from-arctic-400 to-arctic-100">Glaciale</span>
+                        </h1>
+                        <p class="text-lg text-slate-300 font-light leading-relaxed mb-8">
+                            Un unico vettore a senso unico verso nord-est: <strong class="text-arctic-100">Toronto → Ottawa → Montréal → Charlevoix → Vieux-Québec</strong>. 4 basi fisse, azzeramento dello stress, trazione integrale 4x4 sulla taiga e l'ancestrale sfida al fiume ghiacciato.
+                        </p>
+                        <div class="flex flex-wrap gap-4">
+                            <button onclick="switchPage('page-itinerary')" class="px-6 py-3 bg-arctic-500 hover:bg-arctic-400 text-arctic-950 font-bold uppercase font-mono tracking-wider transition flex items-center space-x-2">
+                                <span>Esplora il Master Plan</span>
+                                <i class="fa-solid fa-arrow-right"></i>
+                            </button>
+                            <a href="#map-container" class="px-6 py-3 border border-arctic-400 text-arctic-400 hover:bg-arctic-800/60 font-bold uppercase font-mono tracking-wider transition flex items-center space-x-2">
+                                <i class="fa-solid fa-compass"></i>
+                                <span>Tracciato GPS Mappa</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Dashboard Snapshot Rapido a Badge Taglienti -->
+            <div class="max-w-7xl mx-auto px-4 py-12">
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12">
+                    <div class="ice-card p-4 border-l-2 border-arctic-500">
+                        <span class="font-mono text-xs text-arctic-400 block">DURATA VEGLIA</span>
+                        <span class="text-3xl font-black text-white font-mono">176 h</span>
+                        <span class="text-xs text-slate-400 block">11 giorni x 16h/die</span>
+                    </div>
+                    <div class="ice-card p-4 border-l-2 border-arctic-400">
+                        <span class="font-mono text-xs text-arctic-400 block">BASI D'APPOGGIO</span>
+                        <span class="text-3xl font-black text-white font-mono">4 BASI</span>
+                        <span class="text-xs text-slate-400 block">Zero stress valigie</span>
+                    </div>
+                    <div class="ice-card p-4 border-l-2 border-amber-400">
+                        <span class="font-mono text-xs text-amber-400 block">ESPOSIZIONE GELO</span>
+                        <span class="text-3xl font-black text-white font-mono">32.7%</span>
+                        <span class="text-xs text-slate-400 block">Sotto protezione termica</span>
+                    </div>
+                    <div class="ice-card p-4 border-l-2 border-flame-500">
+                        <span class="font-mono text-xs text-flame-500 block">BUDGET COPPIA</span>
+                        <span class="text-3xl font-black text-white font-mono">~€4.846</span>
+                        <span class="text-xs text-slate-400 block">7.270 $ CAD stimati</span>
+                    </div>
+                </div>
+
+                <!-- SEZIONE MAPPA INTERATTIVA LEAFLET -->
+                <div id="map-container" class="ice-card p-6 border border-arctic-700 mb-12">
+                    <div class="flex flex-col md:flex-row md:items-center justify-between pb-6 border-b border-arctic-800 gap-4">
+                        <div>
+                            <span class="font-mono text-xs text-arctic-400 tracking-widest uppercase block">// GPS VECTOR TRACKING</span>
+                            <h2 class="text-2xl font-black text-white uppercase">Mappa Tappe Numerate & Itinerario Esatto</h2>
+                        </div>
+                        <div class="flex items-center space-x-3 text-xs font-mono">
+                            <span class="flex items-center"><span class="w-3 h-3 bg-[#6FFFE9] inline-block mr-1"></span> Tratta Rotaia / Treno</span>
+                            <span class="flex items-center"><span class="w-3 h-3 bg-[#f97316] inline-block mr-1"></span> Tratta SUV 4x4 / Taiga</span>
+                        </div>
+                    </div>
+
+                    <!-- Contenitore Mappa -->
+                    <div id="leafletMap" class="w-full h-[520px] bg-arctic-900 border border-arctic-700 my-6"></div>
+
+                    <!-- Lista rapida tappe 1-12 -->
+                    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2 text-xs font-mono">
+                        <div class="p-2 bg-arctic-900 border border-arctic-800"><span class="text-arctic-400 font-bold">01.</span> Toronto Metropoli</div>
+                        <div class="p-2 bg-arctic-900 border border-arctic-800"><span class="text-arctic-400 font-bold">02.</span> Cascate di Niagara</div>
+                        <div class="p-2 bg-arctic-900 border border-arctic-800"><span class="text-arctic-400 font-bold">03.</span> Ottawa & Canale</div>
+                        <div class="p-2 bg-arctic-900 border border-arctic-800"><span class="text-arctic-400 font-bold">04.</span> RÉSO & Vieux-Montréal</div>
+                        <div class="p-2 bg-arctic-900 border border-arctic-800"><span class="text-arctic-400 font-bold">05.</span> Salita Taiga Charlevoix</div>
+                        <div class="p-2 bg-arctic-900 border border-arctic-800"><span class="text-arctic-400 font-bold">06.</span> Fiordo Saguenay Ghiacciato</div>
+                        <div class="p-2 bg-arctic-900 border border-arctic-800"><span class="text-arctic-400 font-bold">07.</span> Costa Cratere Meteorite</div>
+                        <div class="p-2 bg-arctic-900 border border-arctic-800"><span class="text-arctic-400 font-bold">08.</span> Gola Jacques-Cartier</div>
+                        <div class="p-2 bg-arctic-900 border border-arctic-800"><span class="text-arctic-400 font-bold">09.</span> Canot à Glace San Lorenzo</div>
+                        <div class="p-2 bg-arctic-900 border border-arctic-800"><span class="text-arctic-400 font-bold">10.</span> Wendake & Montmorency</div>
+                        <div class="p-2 bg-arctic-900 border border-arctic-800"><span class="text-arctic-400 font-bold">11.</span> Bastioni Vieux-Québec</div>
+                        <div class="p-2 bg-arctic-900 border border-arctic-800"><span class="text-arctic-400 font-bold">12.</span> Decollo YQB → MXP</div>
+                    </div>
+                </div>
+
+                <!-- Snapshot Giornaliero Schede -->
+                <div class="mb-8">
+                    <h3 class="text-xl font-black text-white uppercase tracking-wider font-mono mb-4 flex items-center">
+                        <i class="fa-solid fa-bars-staggered text-arctic-400 mr-2"></i> Riepilogo Operativo delle 12 Giornate
+                    </h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" id="snapshot-cards-container">
+                        <!-- Generato dinamicamente via JS -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================================================================= -->
+        <!-- PAGINA 2: ROADBOOK GIORNO PER GIORNO CON TUTTI I BOTTONI FOCUS    -->
+        <!-- ================================================================= -->
+        <section id="page-itinerary" class="page-view hidden">
+            <div class="max-w-7xl mx-auto px-4 py-8">
+                <!-- Selettore Orizzontale dei Giorni (Spigoloso & Scorrevole) -->
+                <div class="border-b border-arctic-700 pb-4 mb-8">
+                    <div class="flex items-center justify-between mb-3">
+                        <span class="font-mono text-xs text-arctic-400 tracking-widest uppercase">// SELEZIONA SCHEDA DI VEGLIA ATTIVA</span>
+                        <span class="text-xs font-mono text-slate-400">FINESSO ORARIO: 07:00 – 23:00</span>
+                    </div>
+                    <div class="flex space-x-2 overflow-x-auto pb-2 scrollbar-thin" id="day-selector-pills">
+                        <!-- Pills inserite da JS -->
+                    </div>
+                </div>
+
+                <!-- Contenitore Giorno Selezionato -->
+                <div id="day-detail-content">
+                    <!-- Iniettato da JS con orari, testi approfonditi e i 4 bottoni specificati -->
+                </div>
+            </div>
+        </section>
+
+        <!-- ================================================================= -->
+        <!-- PAGINA 3: TRACKERS & ANALISI QUANTITATIVA (FINANCIAL & METRICHE)   -->
+        <!-- ================================================================= -->
+        <section id="page-trackers" class="page-view hidden">
+            <div class="max-w-7xl mx-auto px-4 py-8">
+                <div class="mb-8 border-b border-arctic-800 pb-4">
+                    <span class="font-mono text-xs text-arctic-400 tracking-widest uppercase">// AUDIT QUANTITATIVO DELL'ITINERARIO</span>
+                    <h2 class="text-3xl font-black text-white uppercase">Tutti i Tracker di Viaggio</h2>
+                    <p class="text-slate-400 text-sm">Analisi calcolata sull'orizzonte di 176 ore totali di veglia attiva e bilancio economico di coppia.</p>
+                </div>
+
+                <!-- Sezione Grafici Interattivi Chart.js -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
+                    <!-- Grafico 1: Ripartizione Budget -->
+                    <div class="ice-card p-6 border border-arctic-700">
+                        <div class="flex items-center justify-between mb-4 border-b border-arctic-800 pb-2">
+                            <h3 class="font-mono font-bold text-sm text-arctic-400 uppercase">
+                                <i class="fa-solid fa-coins mr-2"></i> Budget Breakdown (CAD $)
+                            </h3>
+                            <span class="text-xs font-mono text-slate-400">Tot: 7.270 $ CAD (~4.846 €)</span>
+                        </div>
+                        <div class="h-64 flex items-center justify-center">
+                            <canvas id="budgetChart"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Grafico 2: Esposizione Climatica (Indoor vs Outdoor) -->
+                    <div class="ice-card p-6 border border-arctic-700">
+                        <div class="flex items-center justify-between mb-4 border-b border-arctic-800 pb-2">
+                            <h3 class="font-mono font-bold text-sm text-arctic-400 uppercase">
+                                <i class="fa-solid fa-shield-halved mr-2"></i> Esposizione Termica (176h)
+                            </h3>
+                            <span class="text-xs font-mono text-slate-400">Soglia max outdoor: 3h/slot</span>
+                        </div>
+                        <div class="h-64 flex items-center justify-center">
+                            <canvas id="climateChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Financial Tracker Table -->
+                <div class="ice-card p-6 border border-arctic-700 mb-12">
+                    <h3 class="font-mono font-bold text-lg text-white uppercase mb-4 flex items-center">
+                        <i class="fa-solid fa-receipt text-flame-500 mr-2"></i> Financial Tracker: Stima di Spesa per Coppia
+                    </h3>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left font-mono text-xs border border-arctic-800">
+                            <thead class="bg-arctic-900 text-arctic-400 uppercase border-b border-arctic-700">
+                                <tr>
+                                    <th class="p-3">Voce di Spesa</th>
+                                    <th class="p-3">Dettagli & Base di Calcolo</th>
+                                    <th class="p-3">Totale (CAD)</th>
+                                    <th class="p-3">Totale (EUR)</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-arctic-800/60" id="financial-table-body">
+                                <!-- Righe inserite da JS -->
+                            </tbody>
+                            <tfoot class="bg-arctic-900/90 font-bold text-white border-t-2 border-arctic-500">
+                                <tr>
+                                    <td class="p-3">TOTALE GENERALE STIMATO</td>
+                                    <td class="p-3">Esperienza completa per 2 (voli esclusi, tasse & tip incluse)</td>
+                                    <td class="p-3 text-arctic-400">~$7.270 CAD</td>
+                                    <td class="p-3 text-arctic-400">~€4.846</td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Experience Tracker & Mobility Tracker Grid -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
+                    <!-- Tabella Experience Tracker -->
+                    <div class="ice-card p-6 border border-arctic-700">
+                        <h3 class="font-mono font-bold text-sm text-arctic-400 uppercase mb-4 flex items-center justify-between">
+                            <span><i class="fa-solid fa-hourglass-half mr-2"></i> Experience Tracker (176 Ore)</span>
+                            <span class="text-xs text-slate-400">Veglia 07-23</span>
+                        </h3>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left font-mono text-xs">
+                                <thead class="bg-arctic-900 text-slate-400 uppercase">
+                                    <tr>
+                                        <th class="p-2">Tipologia Attività</th>
+                                        <th class="p-2">Ore</th>
+                                        <th class="p-2">Quota %</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-arctic-800 text-slate-300" id="experience-table-body">
+                                    <!-- Inseriti da JS -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Geographic & Mobility Efficiency -->
+                    <div class="space-y-6">
+                        <div class="ice-card p-6 border border-arctic-700">
+                            <h3 class="font-mono font-bold text-sm text-arctic-400 uppercase mb-3">
+                                <i class="fa-solid fa-location-crosshairs mr-2"></i> Distribuzione Geografica
+                            </h3>
+                            <div class="space-y-3 font-mono text-xs">
+                                <div>
+                                    <div class="flex justify-between mb-1">
+                                        <span>Vieux-Québec, Wendake & Montmorency</span>
+                                        <span class="text-arctic-400">57.5 h (32.7%)</span>
+                                    </div>
+                                    <div class="w-full bg-arctic-900 h-2"><div class="bg-arctic-400 h-2" style="width: 32.7%"></div></div>
+                                </div>
+                                <div>
+                                    <div class="flex justify-between mb-1">
+                                        <span>Charlevoix, Saguenay & Jacques-Cartier</span>
+                                        <span class="text-arctic-400">45.5 h (25.9%)</span>
+                                    </div>
+                                    <div class="w-full bg-arctic-900 h-2"><div class="bg-arctic-500 h-2" style="width: 25.9%"></div></div>
+                                </div>
+                                <div>
+                                    <div class="flex justify-between mb-1">
+                                        <span>Toronto & Cascate del Niagara</span>
+                                        <span class="text-arctic-400">28.5 h (16.2%)</span>
+                                    </div>
+                                    <div class="w-full bg-arctic-900 h-2"><div class="bg-arctic-700 h-2" style="width: 16.2%"></div></div>
+                                </div>
+                                <div>
+                                    <div class="flex justify-between mb-1">
+                                        <span>Montréal (Metropoli Sotterranea)</span>
+                                        <span class="text-arctic-400">28.0 h (15.9%)</span>
+                                    </div>
+                                    <div class="w-full bg-arctic-900 h-2"><div class="bg-blue-600 h-2" style="width: 15.9%"></div></div>
+                                </div>
+                                <div>
+                                    <div class="flex justify-between mb-1">
+                                        <span>Ottawa (Capitale Federale)</span>
+                                        <span class="text-arctic-400">5.0 h (2.8%)</span>
+                                    </div>
+                                    <div class="w-full bg-arctic-900 h-2"><div class="bg-purple-500 h-2" style="width: 2.8%"></div></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Mobility efficiency -->
+                        <div class="ice-card p-6 border border-arctic-700">
+                            <h3 class="font-mono font-bold text-sm text-arctic-400 uppercase mb-3">
+                                <i class="fa-solid fa-train mr-2"></i> Mobility Efficiency Tracker
+                            </h3>
+                            <p class="text-xs text-slate-300 font-light mb-4">
+                                I treni riscaldati VIA Rail assorbono il <strong>46%</strong> dei trasporti complessivi azzerando la stanchezza da guida. Solo l'8.5h totali sono al volante con SUV 4x4 nei tratti paesaggistici della taiga.
+                            </p>
+                            <div class="grid grid-cols-2 gap-2 font-mono text-xs">
+                                <div class="p-2 bg-arctic-900 border border-arctic-800">
+                                    <span class="text-slate-400 block">VIA Rail Treni:</span>
+                                    <strong class="text-white">14.5 h (Zero Stress)</strong>
+                                </div>
+                                <div class="p-2 bg-arctic-900 border border-arctic-800">
+                                    <span class="text-slate-400 block">Guida SUV 4x4:</span>
+                                    <strong class="text-white">8.5 h (Panoramico)</strong>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sezione Note Personali Dinamiche (Aggiungi/Salva in LocalStorage) -->
+                <div class="ice-card p-6 border border-arctic-700">
+                    <div class="flex items-center justify-between mb-4 border-b border-arctic-800 pb-2">
+                        <h3 class="font-mono font-bold text-sm text-arctic-400 uppercase">
+                            <i class="fa-solid fa-pen-to-square mr-2"></i> Note Personali di Spedizione
+                        </h3>
+                        <span class="text-xs font-mono text-slate-400">Salvataggio automatico locale</span>
+                    </div>
+                    <div class="flex gap-2 mb-4">
+                        <input id="noteInput" type="text" placeholder="Aggiungi una nota o appunto logistico (es. ritirare sim all'arrivo)..." class="flex-grow bg-arctic-900 border border-arctic-700 px-4 py-2 font-mono text-xs text-white focus:outline-none focus:border-arctic-400">
+                        <button onclick="addPersonalNote()" class="px-5 py-2 bg-arctic-500 hover:bg-arctic-400 text-arctic-950 font-mono font-bold text-xs uppercase tracking-wider">Aggiungi</button>
+                    </div>
+                    <ul id="notesList" class="space-y-2 font-mono text-xs">
+                        <!-- Inserite dinamicamente -->
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================================================================= -->
+        <!-- PAGINA 4: GANTT GESTIONALE & TRACKER DEI TASK SPUNTABILI          -->
+        <!-- ================================================================= -->
+        <section id="page-gantt" class="page-view hidden">
+            <div class="max-w-7xl mx-auto px-4 py-8">
+                <div class="mb-8 border-b border-arctic-800 pb-4">
+                    <span class="font-mono text-xs text-arctic-400 tracking-widest uppercase">// CRONOPROGRAMMA PRE-SPEDIZIONE 2026</span>
+                    <h2 class="text-3xl font-black text-white uppercase">Master Gantt & Task Manager</h2>
+                    <p class="text-slate-400 text-sm">Monitora e contrassegna i task operativi. I progressi vengono memorizzati istantaneamente.</p>
+                </div>
+
+                <!-- Barra di avanzamento globale task -->
+                <div class="ice-card p-6 border border-arctic-700 mb-8">
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="font-mono text-xs uppercase text-arctic-400 font-bold">Stato di Avanzamento Preparativi:</span>
+                        <span id="ganttProgressText" class="font-mono text-xs font-bold text-white">0 / 13 Task Completati (0%)</span>
+                    </div>
+                    <div class="w-full bg-arctic-900 h-3 border border-arctic-700">
+                        <div id="ganttProgressBar" class="bg-gradient-to-r from-arctic-500 to-arctic-100 h-3 transition-all duration-500" style="width: 0%"></div>
+                    </div>
+                </div>
+
+                <!-- Matrice Gantt Visiva (Settimana per Settimana) -->
+                <div class="ice-card p-6 border border-arctic-700 mb-12">
+                    <div class="flex items-center justify-between mb-4 border-b border-arctic-800 pb-2">
+                        <h3 class="font-mono font-bold text-sm text-arctic-400 uppercase">
+                            <i class="fa-solid fa-timeline mr-2"></i> Cronoprogramma Temporale (Settembre – Dicembre 2026)
+                        </h3>
+                        <span class="text-xs font-mono text-slate-400">16 Settimane Pre-Partenza</span>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <div class="min-w-[700px] font-mono text-xs">
+                            <!-- Gantt Header -->
+                            <div class="grid grid-cols-12 gap-1 text-center font-bold bg-arctic-900 p-2 border-b border-arctic-700 text-slate-300">
+                                <div class="col-span-4 text-left pl-2">MACRO-AREA / AMBITO</div>
+                                <div class="col-span-2 text-arctic-400">SETTEMBRE</div>
+                                <div class="col-span-2 text-arctic-400">OTTOBRE</div>
+                                <div class="col-span-2 text-arctic-400">NOVEMBRE</div>
+                                <div class="col-span-2 text-flame-500">DICEMBRE</div>
+                            </div>
+                            <!-- Gantt Rows -->
+                            <div class="space-y-1 py-2">
+                                <div class="grid grid-cols-12 gap-1 items-center p-2 bg-arctic-900/40 border border-arctic-800/40">
+                                    <div class="col-span-4 font-semibold text-white">1. Voli & eTA Canada</div>
+                                    <div class="col-span-2"><span class="block bg-arctic-500 text-arctic-950 text-center font-black py-0.5 text-[10px]">S1-S4</span></div>
+                                    <div class="col-span-2 text-center text-slate-600">—</div>
+                                    <div class="col-span-2 text-center text-slate-600">—</div>
+                                    <div class="col-span-2 text-center text-slate-600">—</div>
+                                </div>
+                                <div class="grid grid-cols-12 gap-1 items-center p-2 bg-arctic-900/40 border border-arctic-800/40">
+                                    <div class="col-span-4 font-semibold text-white">2. Basi Hotel (Toronto, Mtl, Qbc)</div>
+                                    <div class="col-span-2"><span class="block bg-arctic-500 text-arctic-950 text-center font-black py-0.5 text-[10px]">S3-S4</span></div>
+                                    <div class="col-span-2"><span class="block bg-arctic-700 text-slate-200 text-center py-0.5 text-[10px]">S1-S2</span></div>
+                                    <div class="col-span-2 text-center text-slate-600">—</div>
+                                    <div class="col-span-2 text-center text-slate-600">—</div>
+                                </div>
+                                <div class="grid grid-cols-12 gap-1 items-center p-2 bg-arctic-900/40 border border-arctic-800/40">
+                                    <div class="col-span-4 font-semibold text-white">3. VIA Rail & SUV 4x4</div>
+                                    <div class="col-span-2"><span class="block bg-arctic-500 text-arctic-950 text-center font-black py-0.5 text-[10px]">S2-S4</span></div>
+                                    <div class="col-span-2 text-center text-slate-600">—</div>
+                                    <div class="col-span-2 text-center text-slate-600">—</div>
+                                    <div class="col-span-2 text-center text-slate-600">—</div>
+                                </div>
+                                <div class="grid grid-cols-12 gap-1 items-center p-2 bg-arctic-900/40 border border-arctic-800/40">
+                                    <div class="col-span-4 font-semibold text-white">4. Canot à Glace & Cabina Pesca</div>
+                                    <div class="col-span-2"><span class="block bg-arctic-500 text-arctic-950 text-center font-black py-0.5 text-[10px]">S4</span></div>
+                                    <div class="col-span-2"><span class="block bg-arctic-700 text-slate-200 text-center py-0.5 text-[10px]">S1-S2</span></div>
+                                    <div class="col-span-2 text-center text-slate-600">—</div>
+                                    <div class="col-span-2 text-center text-slate-600">—</div>
+                                </div>
+                                <div class="grid grid-cols-12 gap-1 items-center p-2 bg-arctic-900/40 border border-arctic-800/40">
+                                    <div class="col-span-4 font-semibold text-white">5. Cenone Capodanno Montréal</div>
+                                    <div class="col-span-2 text-center text-slate-600">—</div>
+                                    <div class="col-span-2"><span class="block bg-flame-500 text-white text-center font-bold py-0.5 text-[10px]">S3-S4</span></div>
+                                    <div class="col-span-2"><span class="block bg-flame-600 text-white text-center font-bold py-0.5 text-[10px]">S1</span></div>
+                                    <div class="col-span-2 text-center text-slate-600">—</div>
+                                </div>
+                                <div class="grid grid-cols-12 gap-1 items-center p-2 bg-arctic-900/40 border border-arctic-800/40">
+                                    <div class="col-span-4 font-semibold text-white">6. Equipaggiamento Polare Black Friday</div>
+                                    <div class="col-span-2 text-center text-slate-600">—</div>
+                                    <div class="col-span-2"><span class="block bg-slate-700 text-slate-200 text-center py-0.5 text-[10px]">Audit</span></div>
+                                    <div class="col-span-2"><span class="block bg-arctic-400 text-arctic-950 font-black text-center py-0.5 text-[10px]">Black Fri</span></div>
+                                    <div class="col-span-2"><span class="block bg-slate-700 text-slate-200 text-center py-0.5 text-[10px]">Accessori</span></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Schede Operative Dettagliate dei Task con Checkbox Interattiva -->
+                <div class="space-y-4" id="task-cards-list">
+                    <!-- Iniettate da JS -->
+                </div>
+            </div>
+        </section>
+
+        <!-- ================================================================= -->
+        <!-- SEZIONE FINALE: MISSIONE COMPIUTA & RECORD POLARE STATS           -->
+        <!-- ================================================================= -->
+        <section class="border-t border-arctic-800 bg-arctic-900/70 py-16">
+            <div class="max-w-7xl mx-auto px-4 text-center">
+                <div class="inline-block p-4 border border-arctic-500 bg-arctic-950 mb-6">
+                    <span class="font-mono text-xs tracking-widest text-arctic-400 uppercase font-bold">
+                        <i class="fa-solid fa-flag-checkered mr-2"></i>EXPEDITION TARGET COMPLETED
+                    </span>
+                </div>
+                <h2 class="text-3xl sm:text-5xl font-black text-white uppercase tracking-tight mb-4">Missione Compiuta</h2>
+                <p class="max-w-2xl mx-auto text-slate-300 text-sm sm:text-base font-light mb-12">
+                    Dalla metropoli d'acciaio di Toronto ai bastioni innevati di Vieux-Québec, affrontando la banchisa con il canot à glace e il silenzio primordiale della taiga boreale.
+                </p>
+
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto text-left font-mono">
+                    <div class="p-4 bg-arctic-950 border border-arctic-700">
+                        <span class="text-slate-400 text-xs block">TEMPO DI VEGLIA:</span>
+                        <span class="text-2xl font-bold text-arctic-400">176 ORE</span>
+                    </div>
+                    <div class="p-4 bg-arctic-950 border border-arctic-700">
+                        <span class="text-slate-400 text-xs block">BASI HOTEL:</span>
+                        <span class="text-2xl font-bold text-white">4 FISSE</span>
+                    </div>
+                    <div class="p-4 bg-arctic-950 border border-arctic-700">
+                        <span class="text-slate-400 text-xs block">COMFORT TERMICO:</span>
+                        <span class="text-2xl font-bold text-amber-400">67.3% AL CALDO</span>
+                    </div>
+                    <div class="p-4 bg-arctic-950 border border-arctic-700">
+                        <span class="text-slate-400 text-xs block">MEZZO CHIAVE:</span>
+                        <span class="text-2xl font-bold text-arctic-400">CANOA & 4x4</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- FOOTER TECNICO -->
+    <footer class="border-t border-arctic-800 bg-arctic-950 py-8 font-mono text-xs text-slate-500">
+        <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div>
+                <span>DISEGNAVIAGGI // MASTER PLAN CANADA ORIENTALE 2026-2027</span>
+            </div>
+            <div class="flex space-x-4">
+                <span class="text-arctic-400">VERSIONE DEFINITIVA 2.0</span>
+                <span>•</span>
+                <span>TAIGA ARCHITECTURE</span>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ================================================================= -->
+    <!-- LOGICA JAVASCRIPT: MAPPA GPS, CHARTS, FOCUS EXPANSION & TASK GANTT-->
+    <!-- ================================================================= -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script>
+        /* ========================================================= */
+        /* 1. DATABASE COMPLETO DEL VIAGGIO (Master Itinerary)        */
+        /* ========================================================= */
+        const itineraryData = [
+            {
+                day: 1,
+                date: "28 Dicembre 2026",
+                title: "L'Approdo nella Metropoli d'Acciaio",
+                base: "Base 1: Toronto Downtown",
+                image: "https://images.unsplash.com/photo-1507992781348-310259076fa0?q=80&w=1200&auto=format&fit=crop",
+                summary: "Atterraggio a Toronto Pearson, collegamento UP Express e prima immersione a Nathan Phillips Square tra grattacieli e ghiaccio.",
+                schedule: [
+                    {
+                        time: "16:00 – 17:30",
+                        title: "L'Arrivo e la Logistica Invisibile",
+                        desc: "Atterraggio a Toronto Pearson. Superata la dogana, seguite i cartelli interni per l'UP Express: evitate taxi e traffico salendo sul treno rapido riscaldato che in 25 minuti deposita alla Union Station. Check-in rapido.",
+                        isFood: false,
+                        focusHistory: "La Union Station di Toronto, inaugurata nel 1927 dal Principe di Galles Edoardo, rappresenta il più maestoso capolavoro Beaux-Arts del Commonwealth in Nord America. Progettata per celebrare il fulcro ferroviario della Canadian Pacific e Canadian National, la sala 'Great Hall' presenta una volta a botte in pietra di Guastavino alta ben 26 metri. Durante gli anni della grande migrazione europea postbellica, fu la vera porta d'ingresso per centinaia di migliaia di coloni e rifugiati destinati a popolare le sterminate praterie dell'Ontario e del Manitoba.",
+                        focusLit: "Toronto è la metropoli labirintica e polifonica descritta dal grande romanziere Michael Ondaatje nel capolavoro 'In the Skin of a Lion' (Nel paese delle ombre). Ondaatje narra la costruzione materiale della metropoli attraverso i corpi operai degli immigrati macedoni, finlandesi e italiani: 'Questa è una città che è stata costruita da persone che non sapevano leggere l'inglese, persone che si arrampicavano sul viadotto sopra il Don River nel gelo di gennaio con le dita nude che si attaccavano al ferro freddo'.",
+                        focusCinema: "Toronto è la capitale indiscussa del cinema mondiale sotto falso nome, doppiando Manhattan e Chicago in oltre cento colossal all'anno. Proprio tra i canyon d'acciaio di Bay Street e la Union Station, David Cronenberg ha girato scene cult di 'Dead Ringers' e 'Crash', trasformando la fredda geometria del vetro e del cemento canadese in uno scenario psicologico disturbante, metafora di un'umanità costretta ad adattarsi a una mutazione tecnologica e climatica estrema.",
+                        foodTip: null
+                    },
+                    {
+                        time: "18:30 – 21:00",
+                        title: "Prime Luci del Nord & Cena di Ripresa",
+                        desc: "Camminata a passo svelto verso Nathan Phillips Square. L'aria a -8°C pizzica il viso mentre sotto la scritta Toronto decine di pattinatori scivolano a ritmo di musica.",
+                        isFood: true,
+                        focusHistory: "Nathan Phillips Square, inaugurata nel 1965 con il pionieristico municipio curvato progettato dall'architetto finlandese Viljo Revell, rappresentò l'emancipazione modernista di Toronto dall'austerità puritana vittoriana. La piazza, intitolata al primo sindaco ebreo della città, trasformò l'inverno da ostacolo a momento collettivo istituendo la monumentale pista di ghiaccio riflettente, dove ancora oggi la popolazione si ritrova nei mesi polari.",
+                        focusLit: "Margaret Atwood, una delle voci più autorevoli del Canada contemporaneo, in saggi come 'Survival: A Thematic Guide to Canadian Literature' spiega che per i canadesi il gelo urbano non è un nemico ma l'elemento costitutivo dell'anima nazionale. Camminare per Nathan Phillips Square d'inverno significa sperimentare quel senso di resilienza e solidarietà civica che traspare continuamente dai racconti intimi della Atwood ambientati nei quartieri della metropoli.",
+                        focusCinema: "La piazza e la sua conca di ghiaccio illuminata appaiono nel cinema d'azione internazionale e nelle serie cult di Netflix e Prime Video, tra cui 'The Boys', dove la facciata brutalista del municipio funge da quartier generale della Vought Tower, contrapponendo il gelo naturale canadese al cinismo artificiale della narrazione distopica contemporanea.",
+                        foodTip: "Comfort food canadese caldo: provate una generosa 'Poutine' classica o una caldissima zuppa di mais e granchio al coperto presso la Union Station Market per riallineare subito le energie e contrastare il fuso orario di -6 ore."
+                    }
+                ]
+            },
+            {
+                day: 2,
+                date: "29 Dicembre 2026",
+                title: "I Giganti di Ghiaccio di Niagara",
+                base: "Base 1: Toronto Downtown",
+                image: "https://images.unsplash.com/photo-1533094602577-19c429424e12?q=80&w=1200&auto=format&fit=crop",
+                summary: "Spedizione mattutina alle Cascate del Niagara trasformate in colossi di cristallo dal gelo artico; serata tra i mattoni rossi del Distillery District.",
+                schedule: [
+                    {
+                        time: "07:30 – 14:00",
+                        title: "La Scultura Primordiale di Niagara",
+                        desc: "Partenza in bus express. D'inverno le Cascate del Niagara perdono ogni traccia estiva e tornano a essere un fenomeno primordiale. Il pulviscolo gela a contatto con l'aria formando lastroni titanici.",
+                        isFood: false,
+                        focusHistory: "Formatesi oltre 12.000 anni fa durante il ritiro dei ghiacciai del Wisconsin, le Cascate del Niagara sono state venerate dalle nazioni Haudenosaunee (Irochesi) che udivano nel rombo il tuono di He-No, il signore delle tempeste. Durante la Guerra anglo-americana del 1812, queste sponde furono teatro di sanguinose battaglie campali nel gelo polare per determinare se il Canada dovesse rimanere fedele alla corona britannica o venire annesso agli Stati Uniti.",
+                        focusLit: "Charles Dickens visitò le Cascate nell'aprile del 1842 e scrisse nelle sue 'American Notes': 'Fu come se le mie visioni dell'eternità terrena si fossero aperte dinanzi a me. Il pensiero che mi avvolse fu di solenne magnificenza e di calma immutabile, una pace che sovrasta il fragore del tempo'. L'effetto ipnotico delle cortine di ghiaccio invernale amplifica all'infinito questa sensazione dickensiana di soggezione primordiale.",
+                        focusCinema: "Niagara è scolpita per sempre nella memoria cinematografica mondiale dal thriller noir omonimo del 1953 diretto da Henry Hathaway, interpretato da una straordinaria Marilyn Monroe. Se il film utilizzava i colori squillanti del Technicolor estivo per narrare adulterio e vendetta lungo i parapetti della cataratta, d'inverno le rapide assumono la cupa e sublime tensione del noir psicologico puro.",
+                        foodTip: null
+                    },
+                    {
+                        time: "16:30 – 19:30",
+                        title: "Distillery District: Mattoni & Bracieri",
+                        desc: "Passeggiata sui ciottoli dell'antica distilleria Gooderham & Worts. Scaldate le mani attorno ai grandi falò all'aperto tra botteghe d'artigianato e arte contemporanea.",
+                        isFood: true,
+                        focusHistory: "Fondata nel 1832 da James Worts e William Gooderham, la distilleria Gooderham & Worts crebbe fino a diventare nel 1871 la più grande produttrice di whisky al mondo, producendo oltre due milioni di galloni all'anno. L'intero complesso in mattoni rossi vittoriani e mulini a vento testimonia l'apice dell'archeologia industriale dell'Impero Britannico, trasformato oggi in uno dei distretti artistici e pedonali meglio preservati del globo.",
+                        focusLit: "La transizione del distretto dal fumo delle caldaie vittoriane all'odierna oasi letteraria risuona nelle pagine di Robertson Davies e del suo capolavoro 'The Deptford Trilogy'. Davies analizza con ironia caustica l'etica calvinista degli industriali scozzesi dell'Ontario, che accumulavano fortune nel commercio di liquori mantenendo un rigore morale austero e puritano.",
+                        focusCinema: "Grazie al suo impianto ottocentesco rimasto miracolosamente integro senza grattacieli moderni all'orizzonte, il Distillery District ha ospitato i set di celebri pellicole d'epoca, da 'Cinderella Man' con Russell Crowe a sequenze di 'Chicago' di Rob Marshall, servendo come quintessenza visiva della città industriale del primo Novecento.",
+                        foodTip: "Gustate un tipico 'Peameal Bacon Sandwich' (il classico sandwich di maiale in crosta di farina di mais) accompagnato da una cioccolata calda aromatizzata all'acero e cannella consumata accanto ai bracieri in ghisa."
+                    }
+                ]
+            },
+            {
+                day: 3,
+                date: "30 Dicembre 2026",
+                title: "La Capitale Federale e la Coda di Castoro",
+                base: "Base 2: Vieux-Montréal",
+                image: "https://images.unsplash.com/photo-1588733103629-b77afe0425ce?q=80&w=1200&auto=format&fit=crop",
+                summary: "Treno panoramico VIA Rail attraverso l'Ontario innevato, sosta strategica a Ottawa lungo il Canale Rideau e arrivo serale a Montréal.",
+                schedule: [
+                    {
+                        time: "11:45 – 15:45",
+                        title: "Ottawa: Parliament Hill & Canale Ghiacciato",
+                        desc: "Sosta alla capitale. Trolley lasciati al deposito custodito. Esplorazione del Canale Rideau gelato, patrimonio UNESCO, e vista sul neogotico federale.",
+                        isFood: true,
+                        focusHistory: "Il Canale Rideau, costruito tra il 1826 e il 1832 dal tenente colonnello John By dei Royal Engineers, fu un'opera titanica concepita per ragioni strettamente difensive: assicurare una via militare interna tra Montréal e il Lago Ontario per proteggersi da invasioni statunitensi. Durante i rigidi inverni canadesi, il canale si trasforma nella pista di pattinaggio naturale più lunga al mondo (7,8 km), diventando l'arteria vitale della capitale.",
+                        focusLit: "Nelle opere di Hugh MacLennan, in particolare in 'Two Solitudes', la geografia politica e fluviale di Ottawa incarna la delicata cerniera tra l'Ontario anglofono e il Québec francofono. Il canale ghiacciato simboleggia quella superficie comune su cui due culture distinte imparano a pattinare insieme senza fratturare la lastra di convivenza civile.",
+                        focusCinema: "L'architettura neogotica di Parliament Hill che svetta sopra il canale Rideau ghiacciato è stata protagonista di numerose produzioni d'intelligence e thriller politici internazionali. Spesso usata come controfigura per ambientazioni londinesi o europee, la collina parlamentare innevata regala al cinema l'immagine della democrazia protetta dal rigore artico.",
+                        foodTip: "Tappa obbligata al chiosco sul canale: assaggiate la calda *Queue de Castor* (BeaverTail fritta al momento, cosparsa di zucchero, cannella e succo di limone fresco spremuto) guardando i pattinatori pendolari."
+                    },
+                    {
+                        time: "19:45 – 21:30",
+                        title: "Ingresso nel Vieux-Montréal & Bistrot",
+                        desc: "Treno VIA Rail verso la metropoli francofona. Arrivo a Montréal Gare Centrale, taxi nel centro storico in pietra viva e prima cena calda.",
+                        isFood: true,
+                        focusHistory: "Fondata nel 1642 con il nome di Ville-Marie dai coloni francesi guidati da Paul de Chomedey de Maisonneuve, Montréal fu a lungo il crocevia del commercio continentale delle pellicce dei 'voyageurs'. Il quartiere del Vieux-Montréal, con le sue stradine acciottolate e i magazzini di pietra grigia del XVIII secolo, testimonia il punto d'incontro tra l'eredità della Nuova Francia e l'espansione mercantile britannica.",
+                        focusLit: "Mordecai Richler, con la sua scrittura graffiante e affettuosa (es. 'La versione di Barney'), ha reso celebre la complessità etnica e linguistica di Montréal. Nel romanzo Richler descrive come il freddo invernale spinga i montrealesi nei bistrot rumorosi, dove il calore umano e il cibo ipercalorico sciolgono qualsiasi rigidità climatica o sociale.",
+                        focusCinema: "Il Vieux-Montréal d'inverno è il set prediletto di Denis Villeneuve e Denys Arcand (regista del capolavoro premio Oscar 'Le invasioni barbariche'). Le luci soffuse riflesse sulla neve che copre Rue Saint-Paul evocano un'intimità poetica e nostalgica, catturando l'anima unica della cultura québécoise.",
+                        foodTip: "Cena di benvenuto in bistrot: ordinate una sontuosa 'Poutine d'autore' preparata con fondo bruno di vitello a lenta cottura, patate dorate e abbondante formaggio fresco 'squick-squick' (fromage en grains)."
+                    }
+                ]
+            },
+            {
+                day: 4,
+                date: "31 Dicembre 2026",
+                title: "La Città Doppia e la Notte di San Silvestro",
+                base: "Base 2: Vieux-Montréal",
+                image: "https://images.unsplash.com/photo-1519178173455-8947b7484df7?q=80&w=1200&auto=format&fit=crop",
+                summary: "La geniale città sotterranea del RÉSO a -15°C, i falò storici del Vieux-Port e il Capodanno tra banchisa e fuochi d'artificio.",
+                schedule: [
+                    {
+                        time: "08:30 – 12:30",
+                        title: "Il Labirinto Sotterraneo: RÉSO",
+                        desc: "Discesa nella rete pedonale sotterranea più estesa al mondo. Oltre 30 km di gallerie illuminate collegano torri, cinema, boutique e piazze senza mai uscire al gelo.",
+                        isFood: false,
+                        focusHistory: "Nato nel 1962 con la costruzione del grattacielo Place Ville Marie progettato da I.M. Pei, il RÉSO (la città sotterranea) fu l'ingegnosa risposta canadese al clima subartico. Questa seconda città sotterranea climatizzata permise a Montréal di rimanere economicamente vibrante durante le tormente invernali, diventando un modello planetario di urbanistica sostenibile.",
+                        focusLit: "Gli scrittori québécois hanno spesso descritto il RÉSO come un dedalo metafisico. Michel Tremblay sottolinea nei suoi scritti come la vita sotterranea mont暑lese elimini le barriere stagionali, creando una dimensione atemporale in cui i cittadini svestono i pesanti cappotti polari per ritrovarsi a camminare 'in maniche di camicia' dentro il ventre caldo della metropoli.",
+                        focusCinema: "Il RÉSO ha ispirato la fantascienza contemporanea: le sue ampie gallerie geometriche e gli snodi futuristici sono stati impiegati come scenografia naturale per rappresentare colonie terrestri o stazioni orbitali in pellicole sci-fi e spot internazionali, valorizzando la modernità pionieristica della città.",
+                        foodTip: null
+                    },
+                    {
+                        time: "20:30 – 00:30",
+                        title: "Cenone & Capodanno sul Fiume di Ghiaccio",
+                        desc: "Cenone d'autore in un bistrot d'epoca del centro storico. Alle 23:30 discesa a piedi al Vieux-Port tra bracieri aperti, musica e fuochi sul San Lorenzo.",
+                        isFood: true,
+                        focusHistory: "Il Vieux-Port di Montréal è stato per tre secoli il cuore pulsante dell'economia canadese. Da queste banchine partivano le canoe cariche di pelli verso l'Europa e arrivavano i transatlantici. Nella notte di San Silvestro, la tradizione secolare dei marinai di accendere fuochi per scaldarsi sulle rive del San Lorenzo gelato rivive nella grande festa popolare cittadina.",
+                        focusLit: "Le notti invernali di Montréal sono immortalate nelle poesie e canzoni di Leonard Cohen, figlio prediletto della città. Cohen cantava di 'Suzanne che ti prende per mano e ti porta giù al fiume', dove la presenza scura e maestosa delle acque del San Lorenzo governa l'immaginazione e la nostalgia romantica dell'inverno québécois.",
+                        focusCinema: "I festeggiamenti di Capodanno nel Vieux-Port ghiacciato, con la silhouette monumentale del ponte Jacques-Cartier illuminato a LED dinamici, appaiono in celebri documentari e produzioni canadesi che celebrano la capacità del popolo quebecchese di fare festa sfidando temperature polari.",
+                        foodTip: "Cenone di Capodanno memorabile: anatra selvatica glassata all'acero, formaggi d'alpeggio affinati, tourtière artigianale e brindisi di mezzanotte con il leggendario 'Cidre de Glace' (sidro di ghiaccio) quebecchese."
+                    }
+                ]
+            },
+            {
+                day: 5,
+                date: "01 Gennaio 2027",
+                title: "L'Ingresso nella Foresta Boreale",
+                base: "Base 3: Charlevoix (Baie-Saint-Paul)",
+                image: "https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?q=80&w=1200&auto=format&fit=crop",
+                summary: "Risveglio panoramico sul Mont-Royal, treno VIA Rail per Québec City, presa del SUV 4x4 e rotta verso il lodge rurale di Charlevoix.",
+                schedule: [
+                    {
+                        time: "09:30 – 12:00",
+                        title: "Risveglio sul Belve­dere del Mont-Royal",
+                        desc: "Colazione lenta. Salita sul Mont-Royal per ammirare dall'alto la metropoli avvolta dalla galaverna e assaggiare la prima tire d'érable dell'anno.",
+                        isFood: true,
+                        focusHistory: "Il Mont-Royal, il massiccio vulcanico eroso che si erge al centro della metropoli, fu battezzato così dall'esploratore Jacques Cartier nel 1535. Il parco montano fu disegnato nel 1876 da Frederick Law Olmsted, il visionario paesaggista già creatore del Central Park di New York, con l'intento di offrire alla comunità un rifugio naturale intatto che proteggesse il bosco originario.",
+                        focusLit: "Gabrielle Roy, leggendaria autrice canadese francese, ha immortalato il contrasto tra i quartieri popolari di Saint-Henri e la vetta serena del Mont-Royal nel capolavoro 'Bonheur d'occasion' (La felicità involontaria). Dalla sommità del monte si contempla la vastità del fiume e la resilienza del popolo del Québec.",
+                        focusCinema: "La terrazza panoramica del Kondiaronk sul Mont-Royal è il set invernale per antonomasia di Montréal nel cinema canadese, offrendo un colpo d'occhio straordinario tra gli aceri ammantati di neve e i grattacieli modernisti che sfumano nella nebbia polare del fiume.",
+                        foodTip: "Il rito ancestrale della 'Tire d'érable sur la neige': sciroppo d'acero purissimo bollente versato direttamente su una scanalatura di neve fresca e arrotolato su un bastoncino di legno. Da gustare caldissimo!"
+                    },
+                    {
+                        time: "17:00 – 21:00",
+                        title: "Ritiro SUV 4x4 & Rotta verso Charlevoix",
+                        desc: "Arrivo a Québec City con VIA Rail. Ritiro del 4x4 con pneumatici invernali da neve alla Gare du Palais. 1h15 di guida sulla Route 138 fino a Baie-Saint-Paul.",
+                        isFood: false,
+                        focusHistory: "La Route 138, nota storicamente come parte del Chemin du Roy e proseguimento costiero verso la Côte-Nord, segue antiche piste tracciate dai popoli Innu e dai primi missionari gesuiti. Salire lungo la costa montuosa del San Lorenzo verso Baie-Saint-Paul significava entrare nella taiga profonda, terra d'isolamento invernale e di fiere comunità contadine.",
+                        focusLit: "Félix-Antoine Savard, autore del poema epico quebecchese 'Menaud, maître-draveur', ha ambientato le sue storie di boscaioli e fluitatori proprio sulle vette aspre di Charlevoix. Nei suoi testi, la taiga invernale ruggisce come una forza mitologica che forgia uomini fieri, innamorati della libertà dei grandi spazi.",
+                        focusCinema: "I paesaggi montani di Charlevoix e le curve della Route 138 coperta di neve sono stati celebrati nei documentari naturalistici del National Film Board of Canada (ONF), mostrati come la porta d'accesso al Grande Nord dove la civiltà cede il passo alle grandi foreste boreali.",
+                        foodTip: null
+                    }
+                ]
+            },
+            {
+                day: 6,
+                date: "02 Gennaio 2027",
+                title: "Le Capanne sul Mare di Ghiaccio del Saguenay",
+                base: "Base 3: Charlevoix (Baie-Saint-Paul)",
+                image: "https://images.unsplash.com/photo-1517048676732-d65bc937f952?q=80&w=1200&auto=format&fit=crop",
+                summary: "Guida attraverso la tundra montana (Route 381), cabina privata riscaldata a legna sulla banchisa del fiordo a La Baie e pesca sul ghiaccio.",
+                schedule: [
+                    {
+                        time: "09:30 – 14:00",
+                        title: "La Cittadella Effimera sul Fiordo Gelato",
+                        desc: "Il fiordo salato del Saguenay gela per oltre mezzo metro creando una cittadella temporanea di centinaia di cabine dipinte a colori vivaci. Pesca sul ghiaccio con stufa a legna.",
+                        isFood: true,
+                        focusHistory: "La pesca sul ghiaccio sul fiordo del Saguenay è una pratica millenaria ideata dai popoli Algonchini e Innu, che usavano arpioni d'osso calati in fori praticati nella coltre gelata. Con l'arrivo dei coloni francesi la tecnica si è evoluta nella tipica 'cabane à pêche': villaggi galleggianti su ghiaccio con strade battute, alimentati da forni a legna per pescare merluzzi di profondità e scorfani boreali.",
+                        focusLit: "Le leggende popolari del Saguenay abbondano di racconti sui mostri marini e sugli spiriti del fiordo d'inverno. Nei racconti tradizionali orali raccolti dai folkloristi del Québec, il fiordo gelato è descritto come un abisso nero e sacro coperto da un velo di ghiaccio, dove il silenzio è così fitto che si può udire il respiro dei cetacei sotto la lastra.",
+                        focusCinema: "Questo surreale paesaggio artico, fatto di centinaia di casette in legno fumanti sperdute su una distesa bianca sconfinata circondata da falesie a strapiombo, ha fatto da sfondo a film d'autore québécois e reportage internazionali sulla vita estrema del Nord America.",
+                        foodTip: "Pranzo rustico dentro la cabina: gustate una calda zuppa di cipolle e formaggio locale, salsiccia affumicata del terroir e tè bollente arricchito da qualche goccia di sciroppo d'acero o whisky quebecchese."
+                    }
+                ]
+            },
+            {
+                day: 7,
+                date: "03 Gennaio 2027",
+                title: "Il Cratere del Meteorite e i Sapori del Terroir",
+                base: "Base 3: Charlevoix (Baie-Saint-Paul)",
+                image: "https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?q=80&w=1200&auto=format&fit=crop",
+                summary: "La spettacolare Route 362 lungo le falesie costiere del San Lorenzo, botteghe artigiane di Baie-Saint-Paul e formaggi affinati a latte crudo.",
+                schedule: [
+                    {
+                        time: "08:30 – 16:30",
+                        title: "La Falesia Meteoritica & L'Anima Gastronomica",
+                        desc: "Guida panoramica lungo la falesia del cratere meteoritico. Sosta alla Laiterie Charlevoix per formaggi a latte crudo, forni a legna e microdistillerie del bosco boreale.",
+                        isFood: true,
+                        focusHistory: "La regione di Charlevoix è un prodigio geologico: 400 milioni di anni fa un meteorite di 2 km di diametro si schiantò sulla crosta terrestre creando un cratere di 54 km. Questa particolare conformazione a anfiteatro riparato ha creato un microclima unico che nei secoli ha favorito l'insediamento di una fitta rete di fattorie artigianali e comunità monastiche devoti alla pastorizia.",
+                        focusLit: "Baie-Saint-Paul è considerata la culla della pittura paesaggistica canadese. Qui artisti del celebre 'Group of Seven', come A.Y. Jackson, trascorsero inverni interi a ritrarre i fienili ricoperti di neve e i rilievi spazzati dalle tempeste, lasciando diari densi di reverenza per l'architettura rurale del Québec.",
+                        focusCinema: "La cittadina di Baie-Saint-Paul vanta una storia artistica mondiale: è proprio tra questi vicoli e fienili innevati che nel 1984 Guy Laliberté e Gilles Ste-Croix fondarono il celeberrimo 'Cirque du Soleil', nato come compagnia di trampolieri e mangiafuoco itineranti del gelo quebecchese.",
+                        foodTip: "Degustazione del terroir: formaggio 'Le Migneron de Charlevoix' a latte crudo, pane di segale a lievitazione naturale e distillati artigianali aromatizzati agli aghi di peccio e tè del Labrador."
+                    }
+                ]
+            },
+            {
+                day: 8,
+                date: "04 Gennaio 2027",
+                title: "La Gola Glaciale e l'Ingresso nella Fortezza",
+                base: "Base 4: Vieux-Québec intramuros",
+                image: "https://images.unsplash.com/photo-1548777123-e216912df7d8?q=80&w=1200&auto=format&fit=crop",
+                summary: "Ciaspolata nella titanica valle a U della Jacques-Cartier, rientro a Québec City, restituzione auto 4x4 e check-in dentro le mura storiche.",
+                schedule: [
+                    {
+                        time: "09:30 – 14:00",
+                        title: "Il Santuario della Neve: Jacques-Cartier",
+                        desc: "Ingresso nel parco nazionale Sépaq. Una monumentale valle glaciale scavata nello Scudo Canadese. Ciaspole ai piedi lungo il fiume gelato alla ricerca di tracce di alci e volpi.",
+                        isFood: false,
+                        focusHistory: "La valle della Jacques-Cartier fu scolpita durante l'ultima era glaciale da ghiacciai spessi migliaia di metri che hanno intagliato un canyon a forma di U profondo oltre 550 metri. Utilizzata per secoli dalle popolazioni Wendat come corridoio di caccia invernale, fu in seguito tutelata per preservare gli ultimi lembi di foresta vergine mista boreale del Québec meridionale.",
+                        focusLit: "I diari dei primi esploratori e 'coureurs des bois' come Pierre-Esprit Radisson descrivono il silenzio della foresta boreale canadese come un'esperienza trascendente: una quiete in cui il minimo scricchiolio della ciaspola sulla neve crostosa echeggia contro le pareti di roccia come in una cattedrale primordiale.",
+                        focusCinema: "La vallata selvaggia e innevata della Jacques-Cartier è stata spesso utilizzata dal cinema hollywoodiano come controfigura per i territori dello Yukon e dell'Alaska in film dedicati alla corsa all'oro e alla sopravvivenza nelle terre estreme del Grande Nord.",
+                        foodTip: null
+                    },
+                    {
+                        time: "17:00 – 21:00",
+                        title: "Riconsegna SUV & Ingresso nel Vieux-Québec",
+                        desc: "Riconsegna del SUV alla Gare du Palais: zero pensieri di guida. Ingresso dentro le mura fortificate, lanterne di Rue Saint-Louis e prima cena con tourtière.",
+                        isFood: true,
+                        focusHistory: "Québec è l'unica città murata a nord del Messico, proclamata patrimonio mondiale UNESCO nel 1985. Fondata nel 1608 da Samuel de Champlain su Cap Diamant, la città alta domina la strozzatura del San Lorenzo ('Kebec' significa 'là dove il fiume si restringe' in lingua algonchina). Le mura di cinta e i bastioni in pietra calcarea grigia furono eretti per resistere agli assedi britannici del XVIII secolo.",
+                        focusLit: "Il fascino labirintico e misterioso del Vieux-Québec è celebrato nelle opere dello scrittore e regista Robert Lepage. Nella sua tetralogia teatrale, i vicoli della Haute-Ville d'inverno diventano lo scrigno di una memoria collettiva secolare che fonde melodramma, rigore gesuita e passione.",
+                        focusCinema: "Alfred Hitchcock scelse il Vieux-Québec per girare nel 1953 il suo capolavoro 'I Confess' (Io confesso), con Montgomery Clift. Hitchcock sfruttò le ripide scalinate in pietra, le ombre dei bastioni e l'imponenza dello Château Frontenac per creare una delle atmosfere di suspense più cupe e suggestive del cinema.",
+                        foodTip: "Cena tradizionale della Nuova Francia: gustate la verace 'Tourtière du Lac-Saint-Jean', il celebre pasticcio di carne speziato con cannella, chiodi di garofano e cipolla cotto lentamente in crosta dorata."
+                    }
+                ]
+            },
+            {
+                day: 9,
+                date: "05 Gennaio 2027",
+                title: "L'Adrenalina Ancestrale del Canot à Glace",
+                base: "Base 4: Vieux-Québec intramuros",
+                image: "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?q=80&w=1200&auto=format&fit=crop",
+                summary: "L'esperienza cardine del viaggio: spedizione in canot à glace sulla banchisa viva del San Lorenzo; toboga centenario su Terrazza Dufferin.",
+                schedule: [
+                    {
+                        time: "08:30 – 11:30",
+                        title: "Terrazza Dufferin & Lo Scivolo Centenario",
+                        desc: "Passeggiata sulla passerella di legno dominata dallo Château Frontenac. Discesa a 70 km/h sul celebre toboga di legno (La Glissade) a strapiombo sul fiume gelato.",
+                        isFood: false,
+                        focusHistory: "Costruita nel 1879 per volere di Lord Dufferin, allora governatore generale del Canada, la terrazza è il più celebre belvedere panoramico del paese. Lo scivolo di legno a tre piste (*Les Glissades de la Terrasse*), inaugurato nel 1884, è la più antica attrazione ricreativa invernale del continente: le slitte in legno tradizionale sfrecciano su rotaie di ghiaccio naturale alimentate solo dalla gravità.",
+                        focusLit: "Nei racconti di viaggio di William Dean Howells della fine dell'Ottocento, la vista dalla Terrazza Dufferin d'inverno veniva paragonata a 'un balcone sospeso sulle saghe nordiche', dove lo sguardo abbraccia il San Lorenzo ricoperto da giganteschi lastroni di banchisa in costante deriva.",
+                        focusCinema: "La Terrazza Dufferin e la maestosa mole del Fairmont Le Château Frontenac compaiono nella celebre serie drammatica sudcoreana cult 'Guardian: The Lonely and Great God' (Goblin), che ha reso il castello un'icona mondiale di romanticismo e leggenda senza tempo.",
+                        foodTip: null
+                    },
+                    {
+                        time: "12:30 – 16:30",
+                        title: "Canot à Glace: La Sfida sulla Banchisa",
+                        desc: "L'esperienza più pura e intensa del Grande Nord. Mute stagne, imbraco e ramponi. Pagaiare tra l'acqua gelida e spingere a monopattino (la trottinette) sopra lastroni mobili.",
+                        isFood: false,
+                        focusHistory: "Il canot à glace fu sviluppato nel XVII secolo come unico mezzo possibile per mantenere i collegamenti vitali tra Québec City e la sponda sud di Lévis quando il fiume era intasato da lastroni di ghiaccio alla deriva. Equipaggi di coraggiosi canottieri rischiavano la vita per trasportare posta, viveri e malati, dando origine alla disciplina sportiva e identitaria più emblematica del patrimonio quebecchese.",
+                        focusLit: "Louis Hémon, l'autore francese che nel 1913 scrisse 'Maria Chapdelaine', descrisse gli uomini del canot à glace come eredi moderni dei giganti delle saghe artiche: atleti d'acciaio capaci di leggere il movimento delle maree e di saltare con un piede solo sopra frammenti di banchisa galleggiante con freddezza millimetrica.",
+                        focusCinema: "I documentari dell'Office National du Film du Canada hanno consacrato il canot à glace come un'epopea visiva unica al mondo: riprese spettacolari mostrano la canoa che scivola sull'acqua nera come pece prima di salire all'improvviso sopra blocchi di ghiaccio frastagliati spinti dalla furia della corrente atlantica.",
+                        foodTip: null
+                    }
+                ]
+            },
+            {
+                day: 10,
+                date: "06 Gennaio 2027",
+                title: "Memoria Huron-Wendat & Il Gigante Fumante",
+                base: "Base 4: Vieux-Québec intramuros",
+                image: "https://images.unsplash.com/photo-1547471080-7cc2caa01a7e?q=80&w=1200&auto=format&fit=crop",
+                summary: "La Casa Lunga cerimoniale a Wendake, cucina boreale raffinata a La Traite e il colossale Pain de Sucre di ghiaccio alla Chute Montmorency.",
+                schedule: [
+                    {
+                        time: "09:00 – 13:00",
+                        title: "Radici Ancestrali a Wendake & Banchetto La Traite",
+                        desc: "Corsa in taxi all'enclave autogestita di Wendake. Visita alla Maison Longue Yänonhchia' attorno al fuoco sacro con cantastorie. Pranzo boreale d'alta cucina.",
+                        isFood: true,
+                        focusHistory: "La Nazione Huron-Wendat trovò rifugio in questa riserva nel tardo XVII secolo dopo le devastanti guerre contro la confederazione Irochese. La grande Casa Lunga (*Yänonhchia'*), costruita interamente con tronchi di cedro e cortecce d'olmo senza chiodi di metallo, rappresentava non solo l'abitazione comunitaria di più clan familiari legati per via matrilineare, ma la struttura simbolica stessa del cosmo indigeno.",
+                        focusLit: "Le leggende della creazione Huron-Wendat narrano che la Terra fu originata posando un frammento di fango sul dorso di una tartaruga gigante emersa dalle acque primordiali. Nei canti tradizionali intonati dal cantastorie attorno al fuoco, la parola assume un valore sacro, capace di trasmettere nei millenni la saggezza del rispetto profondo per la taiga e gli animali selvatici.",
+                        focusCinema: "L'estetica e la memoria delle Prime Nazioni canadesi hanno ispirato opere cinematografiche epiche come 'Black Robe' (Manto Nero) di Bruce Beresford, girato proprio nelle foreste del Québec, dove la complessità culturale, spirituale e cerimoniale delle nazioni indigene viene mostrata con cruda autenticità e rispetto.",
+                        foodTip: "Pranzo gastronomico boreale al celebre ristorante 'La Traite': filetto di cervo arrostito alle bacche di mirto della tundra, pane azzimo tradizionale 'bannock' e tisane aromatiche a base di aghi di cedro bianco e fungo chaga."
+                    },
+                    {
+                        time: "13:45 – 16:30",
+                        title: "Chute Montmorency & Il Pain de Sucre",
+                        desc: "La cascata compie un salto di 83 metri (più alta di Niagara). Il pulviscolo gela a mezz'aria formando alla base un titanico cono di ghiaccio puro alto oltre 30 metri.",
+                        isFood: false,
+                        focusHistory: "Nel luglio del 1759, le alture della Chute Montmorency furono il teatro della storica battaglia di Montmorency, in cui le forze francesi guidate dal marchese di Montcalm respinsero il primo assalto britannico del generale James Wolfe. Nei mesi invernali, il maestoso salto d'acqua ghiacciata divenne nell'Ottocento la meta prediletta della nobiltà coloniale britannica per discese in slitta dal cono di ghiaccio.",
+                        focusLit: "I viaggiatori romantici dell'Ottocento descrivevano il 'Pain de Sucre' della cascata come una meraviglia naturale senza pari: un vulcano di ghiaccio vivo che cresce giorno dopo giorno per accumulo del pulviscolo atomizzato, riflettendo tonalità di azzurro e turchese nel cielo limpido invernale.",
+                        focusCinema: "La passerella sospesa a picco sul salto ghiacciato della Chute Montmorency è stata immortalata in spot internazionali e documentari geografici di Discovery Channel e National Geographic, evidenziando il potere titanico della natura canadese anche alle porte della città.",
+                        foodTip: null
+                    }
+                ]
+            },
+            {
+                day: 11,
+                date: "07 Gennaio 2027",
+                title: "L'Ultima Fiaba Fortificata",
+                base: "Base 4: Vieux-Québec intramuros",
+                image: "https://images.unsplash.com/photo-1519671482749-fd09be7ccebf?q=80&w=1200&auto=format&fit=crop",
+                summary: "Bastioni innevati della Citadelle, acquisti d'arte inuit nel Petit-Champlain e memorabile banchetto d'addio a lume di candela.",
+                schedule: [
+                    {
+                        time: "09:30 – 17:00",
+                        title: "Bastioni della Citadelle & Artigianato Petit-Champlain",
+                        desc: "Esplorazione a piedi dei bastioni a stella, di Porte Saint-Jean e della Citadelle. Nel pomeriggio botteghe di sculture in pietra ollare e sciroppo grado scuro.",
+                        isFood: false,
+                        focusHistory: "La Citadelle di Québec, situata sulla sommità di Cap Diamant, è la più grande fortificazione britannica del Nord America. Progettata dall'ingegnere militare Elias Walker Durnford secondo i principi architettonici del celebre generale francese Vauban, la fortezza a stella è ancora oggi la sede ufficiale del Royal 22e Régiment, l'illustre reggimento francofono delle forze armate canadesi.",
+                        focusLit: "Passeggiare per Rue du Petit-Champlain d'inverno significa calarsi nell'immaginario narrativo di Anne Hébert e del suo romanzo 'Kamouraska'. Le vecchie pietre umide, le persiane colorate e le insegne in ferro battuto che cigolano sotto il vento del nord riportano all'inverno coloniale del Seicento, denso di passioni e di misteri racchiusi nelle case.",
+                        focusCinema: "La pittoresca Rue du Petit-Champlain, considerata una delle vie pedonali più suggestive del pianeta, è apparsa in decine di commedie romantiche e spot di Natale internazionali, trasformata dalla neve fresca e dalle ghirlande di luci soffuse in un vero villaggio incantato fiabesco.",
+                        foodTip: null
+                    },
+                    {
+                        time: "19:30 – 22:30",
+                        title: "Il Banchetto d'Addio a Lume di Candela",
+                        desc: "Cena solenne d'addio in un'antica auberge in pietra del Seicento (es. Aux Anciens Canadiens o Le Lapin Sauté) celebrando il trionfo della spedizione.",
+                        isFood: true,
+                        focusHistory: "La Maison Jacquet, sede del ristorante 'Aux Anciens Canadiens', fu costruita nel 1675 ed è la casa in pietra più antica del Vieux-Québec. All'interno delle sue sale dalle travi basse in pino e dai muri spessi un metro si rifugiavano i notabili della colonia durante i lunghi inverni, gustando piatti tramandati da quattro secoli di storia culinaria.",
+                        focusLit: "Lo scrittore québécois Philippe-Aubert de Gaspé visse in queste sale storiche e vi scrisse nel 1863 il primo romanzo fondativo della letteratura del Québec, 'Les Anciens Canadiens'. Nelle pagine de Gaspé esalta il calore dell'ospitalità focolare, dove il viaggiatore intirizzito veniva accolto con selvaggina fumante e brocche di sidro.",
+                        focusCinema: "L'atmosfera calda e ambrata di queste antiche auberge quebecchesi, con i caminetti aperti in ghisa e i vetri smerigliati coperti da fiori di ghiaccio, ha ispirato i set intimi e nostalgici di registi internazionali in cerca dell'autentico romanticismo d'antan canadese.",
+                        foodTip: "Cena di commiato d'autore: coscia d'anatra confit o spezzatino di selvaggina al ginepro, torta calda di pasta sfoglia con crema densa di sciroppo d'acero e un calice di sidro di ghiaccio riserva barricato."
+                    }
+                ]
+            },
+            {
+                day: 12,
+                date: "08 Gennaio 2027",
+                title: "L'Arrivederci al Grande Nord",
+                base: "Rientro (YQB → MXP)",
+                image: "https://images.unsplash.com/photo-1517824806704-9040b037703b?q=80&w=1200&auto=format&fit=crop",
+                summary: "Ultimo caffè filtro e sfoglia d'acero nel Petit-Champlain, taxi per l'aeroporto Jean Lesage (YQB) e decollo per Milano Malpensa.",
+                schedule: [
+                    {
+                        time: "08:30 – 13:30",
+                        title: "L'Ultimo Respiro Polare & Decollo",
+                        desc: "Ultima passeggiata mattutina con l'aria pungente che pizzica il viso. Check-out, comoda salita in taxi (20 min) per l'aeroporto YQB e imbarco sul volo per Malpensa.",
+                        isFood: true,
+                        focusHistory: "L'aeroporto Jean-Lesage di Québec City (YQB) porta il nome del celebre primo ministro del Québec che negli anni Sessanta guidò la 'Révolution Tranquille' (Rivoluzione Tranquilla), trasformando radicalmente la società quebecchese da mondo rurale tradizionale a moderna repubblica culturale ed economica fiera della propria francofonia.",
+                        focusLit: "Il poeta nazionale del Québec, Gilles Vigneault, ha scritto il celebre verso che riassume l'essenza di questa terra: 'Mon pays ce n'est pas un pays, c'est l'hiver' (Il mio paese non è un paese, è l'inverno). Lasciare il Québec significa portare per sempre dentro di sé il respiro limpido e la maestosa solennità delle sue nevi.",
+                        focusCinema: "La sequenza finale di ogni grande viaggio polare nel cinema chiude sui motori dell'aereo che decolla sorvolando il mosaico di ghiacci del San Lorenzo: uno spettacolo aereo che fissa nella memoria per sempre la grandezza immensa della natura canadese.",
+                        foodTip: "Ultima colazione quebecchese: grande tazza di caffè filtro americano caldo con 'pain au chocolat' o croissant caldo farcito di crema d'acero prima del volo transatlantico."
+                    }
+                ]
+            }
+        ];
+
+        /* ========================================================= */
+        /* 2. DATI TRACKERS & GANTT                                   */
+        /* ========================================================= */
+        const financialData = [
+            { item: "Treni Intercity", desc: "VIA Rail Economy sola andata (Toronto → Ottawa → Montréal → Québec) x2 pax", cad: "$420 CAD", eur: "~ €280" },
+            { item: "Noleggio Auto & Carburante", desc: "SUV compatto 4x4 (3 giorni: 1–4 Gen) con gomme chiodate, assicurazione e benzina", cad: "$460 CAD", eur: "~ €307" },
+            { item: "Trasporti Locali & Navette", desc: "UP Express Toronto, bus Niagara A/R, taxi urbani (Wendake, Montmorency, aeroporto YQB)", cad: "$260 CAD", eur: "~ €173" },
+            { item: "Parchi & Attività Outdoor", desc: "Pass Sépaq (Jacques-Cartier, Montmorency), noleggio ciaspole, scivoli toboga Dufferin", cad: "$150 CAD", eur: "~ €100" },
+            { item: "Esperienze Esclusive", desc: "Spedizione guidata Canot à Glace con mute stagne (x2) + Cabina privata pesca fiordo", cad: "$670 CAD", eur: "~ €447" },
+            { item: "Cultura & Tradizioni", desc: "Ingresso guidato Maison Longue Huron-Wendat + degustazioni artigiani a Charlevoix", cad: "$110 CAD", eur: "~ €73" },
+            { item: "Pernottamenti (11 notti)", desc: "2n Toronto Downtown, 2n Vieux-Montréal, 3n Lodge Charlevoix, 4n Vieux-Québec intramuros", cad: "$2.900 CAD", eur: "~ €1.933" },
+            { item: "Ristorazione & Sapori", desc: "Pasti quotidiani, degustazioni street food, Cenone Capodanno Montréal e cena d'addio", cad: "$2.300 CAD", eur: "~ €1.533" }
+        ];
+
+        const experienceData = [
+            { cat: "Natura Boreale & Outdoor Attivo", h: "34,5 h", pct: "19,6%" },
+            { cat: "Camminate Urbane & Architettura", h: "30,0 h", pct: "17,0%" },
+            { cat: "Ristoranti, Sapori & Riti Culinari", h: "27,0 h", pct: "15,3%" },
+            { cat: "Relax Serale & Pause Termiche", h: "26,0 h", pct: "14,8%" },
+            { cat: "Treni Panoramici (VIA Rail & UP)", h: "14,5 h", pct: "8,2%" },
+            { cat: "Esperienze Endemiche (Canoa & Pesca)", h: "13,0 h", pct: "7,4%" },
+            { cat: "Guida SUV 4x4 (Taiga & Fiordi)", h: "8,5 h", pct: "4,8%" },
+            { cat: "Cultura Indigena & Tradizioni", h: "8,5 h", pct: "4,8%" },
+            { cat: "Trasferimenti Locali & Bus", h: "8,5 h", pct: "4,8%" },
+            { cat: "Città Sotterranea (RÉSO Montréal)", h: "5,5 h", pct: "3,1%" }
+        ];
+
+        const ganttTasks = [
+            { id: "task_1", title: "Voli Intercontinentali Open-Jaw", target: "Compagnia aerea ufficiale (MXP → YYZ / YQB → MXP con 23kg bagaglio stiva)", deadline: "Metà Settembre 2026", warning: "Evitare OTA terze per gestire flessibilità cambi invernali." },
+            { id: "task_2", title: "Burocrazia eTA Ufficiale Canada", target: "Esclusivamente su Canada.ca (costo reale 7 $ CAD / persona)", deadline: "Fine Settembre 2026", warning: "Attenzione alle truffe web: non usare siti intermediari che chiedono 50-80 €." },
+            { id: "task_3", title: "Polizza Medica Massimale Elevato", target: "Broker specializzati (minimo 1.000.000 € o illimitato + sport invernali)", deadline: "Entro 48h dall'acquisto voli", warning: "Sanità canadese costosissima; verificare che copra ciaspole e canoa." },
+            { id: "task_4", title: "Treni VIA Rail (3 Tratte)", target: "viarail.ca: Toronto→Ottawa, Ottawa→Montréal, Montréal→Québec (Economy Plus)", deadline: "Entro 20 Settembre 2026", warning: "Posti al 1° gennaio limitatissimi. Sfruttare Discount Tuesdays." },
+            { id: "task_5", title: "Canot à Glace sul Fiume San Lorenzo", target: "canotaglaceexperience.ca (Slot del 5 Gennaio pomeriggio x 2 pax)", deadline: "Fine Settembre 2026", warning: "Solo 10-15 posti disponibili al giorno per le maree. Bloccare subito!" },
+            { id: "task_6", title: "Noleggio SUV 4x4 AWD (Gare du Palais)", target: "Enterprise / Avis o broker (ritiro 1 Gen ore 17:00, reso 4 Gen 16:30)", deadline: "Fine Settembre 2026", warning: "Vincolo di legge Québec: esigere conferma scritta gomme da neve 3PMSF." },
+            { id: "task_7", title: "Basi Strategiche Hotel (1, 2, 3, 4)", target: "2n Toronto Union, 2n Vieux-Mtl, 3n Lodge Charlevoix, 4n Vieux-Qbc intramuros", deadline: "Entro 30 Settembre 2026", warning: "A Québec City stare categoricamente dentro le mura per muoversi solo a piedi." },
+            { id: "task_8", title: "Cabina Riscaldata Pesca Fiordo Saguenay", target: "contactnature.ca (Baie des Ha! Ha!) mattina del 2 Gennaio", deadline: "Entro 15 Ottobre 2026", warning: "Specificare che siete principianti: include legna, esche e canne forate." },
+            { id: "task_9", title: "Cenone di Capodanno nel Vieux-Montréal", target: "OpenTable.ca / Resy.com (Gibbys, Bonaparte, Monarque o Modavie)", deadline: "Tra 15 Ottobre e 5 Novembre", warning: "I tavoli per il 31/12 aprono in questa finestra e si esauriscono in 48h." },
+            { id: "task_10", title: "Bus Rapido Cascate del Niagara A/R", target: "Megabus.com o gotransit.com per il 29 Dicembre", deadline: "Entro 15 Novembre 2026", warning: "Preferibile ai tour guidati: costa un terzo e dà piena libertà di tempo." },
+            { id: "task_11", title: "Wendake: Casa Lunga & Tavolo La Traite", target: "museehuronwendat.ca (visita Yänonhchia' + pranzo 6 Gennaio)", deadline: "Entro 15 Novembre 2026", warning: "Segnalare in anticipo la lingua desiderata (francese o inglese) per il cantastorie." },
+            { id: "task_12", title: "Cena d'Addio nel Vieux-Québec", target: "Aux Anciens Canadiens o Le Lapin Sauté (Petit-Champlain)", deadline: "Entro 5 Dicembre 2026", warning: "Locali storici con pochi coperti: la prenotazione evita code a -15°C." },
+            { id: "task_13", title: "Pass Parchi Provinciali Sépaq", target: "sepaq.com (Accesso Parc Jacques-Cartier con noleggio ciaspole + Chute Montmorency)", deadline: "Entro 15 Dicembre 2026", warning: "Accesso contingentato per non saturare i sentieri battuti." }
+        ];
+
+        /* Coordinate geografiche delle 12 tappe per Leaflet GPS */
+        const mapLocations = [
+            { num: 1, name: "Toronto Metropoli", lat: 43.6532, lng: -79.3832, desc: "Arrivo UP Express & Nathan Phillips Square" },
+            { num: 2, name: "Cascate del Niagara", lat: 43.0962, lng: -79.0377, desc: "Ghiacci primordiali & Distillery District" },
+            { num: 3, name: "Ottawa Capitale", lat: 45.4215, lng: -75.6972, desc: "Canale Rideau gelato & Parliament Hill" },
+            { num: 4, name: "Montréal Sotterranea", lat: 45.5017, lng: -73.5673, desc: "RÉSO, Vieux-Port & Capodanno sul San Lorenzo" },
+            { num: 5, name: "Baie-Saint-Paul (Charlevoix)", lat: 47.4414, lng: -70.5050, desc: "Lodge rurale e taiga boreale" },
+            { num: 6, name: "Fiordo del Saguenay (La Baie)", lat: 48.3364, lng: -70.8808, desc: "Pesca sul ghiaccio in cabina riscaldata" },
+            { num: 7, name: "Cratere di Charlevoix", lat: 47.5500, lng: -70.3000, desc: "Falesie sul mare di ghiaccio & Laiterie" },
+            { num: 8, name: "Parc Jacques-Cartier", lat: 47.2500, lng: -71.3500, desc: "Ciaspolata nella titanica valle glaciale a U" },
+            { num: 9, name: "Québec City (Canot à Glace)", lat: 46.8139, lng: -71.2080, desc: "Sfida sulla banchisa del San Lorenzo" },
+            { num: 10, name: "Wendake & Montmorency", lat: 46.8580, lng: -71.3550, desc: "Casa Lunga Huron & Pain de Sucre glaciale" },
+            { num: 11, name: "Bastioni Vieux-Québec", lat: 46.8115, lng: -71.2060, desc: "Mura storiche, Citadelle & Petit-Champlain" },
+            { num: 12, name: "Aeroporto Jean Lesage (YQB)", lat: 46.7911, lng: -71.3933, desc: "Decollo per Milano Malpensa" }
+        ];
+
+        /* ========================================================= */
+        /* 3. INIZIALIZZAZIONE PAGINE & COMPONENTI                    */
+        /* ========================================================= */
+        let leafletMapInstance = null;
+
+        function switchPage(pageId) {
+            document.querySelectorAll('.page-view').forEach(p => p.classList.add('hidden'));
+            document.getElementById(pageId).classList.remove('hidden');
+
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('border-arctic-500', 'bg-arctic-800', 'text-arctic-400');
+                btn.classList.add('border-arctic-700', 'bg-arctic-950', 'text-slate-300');
+            });
+            const activeBtn = document.getElementById('btn-' + pageId);
+            if(activeBtn) {
+                activeBtn.classList.add('border-arctic-500', 'bg-arctic-800', 'text-arctic-400');
+                activeBtn.classList.remove('border-arctic-700', 'bg-arctic-950', 'text-slate-300');
+            }
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+
+            if (pageId === 'page-preview' && leafletMapInstance) {
+                setTimeout(() => leafletMapInstance.invalidateSize(), 200);
+            }
+        }
+
+        /* Inizializzazione Mappa Leaflet con Tappe e Polylines Vettoriali */
+        function initLeafletMap() {
+            if (leafletMapInstance) return;
+            leafletMapInstance = L.map('leafletMap').setView([45.8, -74.0], 6);
+
+            // Layer Mappa Dark CartoDB
+            L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+                attribution: '© OpenStreetMap © CARTO',
+                maxZoom: 18
+            }).addTo(leafletMapInstance);
+
+            // Marker numerati con icone custom spigolose
+            mapLocations.forEach(loc => {
+                const iconHtml = `<div class="custom-marker w-6 h-6">${loc.num}</div>`;
+                const customIcon = L.divIcon({
+                    html: iconHtml,
+                    className: '',
+                    iconSize: [24, 24],
+                    iconAnchor: [12, 12]
+                });
+
+                L.marker([loc.lat, loc.lng], { icon: customIcon })
+                 .addTo(leafletMapInstance)
+                 .bindPopup(`<strong style="font-family: monospace; color: #0B132B;">${loc.num}. ${loc.name}</strong><br><span style="font-size:11px;">${loc.desc}</span>`);
+            });
+
+            // Polilinea 1: Treno VIA Rail (Toronto -> Niagara -> Ottawa -> Montreal -> Quebec)
+            const railPoints = [
+                [43.6532, -79.3832], // Toronto
+                [43.0962, -79.0377], // Niagara
+                [43.6532, -79.3832], // Rientro Toronto
+                [45.4215, -75.6972], // Ottawa
+                [45.5017, -73.5673], // Montreal
+                [46.8139, -71.2080]  // Quebec City
+            ];
+            L.polyline(railPoints, {
+                color: '#6FFFE9',
+                weight: 3,
+                dashArray: '6, 6',
+                opacity: 0.85
+            }).addTo(leafletMapInstance);
+
+            // Polilinea 2: Tratta SUV 4x4 (Quebec -> Charlevoix -> Saguenay -> Jacques-Cartier -> Quebec)
+            const suvPoints = [
+                [46.8139, -71.2080], // Quebec
+                [47.4414, -70.5050], // Baie-Saint-Paul
+                [48.3364, -70.8808], // Fiordo Saguenay
+                [47.5500, -70.3000], // Charlevoix falesie
+                [47.2500, -71.3500], // Jacques-Cartier
+                [46.8139, -71.2080]  // Chiusura noleggio Quebec
+            ];
+            L.polyline(suvPoints, {
+                color: '#f97316',
+                weight: 3,
+                opacity: 0.95
+            }).addTo(leafletMapInstance);
+        }
+
+        /* Render Snapshot Cards in Pagina Preview */
+        function renderSnapshotCards() {
+            const container = document.getElementById('snapshot-cards-container');
+            container.innerHTML = itineraryData.map(d => `
+                <div class="ice-card p-4 flex flex-col justify-between hover:border-arctic-400 transition cursor-pointer" onclick="selectDayRoadbook(${d.day})">
+                    <div>
+                        <div class="flex items-center justify-between font-mono text-xs mb-2">
+                            <span class="text-arctic-400 font-bold">GIORNO ${String(d.day).padStart(2, '0')}</span>
+                            <span class="text-slate-400">${d.date.split(' ')[0]} ${d.date.split(' ')[1]}</span>
+                        </div>
+                        <h4 class="font-bold text-white text-sm mb-2 line-clamp-1">${d.title}</h4>
+                        <p class="text-slate-300 text-xs line-clamp-2 mb-3">${d.summary}</p>
+                    </div>
+                    <div class="border-t border-arctic-800 pt-2 flex items-center justify-between text-[11px] font-mono">
+                        <span class="text-slate-400">${d.base.split(':')[1] || d.base}</span>
+                        <span class="text-arctic-400 hover:underline">Apri Roadbook →</span>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        /* Render Pills e Dettaglio Giorno nel Roadbook */
+        function renderRoadbookSelector() {
+            const pillContainer = document.getElementById('day-selector-pills');
+            pillContainer.innerHTML = itineraryData.map(d => `
+                <button onclick="selectDayRoadbook(${d.day})" id="pill-day-${d.day}" class="day-pill flex-shrink-0 px-3 py-2 border border-arctic-700 bg-arctic-900 font-mono text-xs font-bold text-slate-300 hover:border-arctic-400 transition">
+                    G${d.day} <span class="hidden sm:inline font-normal text-slate-400">(${d.date.split(' ')[0]} ${d.date.split(' ')[1].substring(0,3)})</span>
+                </button>
+            `).join('');
+        }
+
+        function selectDayRoadbook(dayNum) {
+            switchPage('page-itinerary');
+
+            document.querySelectorAll('.day-pill').forEach(p => {
+                p.classList.remove('border-arctic-400', 'bg-arctic-800', 'text-arctic-400');
+                p.classList.add('border-arctic-700', 'bg-arctic-900', 'text-slate-300');
+            });
+            const activePill = document.getElementById(`pill-day-${dayNum}`);
+            if (activePill) {
+                activePill.classList.add('border-arctic-400', 'bg-arctic-800', 'text-arctic-400');
+                activePill.classList.remove('border-arctic-700', 'bg-arctic-900', 'text-slate-300');
+            }
+
+            const day = itineraryData.find(d => d.day === dayNum);
+            const detailContainer = document.getElementById('day-detail-content');
+
+            detailContainer.innerHTML = `
+                <div class="ice-card border border-arctic-700 overflow-hidden mb-8">
+                    <div class="relative h-64 sm:h-80 w-full bg-cover bg-center border-b border-arctic-700" style="background-image: linear-gradient(to bottom, rgba(6,10,18,0.3), rgba(6,10,18,0.9)), url('${day.image}');">
+                        <div class="absolute bottom-0 left-0 p-6 max-w-3xl">
+                            <div class="flex items-center space-x-3 mb-2">
+                                <span class="bg-arctic-500 text-arctic-950 font-mono font-black text-xs px-2 py-0.5">GIORNO ${day.day} DI 12</span>
+                                <span class="font-mono text-xs text-arctic-100">${day.date}</span>
+                                <span class="font-mono text-xs text-amber-400 border border-amber-400 px-2 py-0.5">${day.base}</span>
+                            </div>
+                            <h2 class="text-2xl sm:text-4xl font-black text-white uppercase tracking-tight">${day.title}</h2>
+                        </div>
+                    </div>
+
+                    <div class="p-6">
+                        <p class="text-sm sm:text-base text-slate-300 font-light mb-8 border-l-2 border-arctic-400 pl-4">${day.summary}</p>
+                        
+                        <h3 class="font-mono text-xs uppercase tracking-widest text-arctic-400 font-bold mb-6">// CRONOPROGRAMMA ATTIVITA' E FOCUS APPROFONDITI</h3>
+                        
+                        <div class="space-y-6">
+                            ${day.schedule.map((act, idx) => `
+                                <div class="bg-arctic-900/80 border border-arctic-800 p-5">
+                                    <div class="flex flex-col sm:flex-row sm:items-center justify-between pb-3 border-b border-arctic-800/80 gap-2">
+                                        <div class="flex items-center space-x-3">
+                                            <span class="font-mono text-xs bg-arctic-800 text-arctic-400 px-2 py-1 font-bold border border-arctic-700">${act.time}</span>
+                                            <h4 class="font-bold text-white text-base">${act.title}</h4>
+                                        </div>
+                                        ${act.isFood ? '<span class="font-mono text-[10px] uppercase bg-flame-500/20 text-flame-500 border border-flame-500/40 px-2 py-0.5 w-fit">TAPPA GASTRONOMICA</span>' : ''}
+                                    </div>
+                                    <p class="text-slate-300 text-xs sm:text-sm my-4 font-light leading-relaxed">${act.desc}</p>
+                                    
+                                    <!-- Bottoni Interattivi Spigolosi -->
+                                    <div class="pt-2 border-t border-arctic-800 flex flex-wrap gap-2">
+                                        <button onclick="toggleFocus('hist_${day.day}_${idx}')" class="px-3 py-1.5 bg-arctic-950 hover:bg-arctic-800 border border-arctic-700 hover:border-arctic-400 text-arctic-400 font-mono text-xs font-bold transition flex items-center space-x-1.5">
+                                            <i class="fa-solid fa-landmark"></i>
+                                            <span>Focus Storico</span>
+                                        </button>
+                                        <button onclick="toggleFocus('lit_${day.day}_${idx}')" class="px-3 py-1.5 bg-arctic-950 hover:bg-arctic-800 border border-arctic-700 hover:border-arctic-400 text-arctic-400 font-mono text-xs font-bold transition flex items-center space-x-1.5">
+                                            <i class="fa-solid fa-book-open"></i>
+                                            <span>Focus Letterario</span>
+                                        </button>
+                                        <button onclick="toggleFocus('cin_${day.day}_${idx}')" class="px-3 py-1.5 bg-arctic-950 hover:bg-arctic-800 border border-arctic-700 hover:border-arctic-400 text-arctic-400 font-mono text-xs font-bold transition flex items-center space-x-1.5">
+                                            <i class="fa-solid fa-film"></i>
+                                            <span>Focus Cinematografico</span>
+                                        </button>
+                                        ${act.isFood ? `
+                                            <button onclick="toggleFocus('food_${day.day}_${idx}')" class="px-3 py-1.5 bg-flame-500/20 hover:bg-flame-500/30 border border-flame-500 text-flame-500 font-mono text-xs font-bold transition flex items-center space-x-1.5">
+                                                <i class="fa-solid fa-utensils"></i>
+                                                <span>Cosa Mangiare Qui</span>
+                                            </button>
+                                        ` : ''}
+                                    </div>
+
+                                    <!-- Box di Testo a Comparsa Profonda (~1000 caratteri per bottone) -->
+                                    <div id="hist_${day.day}_${idx}" class="focus-content font-mono text-xs bg-arctic-950 border border-arctic-700/60 mt-2 text-slate-300">
+                                        <div class="p-4 border-l-2 border-arctic-400">
+                                            <strong class="text-arctic-400 uppercase block mb-1"><i class="fa-solid fa-landmark mr-1"></i> Approfondimento Storico:</strong>
+                                            ${act.focusHistory}
+                                        </div>
+                                    </div>
+                                    <div id="lit_${day.day}_${idx}" class="focus-content font-mono text-xs bg-arctic-950 border border-arctic-700/60 mt-2 text-slate-300">
+                                        <div class="p-4 border-l-2 border-arctic-500">
+                                            <strong class="text-arctic-500 uppercase block mb-1"><i class="fa-solid fa-book-open mr-1"></i> Risonanza Letteraria:</strong>
+                                            ${act.focusLit}
+                                        </div>
+                                    </div>
+                                    <div id="cin_${day.day}_${idx}" class="focus-content font-mono text-xs bg-arctic-950 border border-arctic-700/60 mt-2 text-slate-300">
+                                        <div class="p-4 border-l-2 border-arctic-100">
+                                            <strong class="text-arctic-100 uppercase block mb-1"><i class="fa-solid fa-film mr-1"></i> Memoria Cinematografica:</strong>
+                                            ${act.focusCinema}
+                                        </div>
+                                    </div>
+                                    ${act.isFood ? `
+                                        <div id="food_${day.day}_${idx}" class="focus-content font-mono text-xs bg-arctic-950 border border-flame-500/60 mt-2 text-slate-300">
+                                            <div class="p-4 border-l-2 border-flame-500">
+                                                <strong class="text-flame-500 uppercase block mb-1"><i class="fa-solid fa-utensils mr-1"></i> Specialità del Terroir & Consigli Culinari:</strong>
+                                                ${act.foodTip}
+                                            </div>
+                                        </div>
+                                    ` : ''}
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        /* Toggle Espansione Focus Box */
+        function toggleFocus(elementId) {
+            const el = document.getElementById(elementId);
+            if (!el) return;
+            el.classList.toggle('open');
+        }
+
+        /* Render Tabelle Finanziarie & Experience */
+        function renderTrackerTables() {
+            const fBody = document.getElementById('financial-table-body');
+            fBody.innerHTML = financialData.map(f => `
+                <tr class="hover:bg-arctic-900/60">
+                    <td class="p-3 font-bold text-white">${f.item}</td>
+                    <td class="p-3 text-slate-300">${f.desc}</td>
+                    <td class="p-3 text-arctic-400 font-bold">${f.cad}</td>
+                    <td class="p-3 text-slate-300">${f.eur}</td>
+                </tr>
+            `).join('');
+
+            const expBody = document.getElementById('experience-table-body');
+            expBody.innerHTML = experienceData.map(e => `
+                <tr class="hover:bg-arctic-900/60">
+                    <td class="p-2 text-white">${e.cat}</td>
+                    <td class="p-2 text-arctic-400 font-bold">${e.h}</td>
+                    <td class="p-2 text-slate-400">${e.pct}</td>
+                </tr>
+            `).join('');
+        }
+
+        /* Inizializzazione Grafici Chart.js */
+        function initCharts() {
+            // 1. Grafico a Ciambella: Budget
+            const ctxBudget = document.getElementById('budgetChart').getContext('2d');
+            new Chart(ctxBudget, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Pernottamenti (11n)', 'Ristorazione & Food', 'Esperienze & Parchi', 'Noleggio SUV & Carburante', 'Treni VIA Rail', 'Trasporti & Navette', 'Cultura & Guide'],
+                    datasets: [{
+                        data: [2900, 2300, 820, 460, 420, 260, 110],
+                        backgroundColor: ['#5BC0BE', '#f97316', '#6FFFE9', '#3A506B', '#1C2541', '#94a3b8', '#0B132B'],
+                        borderColor: '#060a12',
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: { color: '#cbd5e1', font: { family: 'monospace', size: 10 } }
+                        }
+                    }
+                }
+            });
+
+            // 2. Grafico a Barre: Esposizione Climatica (Indoor vs Outdoor)
+            const ctxClimate = document.getElementById('climateChart').getContext('2d');
+            new Chart(ctxClimate, {
+                type: 'bar',
+                data: {
+                    labels: ['Indoor Protetti (87h)', 'All\'aperto Gelo (57.5h)', 'Mezzi Climatizzati (31.5h)'],
+                    datasets: [{
+                        label: 'Ore di Veglia',
+                        data: [87, 57.5, 31.5],
+                        backgroundColor: ['#5BC0BE', '#f97316', '#3A506B'],
+                        borderColor: '#6FFFE9',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            ticks: { color: '#94a3b8', font: { family: 'monospace' } },
+                            grid: { color: 'rgba(255,255,255,0.05)' }
+                        },
+                        x: {
+                            ticks: { color: '#cbd5e1', font: { family: 'monospace', size: 10 } },
+                            grid: { display: false }
+                        }
+                    },
+                    plugins: {
+                        legend: { display: false }
+                    }
+                }
+            });
+        }
+
+        /* Gestione Note Personali con LocalStorage */
+        function loadNotes() {
+            const notes = JSON.parse(localStorage.getItem('expedition_notes') || '[]');
+            const list = document.getElementById('notesList');
+            if (notes.length === 0) {
+                list.innerHTML = `<li class="text-slate-500 italic p-2 border border-dashed border-arctic-800">Nessuna nota personale registrata. Aggiungi promemoria qui sopra.</li>`;
+                return;
+            }
+            list.innerHTML = notes.map((n, i) => `
+                <li class="flex items-center justify-between p-2.5 bg-arctic-900 border border-arctic-800">
+                    <span class="text-slate-200">${n}</span>
+                    <button onclick="removeNote(${i})" class="text-red-400 hover:text-red-300 font-bold ml-4"><i class="fa-solid fa-trash-can"></i></button>
+                </li>
+            `).join('');
+        }
+
+        function addPersonalNote() {
+            const input = document.getElementById('noteInput');
+            const val = input.value.trim();
+            if (!val) return;
+            const notes = JSON.parse(localStorage.getItem('expedition_notes') || '[]');
+            notes.push(val);
+            localStorage.setItem('expedition_notes', JSON.stringify(notes));
+            input.value = '';
+            loadNotes();
+        }
+
+        function removeNote(index) {
+            const notes = JSON.parse(localStorage.getItem('expedition_notes') || '[]');
+            notes.splice(index, 1);
+            localStorage.setItem('expedition_notes', JSON.stringify(notes));
+            loadNotes();
+        }
+
+        /* Gestione Task Gantt Interattivi con Salvataggio Stato */
+        function renderGanttTasks() {
+            const container = document.getElementById('task-cards-list');
+            const savedState = JSON.parse(localStorage.getItem('gantt_task_state') || '{}');
+
+            container.innerHTML = ganttTasks.map(t => {
+                const isChecked = savedState[t.id] === true;
+                return `
+                    <div class="ice-card p-4 border border-arctic-700 flex flex-col md:flex-row md:items-center justify-between gap-4 transition ${isChecked ? 'opacity-70 bg-arctic-950/60' : ''}">
+                        <div class="flex items-start space-x-3">
+                            <input type="checkbox" id="${t.id}" onchange="toggleTaskState('${t.id}')" ${isChecked ? 'checked' : ''} class="mt-1 w-4 h-4 text-arctic-500 bg-arctic-900 border-arctic-600 focus:ring-0 cursor-pointer">
+                            <div>
+                                <label for="${t.id}" class="font-bold text-sm cursor-pointer ${isChecked ? 'line-through text-slate-500' : 'text-white'}">
+                                    ${t.title}
+                                </label>
+                                <span class="block text-xs font-mono text-arctic-400 mt-0.5">${t.target}</span>
+                                <span class="block text-[11px] font-mono text-slate-400 mt-1">⚠️ <strong class="text-amber-400">Insidia:</strong> ${t.warning}</span>
+                            </div>
+                        </div>
+                        <div class="flex items-center space-x-3 self-end md:self-center font-mono text-xs">
+                            <span class="px-2.5 py-1 bg-arctic-900 border border-arctic-700 text-slate-300">
+                                <i class="fa-regular fa-clock mr-1 text-arctic-400"></i>${t.deadline}
+                            </span>
+                            <span class="px-2.5 py-1 font-bold ${isChecked ? 'bg-emerald-950 border border-emerald-500 text-emerald-400' : 'bg-arctic-900 border border-arctic-700 text-slate-400'}">
+                                ${isChecked ? 'COMPLETATO' : 'IN ATTESA'}
+                            </span>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            updateGanttProgress();
+        }
+
+        function toggleTaskState(taskId) {
+            const savedState = JSON.parse(localStorage.getItem('gantt_task_state') || '{}');
+            savedState[taskId] = !savedState[taskId];
+            localStorage.setItem('gantt_task_state', JSON.stringify(savedState));
+            renderGanttTasks();
+        }
+
+        function updateGanttProgress() {
+            const savedState = JSON.parse(localStorage.getItem('gantt_task_state') || '{}');
+            const total = ganttTasks.length;
+            const completed = Object.values(savedState).filter(Boolean).length;
+            const pct = Math.round((completed / total) * 100);
+
+            document.getElementById('ganttProgressBar').style.width = pct + '%';
+            document.getElementById('ganttProgressText').textContent = `${completed} / ${total} Task Completati (${pct}%)`;
+        }
+
+        /* ========================================================= */
+        /* 4. DOMCONTENTLOADED EVENT                                  */
+        /* ========================================================= */
+        document.addEventListener('DOMContentLoaded', () => {
+            initLeafletMap();
+            renderSnapshotCards();
+            renderRoadbookSelector();
+            selectDayRoadbook(1);
+            renderTrackerTables();
+            initCharts();
+            loadNotes();
+            renderGanttTasks();
+        });
+    </script>
+</body>
+</html>
