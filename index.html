@@ -274,8 +274,8 @@
       </div>
       <div class="bg-white/80 backdrop-blur rounded-2xl p-4 border border-glacier/15 shadow-sm">
         <span class="text-xs font-bold uppercase tracking-wider text-glacier/70 block">Stima Spesa Coppia</span>
-        <span class="font-display text-3xl font-bold text-emerald-700">~€4.846</span>
-        <span class="text-xs text-fiordo/70 block mt-0.5">$7.270 CAD con tasse/mance</span>
+        <span class="font-display text-3xl font-bold text-emerald-700">~€6.706</span>
+        <span class="text-xs text-fiordo/70 block mt-0.5">€4.846 Canada + €1.860 voli/TGV</span>
       </div>
     </div>
   </div>
@@ -407,7 +407,7 @@
     <!-- Chart Budget CAD/EUR -->
     <div class="daycard rounded-3xl p-6 ice-cut">
       <h3 class="font-display text-xl text-fiordo font-bold mb-1">Financial Tracker (Stima Coppia in EUR)</h3>
-      <p class="text-xs text-fiordo/60 mb-4">Totale stimato ~€4.846 ($7.270 CAD) con tasse e mance incluse</p>
+      <p class="text-xs text-fiordo/60 mb-4">Canada: ~€4.846 ($7.270 CAD) con tasse e mance incluse · + Voli Torino⇄Canada e TGV: ~€1.860 · Totale coppia: ~€6.706</p>
       <div class="relative h-64">
         <canvas id="chartBudget"></canvas>
       </div>
@@ -560,14 +560,14 @@ const ITINERARY_DATA = [
   date: "28 Dicembre 2026",
   title: "L'Approdo nella Metropoli d'Acciaio",
   base: "Base 1: Toronto Downtown (Notte 1/2)",
-  transitSummary: "Volo MXP → YYZ | Treno UP Express (25 min diretti per Union Station)",
+  transitSummary: "Volo Torino → Toronto (scalo a Parigi CDG, 10:00–16:10, ~550€) | Treno UP Express (25 min diretti per Union Station)",
   stops: [
     {
-      time: "16:00 – 17:30",
+      time: "10:00 – 16:10",
       type: "transport",
-      title: "Arrivo a Toronto Pearson e UP Express per Union Station",
-      transit: "Treno rapido UP Express riscaldato (cadenza ogni 15 min, 25 min di percorrenza)",
-      desc: "Atterraggio al Terminal 1/3 dell'aeroporto Pearson (YYZ). Superata la dogana canadese, seguire i cartelli interni verso il treno UP Express: evita il pesante traffico automobilistico della Gardiner Expressway e conduce direttamente sotto le volte di Union Station. Check-in rapido a Downtown.",
+      title: "Decollo da Torino, scalo a Parigi CDG e arrivo a Toronto Pearson",
+      transit: "Volo con scalo Torino → Parigi CDG → Toronto (YYZ), ~550€ a persona, poi UP Express riscaldato per Union Station (25 min, cadenza ogni 15 min)",
+      desc: "Partenza da Torino alle 10:00 con breve scalo tecnico a Parigi Charles de Gaulle prima del lungo tratto transatlantico. Atterraggio al Terminal 1/3 dell'aeroporto Pearson (YYZ) alle 16:10 ora locale. Superata la dogana canadese, seguire i cartelli interni verso il treno UP Express: evita il pesante traffico automobilistico della Gardiner Expressway e conduce direttamente sotto le volte di Union Station. Check-in rapido a Downtown.",
       focus: {
         storico: "La Union Station di Toronto, completata nel 1927 in stile Beaux-Arts, rappresenta il vertice simbolico dell'espansione della ferrovia canadese. Progettata con un imponente colonnato dorico in calcare dell'Indiana e una sala centrale con soffitti a volta Guastavino, ha accolto generazioni di migranti europei diretti verso le miniere e le foreste dello Scudo Canadese. Oggi unisce la memoria della frontiera su rotaia con il modernissimo corridoio metropolitano rapido dell'UP Express.",
         letterario: "Michael Ondaatje, nel romanzo capolavoro 'Nel labirinto delle ombre' (In the Skin of a Lion), racconta la nascita di Toronto attraverso il sudore e le fatiche dei lavoratori immigrati che scavarono i tunnel idraulici e gettarono le basi della metropoli nell'aria gelida: 'La città è costruita sul silenzio e sulle mani di coloro che non compaiono nelle fotografie ufficiali'. Entrare a Downtown dal nastro d'acciaio ferroviario evoca immediatamente la grandezza di questa titanica impresa urbana.",
@@ -575,7 +575,7 @@ const ITINERARY_DATA = [
       }
     },
     {
-      time: "18:30 – 21:00",
+      time: "18:00 – 20:30",
       type: "sight",
       title: "Prime Luci del Nord a Nathan Phillips Square",
       transit: "Passeggiata a piedi (15 min da Union Station su Bay Street)",
@@ -1062,8 +1062,8 @@ const ITINERARY_DATA = [
   day: 12,
   date: "8 Gennaio 2027",
   title: "L'Arrivederci al Grande Nord",
-  base: "Volo di Rientro: YQB → MXP",
-  transitSummary: "Taxi rapido da Downtown a Québec Jean Lesage (YQB, 20 min, 16 km) | Volo con scalo per Malpensa",
+  base: "Volo di Rientro: YQB → Parigi CDG (diretto) + TGV per Torino",
+  transitSummary: "Pomeriggio libero nel Vieux-Québec | Taxi per YQB (20 min) | Volo diretto YQB → CDG (19:05 – 07:30) | TGV Parigi → Torino (12:45, ~70€)",
   stops: [
     {
       time: "08:30 – 10:30",
@@ -1074,11 +1074,22 @@ const ITINERARY_DATA = [
       cibo: "Caffè filtro grande con goccio di sciroppo d'acero e sfoglia calda 'Chausson aux Pommes et Érable' appena sfornata dalla boulangerie artigianale."
     },
     {
-      time: "11:00 – 11:30",
+      time: "10:30 – 16:00",
+      type: "sight",
+      title: "Pomeriggio Libero nel Vieux-Québec",
+      transit: "A piedi, senza fretta, all'interno delle mura",
+      desc: "Il volo diretto per Parigi parte solo in serata, quindi l'ultimo giorno regala un intero pomeriggio senza l'ansia della valigia: un ultimo giro tra le gallerie d'arte del Petit-Champlain, un pranzo con calma affacciati sulla Terrazza Dufferin e, nel primo pomeriggio, la chiusura definitiva dei bagagli tecnici in hotel prima del check-out.",
+      focus: {
+        storico: "Le mura fortificate, uniche a nord del Messico, restano aperte ai pedoni tutto l'anno: un'ultima passeggiata sui bastioni permette di fissare nella memoria la sagoma innevata della città prima della lunga notte di viaggio.",
+        cibo: "Ultimo assaggio di sciroppo d'acero Dark/Robust da portare a casa e, per pranzo, una zuppa di piselli fumante o un panino al cervè accompagnato da sidro di ghiaccio."
+      }
+    },
+    {
+      time: "16:00 – 16:30",
       type: "transport",
       title: "Trasferimento Taxi verso l'Aeroporto Jean Lesage (YQB)",
       transit: "Taxi urbano (20 min di corsa fluida)",
-      desc: "Salita in taxi direttamente davanti all'hotel. In soli venti minuti si raggiunge il moderno ed efficiente scalo di Québec City, evitando lo stress dei grandi aeroporti.",
+      desc: "Salita in taxi direttamente davanti all'hotel nel primo pomeriggio, con largo margine rispetto al volo delle 19:05. In soli venti minuti si raggiunge il moderno ed efficiente scalo di Québec City, evitando lo stress dei grandi aeroporti.",
       focus: {
         storico: "L'aeroporto è intitolato a Jean Lesage, il premier padre della 'Rivoluzione Tranquilla' degli anni Sessanta, che trasformò il Québec in una società moderna, laica e culturalmente fiera.",
         letterario: "Il commiato dalla neve del Canada coincide per ogni viaggiatore con una sensazione di quiete interiore: la purezza del grande freddo lascia una traccia indelebile nell'anima.",
@@ -1086,11 +1097,18 @@ const ITINERARY_DATA = [
       }
     },
     {
-      time: "13:30",
+      time: "19:05",
       type: "transport",
-      title: "Decollo verso Milano Malpensa",
-      transit: "Volo intercontinentale di linea con scalo a Montréal / Parigi / Francoforte",
-      desc: "Imbarco con il cuore colmo dei silenzi della taiga boreale, del sapore dell'acero caldo e del coraggio dei canottieri sul ghiaccio del San Lorenzo."
+      title: "Decollo Diretto verso Parigi Charles de Gaulle",
+      transit: "Volo diretto YQB → CDG, nessuno scalo (~310€ a persona), atterraggio 07:30 ora di Parigi del 9 Gennaio",
+      desc: "Imbarco con il cuore colmo dei silenzi della taiga boreale, del sapore dell'acero caldo e del coraggio dei canottieri sul ghiaccio del San Lorenzo. Una notte transatlantica in volo diretto, senza scali, verso l'Europa."
+    },
+    {
+      time: "9 Gennaio · 07:30 – 12:45",
+      type: "transport",
+      title: "Atterraggio a Parigi e TGV per Torino",
+      transit: "Trasferimento a Gare de Lyon, poi TGV diretto Parigi → Torino Porta Susa (partenza 12:45, ~70€ a persona)",
+      desc: "Atterraggio a Parigi Charles de Gaulle alle 07:30 e trasferimento verso Gare de Lyon. Imbarco sul TGV delle 12:45: l'ultimo tratto del viaggio, tra le campagne innevate di Francia e Piemonte, chiude idealmente il cerchio partito da Torino dodici giorni prima."
     }
   ]
 }
@@ -1312,7 +1330,7 @@ const MAP_BASE_STATIONS = [
   { id: 'b2', num: 2, name: 'Base 2: Vieux-Montréal', x: 470, y: 310, nights: '2 Notti (30 Dic - 1 Gen)', desc: 'Pernottamento nel quartiere storico in pietra. Rete sotterranea RÉSO e Capodanno al Vieux-Port.' },
   { id: 'b3', num: 3, name: 'Base 3: Charlevoix / Baie-St-Paul', x: 670, y: 200, nights: '3 Notti (1-4 Gen)', desc: 'Lodge rurale con stufa a legna. Ritiro SUV 4x4 a Québec City e salita via Route 138.' },
   { id: 'b4', num: 4, name: 'Base 4: Vieux-Québec Intramuros', x: 640, y: 265, nights: '4 Notti (4-8 Gen)', desc: 'Raggiunta e occupata solo il 4 Gennaio DOPO la riconsegna del SUV: fortezza a piedi, canoa e Wendake.' },
-  { id: 'yqb', num: '✈', name: 'Decollo Jean Lesage (YQB)', x: 605, y: 285, nights: 'Partenza 8 Gen', desc: 'Aeroporto a 20 min da Vieux-Québec: decollo con scalo verso Milano Malpensa.' }
+  { id: 'yqb', num: '✈', name: 'Decollo Jean Lesage (YQB)', x: 605, y: 285, nights: 'Partenza 8 Gen, 19:05', desc: 'Aeroporto a 20 min da Vieux-Québec: volo diretto delle 19:05 verso Parigi CDG (senza scali), seguito dal TGV delle 12:45 per Torino il 9 Gennaio.' }
 ];
 
 const MAP_STAR_ATTRACTIONS = [
@@ -1515,11 +1533,11 @@ function initCharts() {
   new Chart(document.getElementById('chartBudget'), {
     type: 'bar',
     data: {
-      labels: ['Alloggi (11n)', 'Ristorazione', 'Esperienze Esclusive', 'SUV 4x4 & Benzina', 'Treni VIA Rail', 'Trasporti Locali', 'Parchi & Sépaq', 'Cultura Indigena'],
+      labels: ['Alloggi (11n)', 'Voli Torino⇄Canada + TGV', 'Ristorazione', 'Esperienze Esclusive', 'SUV 4x4 & Benzina', 'Treni VIA Rail', 'Trasporti Locali', 'Parchi & Sépaq', 'Cultura Indigena'],
       datasets: [{
         label: 'Totale in EUR (€)',
-        data: [1933, 1533, 447, 307, 280, 173, 100, 73],
-        backgroundColor: '#2C5B75',
+        data: [1933, 1860, 1533, 447, 307, 280, 173, 100, 73],
+        backgroundColor: (ctx) => ctx.dataIndex === 1 ? '#C86D3B' : '#2C5B75',
         borderRadius: 6
       }]
     },
@@ -1541,7 +1559,8 @@ const GANTT_SECTIONS = [
     category: "1. Burocrazia & Voli Intercontinentali",
     tasks: [
       { id: 'g_t1', text: "Verifica validità passaporti (almeno 6 mesi dalla data di rientro)", deadline: "Metà Settembre" },
-      { id: 'g_t2', text: "Acquisto volo multitratta MXP → YYZ / YQB → MXP con bagaglio 23 kg", deadline: "Metà Settembre" },
+      { id: 'g_t2', text: "Acquisto volo Torino → Toronto (scalo Parigi CDG, ~550€/persona) e rientro diretto Québec → Parigi (~310€/persona), con bagaglio 23 kg", deadline: "Metà Settembre" },
+      { id: 'g_t2b', text: "Acquisto biglietto TGV Parigi Gare de Lyon → Torino, partenza 12:45 del 9 Gennaio (~70€/persona)", deadline: "Metà Settembre" },
       { id: 'g_t3', text: "Emissione eTA ufficiale su Canada.ca a 7 $ CAD (evitare portali terzi)", deadline: "Fine Settembre" },
       { id: 'g_t4', text: "Polizza medica e annullamento con copertura esplicita sport invernali", deadline: "Entro 48h dai voli" }
     ]
